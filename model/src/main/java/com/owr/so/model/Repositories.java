@@ -3,6 +3,7 @@ package com.owr.so.model;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class Repositories {
 
 	private List<RepositoryMeta> repos = new ArrayList<>();

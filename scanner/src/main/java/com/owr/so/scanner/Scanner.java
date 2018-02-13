@@ -12,8 +12,8 @@ import java.time.Instant;
 import java.util.stream.Stream;
 
 import com.owr.so.console.ConsoleOutput;
-import com.owr.so.model.FileMeta;
-import com.owr.so.model.FilesRepo;
+import com.owr.so.model.FileMetaDepricated;
+import com.owr.so.model.FilesRepoDepricated;
 import com.owr.so.model.Repositories;
 import com.owr.so.storage.RepoStorage;
 import com.owr.so.storage.Storage;
@@ -39,20 +39,20 @@ public class Scanner {
 		String repoPath = repoName + REPO_SUFFIX;
 		String repoPathOld = repoPath + ".fordelete";
 
-		FilesRepo repoNew = new FilesRepo();
-		FilesRepo repoOld = loadExistingData(repoPath, repoPathOld, forceUpdate);
+		FilesRepoDepricated repoNew = new FilesRepoDepricated();
+		FilesRepoDepricated repoOld = loadExistingData(repoPath, repoPathOld, forceUpdate);
 
 		String repoRootDir = repositories.getPath(repoName);
 		Stream<Path> paths = FileUtil.scanFnames(repoRootDir);
 
 		paths.forEach(filePath -> {
 
-			FileMeta f = new FileMeta();
+			FileMetaDepricated f = new FileMetaDepricated();
 			String checkSum = readMeta(f, filePath, repoRootDir, repoOld);
 			repoNew.getBranchData().put(checkSum, f);
 
 		});
-		Storage<FilesRepo> str = new Storage<>();
+		Storage<FilesRepoDepricated> str = new Storage<>();
 
 		str.save(Paths.get(repoPath), repoNew);
 
@@ -63,30 +63,30 @@ public class Scanner {
 
 	}
 
-	private FilesRepo loadExistingData(String repoPath, String repoPathOld, boolean forceUpdate) throws IOException {
+	private FilesRepoDepricated loadExistingData(String repoPath, String repoPathOld, boolean forceUpdate) throws IOException {
 		Path existingRepoPath = Paths.get(repoPath);
 		File existingFile = existingRepoPath.toFile();
-		FilesRepo repoOld = new FilesRepo();
+		FilesRepoDepricated repoOld = new FilesRepoDepricated();
 		if (existingFile.exists()) {
 
 			if (!forceUpdate) {
 				// load old data
-				Storage<FilesRepo> str = new Storage<>();
-				repoOld = str.load(existingRepoPath, FilesRepo.class);
+				Storage<FilesRepoDepricated> str = new Storage<>();
+				repoOld = str.load(existingRepoPath, FilesRepoDepricated.class);
 			}
 			existingFile.delete();
 		}
 		return repoOld;
 	}
 
-	private String readMeta(final FileMeta fNew, Path filePath, String repoRootDir, FilesRepo repoOld) {
+	private String readMeta(final FileMetaDepricated fNew, Path filePath, String repoRootDir, FilesRepoDepricated repoOld) {
 		String relativePath = filePath.toString().substring(repoRootDir.length());
 
 		try {
 			BasicFileAttributes file = Files.readAttributes(filePath, BasicFileAttributes.class);
 
 			if (file.isRegularFile()) {
-				FileMeta fOld = repoOld.getBranchData().get(relativePath);
+				FileMetaDepricated fOld = repoOld.getBranchData().get(relativePath);
 
 				// updateFileMeta(fNew, filePath, file);
 				fNew.setSize(file.size());
@@ -109,7 +109,7 @@ public class Scanner {
 
 	}
 
-	private boolean checkForModification(FileMeta fNew, FileMeta fOld) {
+	private boolean checkForModification(FileMetaDepricated fNew, FileMetaDepricated fOld) {
 
 		// New file?
 		if (fOld == null) {

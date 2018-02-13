@@ -12,29 +12,20 @@
 	</properties>
 
 	<dependencies>
-
-
-
-		<!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-lang3</artifactId> 
-			<version>3.5</version> </dependency> -->
-		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.10</version>
 		</dependency>
-
 		<dependency>
-			<groupId>com.owr.fr</groupId>
+			<groupId>com.owr.so</groupId>
 			<artifactId>model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>com.owr.fr</groupId>
+			<groupId>com.owr.so</groupId>
 			<artifactId>console</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-
-
 </project>

@@ -7,26 +7,26 @@ import java.util.Set;
 import com.owr.so.merge.data.MergedRepos;
 import com.owr.so.merge.diff.ConflictReason;
 import com.owr.so.merge.diff.Operation;
-import com.owr.so.model.FileMeta;
-import com.owr.so.model.FilesRepo;
+import com.owr.so.model.FileMetaDepricated;
+import com.owr.so.model.FilesRepoDepricated;
 
 public class Merge {
 
 	private static final int SINGLE = 1;
 
-	public void merge(FilesRepo filesRepo1, FilesRepo filesRepo2, MergedRepos result) {
+	public void merge(FilesRepoDepricated filesRepo1, FilesRepoDepricated filesRepo2, MergedRepos result) {
 
 		mergeRepo(result, filesRepo1, filesRepo2, false);
 		mergeRepo(result, filesRepo2, filesRepo1, true);
 
 	}
 
-	private void mergeRepo(MergedRepos data, FilesRepo filesRepo1, FilesRepo filesRepo2, boolean oppositeMerge) {
+	private void mergeRepo(MergedRepos data, FilesRepoDepricated filesRepo1, FilesRepoDepricated filesRepo2, boolean oppositeMerge) {
 
 		Set<String> paths1 = filesRepo1.getBranchData().keySet();
 
-		FileMeta fm2, fm1 = null;
-		List<FileMeta> fml1, fml2 = null;
+		FileMetaDepricated fm2, fm1 = null;
+		List<FileMetaDepricated> fml1, fml2 = null;
 
 		for (String path1 : paths1) {
 
@@ -69,7 +69,7 @@ public class Merge {
 
 				} else if (fml2.isEmpty()) {
 					// New / Deleted
-					fm2 = new FileMeta();
+					fm2 = new FileMetaDepricated();
 					fm2.setRepo(filesRepo2.getName());
 					fm2.setPath(fm1.getPath());
 					data.addDiff(Operation.Add, fm1, fm2);
@@ -102,15 +102,15 @@ public class Merge {
 		}
 	}
 
-	private List<FileMeta> findByMd5(FileMeta fm, FilesRepo filesRepo) {
-		List<FileMeta> result =filesRepo.getBranchDataByMd5().get(fm.getMd5());
+	private List<FileMetaDepricated> findByMd5(FileMetaDepricated fm, FilesRepoDepricated filesRepo) {
+		List<FileMetaDepricated> result =filesRepo.getBranchDataByMd5().get(fm.getMd5());
 		if (result == null) {
 			result = new ArrayList<>();
 		}
 		return result;
 	}
 
-	private FileMeta findByPath(String path, FilesRepo filesRepo) {
+	private FileMetaDepricated findByPath(String path, FilesRepoDepricated filesRepo) {
 		return filesRepo.getBranchData().get(path);
 	}
 

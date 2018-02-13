@@ -9,8 +9,8 @@ import java.util.Set;
 
 import com.owr.so.merge.Merge;
 import com.owr.so.merge.data.MergedRepos;
-import com.owr.so.model.FileMeta;
-import com.owr.so.model.FilesRepo;
+import com.owr.so.model.FileMetaDepricated;
+import com.owr.so.model.FilesRepoDepricated;
 import com.owr.so.model.Repositories;
 import com.owr.so.model.RepositoryMeta;
 import com.owr.so.storage.RepoStorage;
@@ -40,8 +40,8 @@ public class Main {
 			}
 
 			// Load repos
-			FilesRepo filesRepo1 = loadRepoMetaData(reposForMerge.get(0));
-			FilesRepo filesRepo2 = loadRepoMetaData(reposForMerge.get(1));
+			FilesRepoDepricated filesRepo1 = loadRepoMetaData(reposForMerge.get(0));
+			FilesRepoDepricated filesRepo2 = loadRepoMetaData(reposForMerge.get(1));
 
 			// Merge repos
 			Merge merge = new Merge();
@@ -78,16 +78,16 @@ public class Main {
 		return name + "." + ext;
 	}
 
-	private static FilesRepo loadRepoMetaData(RepositoryMeta repositoryMeta) throws IOException {
+	private static FilesRepoDepricated loadRepoMetaData(RepositoryMeta repositoryMeta) throws IOException {
 
-		Storage<FilesRepo> str = new Storage<>();
+		Storage<FilesRepoDepricated> str = new Storage<>();
 		Path repoFile = Paths.get(repositoryMeta.getName()+".repo");
 
-		FilesRepo filesRepo = str.load(repoFile, FilesRepo.class);
+		FilesRepoDepricated filesRepo = str.load(repoFile, FilesRepoDepricated.class);
 
 		Set<String> keys = filesRepo.getBranchData().keySet();
 
-		FileMeta fm = null;
+		FileMetaDepricated fm = null;
 
 		for (String key : keys) {
 

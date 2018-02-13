@@ -1,5 +1,6 @@
 package com.owr.so.model;
 
+@Deprecated
 public class RepositoryMeta {
 
 	private String name;

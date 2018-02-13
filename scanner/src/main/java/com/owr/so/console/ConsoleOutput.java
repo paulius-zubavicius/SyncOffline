@@ -11,7 +11,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Duration;
 import java.util.Set;
 
-import com.owr.so.model.FilesRepo;
+import com.owr.so.model.FilesRepoDepricated;
 import com.owr.so.model.Repositories;
 import com.owr.so.model.RepositoryMeta;
 import com.owr.so.model.Version;
@@ -40,7 +40,7 @@ public class ConsoleOutput {
 		System.out.println();
 	}
 
-	public static void printStatistics(FilesRepo branch, Duration timeElapsed) {
+	public static void printStatistics(FilesRepoDepricated branch, Duration timeElapsed) {
 
 		long size = 0;
 		Set<String> keys = branch.getBranchData().keySet();

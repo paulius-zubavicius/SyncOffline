@@ -12,11 +12,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.owr.fr</groupId>
+			<groupId>com.owr.so</groupId>
 			<artifactId>model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-
 	</dependencies>
-	<name>SyncOffline</name>
 </project>
