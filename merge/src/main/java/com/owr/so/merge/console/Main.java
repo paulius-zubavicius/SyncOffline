@@ -9,7 +9,7 @@ import java.util.Set;
 
 import com.owr.so.merge.Merge;
 import com.owr.so.merge.data.MergedRepos;
-import com.owr.so.model.FileMetaDepricated;
+import com.owr.so.model.FileEntity;
 import com.owr.so.model.FilesRepoDepricated;
 import com.owr.so.model.Repositories;
 import com.owr.so.model.RepositoryMeta;
@@ -87,20 +87,21 @@ public class Main {
 
 		Set<String> keys = filesRepo.getBranchData().keySet();
 
-		FileMetaDepricated fm = null;
+		FileEntity fm = null;
 
 		for (String key : keys) {
 
 			fm = filesRepo.getBranchData().get(key);
 
-			fm.setRepo(repositoryMeta.getName());
-			fm.setPath(key);
+			//FIXME
+			//fm.setRepo(repositoryMeta.getName());
+			//fm.setPath(key);
 
-			if (!filesRepo.getBranchDataByMd5().containsKey(fm.getMd5())) {
-				filesRepo.getBranchDataByMd5().put(fm.getMd5(), new ArrayList<>());
+			if (!filesRepo.getBranchDataByMd5().containsKey(fm.getHashSum())) {
+				filesRepo.getBranchDataByMd5().put(fm.getHashSum(), new ArrayList<>());
 			}
 
-			filesRepo.getBranchDataByMd5().get(fm.getMd5()).add(fm);
+			filesRepo.getBranchDataByMd5().get(fm.getHashSum()).add(fm);
 		}
 
 		filesRepo.setName(repositoryMeta.getName());

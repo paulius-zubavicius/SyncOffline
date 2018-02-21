@@ -7,7 +7,7 @@ import java.util.Set;
 import com.owr.so.merge.data.MergedRepos;
 import com.owr.so.merge.diff.ConflictReason;
 import com.owr.so.merge.diff.Operation;
-import com.owr.so.model.FileMetaDepricated;
+import com.owr.so.model.FileEntity;
 import com.owr.so.model.FilesRepoDepricated;
 
 public class Merge {
@@ -25,8 +25,8 @@ public class Merge {
 
 		Set<String> paths1 = filesRepo1.getBranchData().keySet();
 
-		FileMetaDepricated fm2, fm1 = null;
-		List<FileMetaDepricated> fml1, fml2 = null;
+		FileEntity fm2, fm1 = null;
+		List<FileEntity> fml1, fml2 = null;
 
 		for (String path1 : paths1) {
 
@@ -37,7 +37,7 @@ public class Merge {
 				// Place the same
 
 				// is it different content?
-				if (!fm1.getMd5().equalsIgnoreCase(fm2.getMd5())) {
+				if (!fm1.getHashSum().equalsIgnoreCase(fm2.getHashSum())) {
 
 					// 
 					if (fm1.getModified() > fm2.getModified()) {
@@ -69,9 +69,10 @@ public class Merge {
 
 				} else if (fml2.isEmpty()) {
 					// New / Deleted
-					fm2 = new FileMetaDepricated();
-					fm2.setRepo(filesRepo2.getName());
-					fm2.setPath(fm1.getPath());
+					fm2 = new FileEntity();
+					//FIXME
+					//fm2.setRepo(filesRepo2.getName());
+					//fm2.setPath(fm1.getPath());
 					data.addDiff(Operation.Add, fm1, fm2);
 				} else {
 
@@ -102,15 +103,15 @@ public class Merge {
 		}
 	}
 
-	private List<FileMetaDepricated> findByMd5(FileMetaDepricated fm, FilesRepoDepricated filesRepo) {
-		List<FileMetaDepricated> result =filesRepo.getBranchDataByMd5().get(fm.getMd5());
+	private List<FileEntity> findByMd5(FileEntity fm, FilesRepoDepricated filesRepo) {
+		List<FileEntity> result =filesRepo.getBranchDataByMd5().get(fm.getHashSum());
 		if (result == null) {
 			result = new ArrayList<>();
 		}
 		return result;
 	}
 
-	private FileMetaDepricated findByPath(String path, FilesRepoDepricated filesRepo) {
+	private FileEntity findByPath(String path, FilesRepoDepricated filesRepo) {
 		return filesRepo.getBranchData().get(path);
 	}
 

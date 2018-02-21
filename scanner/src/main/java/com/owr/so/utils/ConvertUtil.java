@@ -2,6 +2,10 @@ package com.owr.so.utils;
 
 import java.time.Duration;
 
+/**
+ * @author Paulius Zubavicius
+ *
+ */
 public class ConvertUtil {
 
 	private static final double KB1 = 1024.0;

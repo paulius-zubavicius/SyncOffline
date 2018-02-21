@@ -1,61 +1,105 @@
 package com.owr.so.console;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
+import com.owr.so.scanner.EnumActionByFlags;
 import com.owr.so.scanner.Scanner;
+import com.owr.so.scanner.dirtree.IScanningLogEventsListener;
+import com.owr.so.scanner.dirtree.LogEventsListenerImpl;
 
+/**
+ * @author Paulius Zubavicius
+ *
+ */
 public class Main {
 
-	private static final String LIST = "list";
-	private static final String ADD = "add";
-	private static final String SCAN = "scan";
-	private static final String UPDATE = "update";
-	private static final String REMOVE = "remove";
+	private static final String OPT_LONG_META = "metaFile";
+	private static final String OPT_SHORT_META = "f";
 
-	public static void main(String[] args) throws IOException, URISyntaxException {
+	private static final String OPT_LONG_NEW_SCAN = "newScanDir";
+	private static final String OPT_SHORT_NEW_SCAN = "d";
 
-		if (args.length > 0) {
+	private static final String OPT_STATUS = "status";
 
-			Scanner scn = new Scanner();
+	public static void main(String[] args) {
 
-			if (LIST.equalsIgnoreCase(args[0])) {
-				ConsoleOutput.repoListOutput(scn.getRepolist());
-				ConsoleOutput.printDone(LIST);
-				return;
-			}
+		/**
+		 * Options
+		 */
+		Options options = creteArgsOptions();
 
-			if (ADD.equalsIgnoreCase(args[0])) {
+		/**
+		 * Log events listener
+		 */
+		IScanningLogEventsListener logEventsListener = new LogEventsListenerImpl();
 
-				// FIXME Fix: path with spaces
-				String path = "";
-				for (int i = 2; i < args.length; i++) {
-					path += args[i];
-				}
+		/**
+		 * Parse
+		 */
+		CommandLine line = null;
+		CommandLineParser parser = new DefaultParser();
+		try {
 
-				scn.addRepo(args[1], path);
-				ConsoleOutput.printDone(args[1] + " : " + path);
-				return;
-			}
+			line = parser.parse(options, args);
 
-			if (REMOVE.equalsIgnoreCase(args[0])) {
-				scn.removeRepo(args[1]);
-				ConsoleOutput.printDone(args[1]);
-				return;
-			}
-
-			if (SCAN.equalsIgnoreCase(args[0])) {
-				scn.scanFilesRepo(args[1], true);
-				ConsoleOutput.printDone(args[1]);
-				return;
-			}
-
-			if (UPDATE.equalsIgnoreCase(args[0])) {
-				scn.scanFilesRepo(args[1], false);
-				ConsoleOutput.printDone(args[1]);
-				return;
-			}
+		} catch (ParseException e) {
+			logEventsListener.businessCaseException(e, options);
+			System.exit(0);
 		}
-		ConsoleOutput.printConsoleHelp();
+
+		/**
+		 * Actions
+		 */
+
+		boolean fMeta = line.hasOption(OPT_SHORT_META);
+		boolean fNew = line.hasOption(OPT_SHORT_NEW_SCAN);
+		boolean fStatus = line.hasOption(OPT_STATUS);
+
+		String metaFileStr = line.getOptionValue(OPT_SHORT_META);
+		String scanDirStr = line.getOptionValue(OPT_SHORT_NEW_SCAN);
+
+		Scanner scanner = new Scanner(logEventsListener);
+
+		EnumActionByFlags action = null;
+		try {
+			action = scanner.actionByFlags(fMeta, fNew, fStatus, metaFileStr, scanDirStr);
+		} catch (Exception e) {
+			logEventsListener.businessCaseException(e, options);
+			System.exit(0);
+		}
+
+		switch (action) {
+		case SHOW_STATUS:
+			scanner.readMetaFileStatus(metaFileStr);
+			break;
+		case SCAN_FULL:
+			scanner.scanFull(metaFileStr, scanDirStr);
+			break;
+		case SCAN_UPDATE:
+			scanner.scanUpdate(metaFileStr, scanDirStr);
+			break;
+		default:
+			throw new RuntimeException("Unexpected action: " + action);
+		}
+
 	}
+
+	private static Options creteArgsOptions() {
+		Options options = new Options();
+		options.addOption(Option.builder(OPT_SHORT_META).longOpt(OPT_LONG_META).required().hasArg().valueSeparator()
+				.desc("Meta file of scanning directory tree. If it isn't exist it will be created but <"
+						+ OPT_LONG_NEW_SCAN + "> parameter must be specified.")
+				.build());
+		options.addOption(Option.builder(OPT_SHORT_NEW_SCAN).longOpt(OPT_LONG_NEW_SCAN).required(false).hasArg()
+				.valueSeparator().desc("Use this to execute full scan for new synchronizing directory tree.").build());
+		options.addOption(
+				Option.builder(OPT_STATUS).required(false).desc("Shows status of directory tree meta file.").build());
+		return options;
+	}
+
 }

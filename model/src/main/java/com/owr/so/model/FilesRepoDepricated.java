@@ -10,21 +10,21 @@ public class FilesRepoDepricated implements Serializable {
 
 	private static final long serialVersionUID = 8483924072968680391L;
 
-	private HashMap<String, FileMetaDepricated> branchData = new HashMap<>();
+	private HashMap<String, FileEntity> branchData = new HashMap<>();
 	
-	private transient HashMap<String, List<FileMetaDepricated>> branchDataByMd5 = new HashMap<>();
+	private transient HashMap<String, List<FileEntity>> branchDataByMd5 = new HashMap<>();
 
 	private transient String name;
 
-	public HashMap<String, FileMetaDepricated> getBranchData() {
+	public HashMap<String, FileEntity> getBranchData() {
 		return branchData;
 	}
 	
-	public HashMap<String, List<FileMetaDepricated>> getBranchDataByMd5() {
+	public HashMap<String, List<FileEntity>> getBranchDataByMd5() {
 		return branchDataByMd5;
 	}
 
-	public void setBranchData(HashMap<String, FileMetaDepricated> branchData) {
+	public void setBranchData(HashMap<String, FileEntity> branchData) {
 		this.branchData = branchData;
 	}
 

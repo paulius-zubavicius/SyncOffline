@@ -10,7 +10,7 @@ import com.owr.so.merge.diff.ConflictDiff;
 import com.owr.so.merge.diff.ConflictReason;
 import com.owr.so.merge.diff.Operation;
 import com.owr.so.merge.diff.SimpleDiff;
-import com.owr.so.model.FileMetaDepricated;
+import com.owr.so.model.FileEntity;
 import com.owr.so.model.Version;
 
 public class ConsoleOutput {
@@ -62,10 +62,11 @@ public class ConsoleOutput {
 		case SameHashes:
 			System.out.println(
 					" File was moved/renamed but it dificult to determinate new path because there are more than one file with identical content.");
-			System.out.println(" md5: " + c.getFml().get(0).getMd5());
+			System.out.println(" md5: " + c.getFml().get(0).getHashSum());
 			System.out.println(" Files: ");
-			for (FileMetaDepricated fileMeta : c.getFml()) {
-				System.out.println(" [" + fileMeta.getRepo() + "] : " + fileMeta.getPath());
+			for (FileEntity fileMeta : c.getFml()) {
+				//FIXME
+				//System.out.println(" [" + fileMeta.getRepo() + "] : " + fileMeta.getPath());
 			}
 			break;
 
@@ -73,16 +74,18 @@ public class ConsoleOutput {
 			System.out.println(" File was moved/renamed but the 'accessed' value the same.");
 			System.out.println(" accessed: " + LocalTime.ofNanoOfDay(c.getFml().get(0).getAccessed()));
 			System.out.println(" Files: ");
-			for (FileMetaDepricated fileMeta : c.getFml()) {
-				System.out.println(" [" + fileMeta.getRepo() + "] : " + fileMeta.getPath());
+			for (FileEntity fileMeta : c.getFml()) {
+				//FIXME
+				//System.out.println(" [" + fileMeta.getRepo() + "] : " + fileMeta.getPath());
 			}
 			break;
 		case SameModified:
 			System.out.println(" File was modified but the 'modified' value the same.");
 			System.out.println(" modified: " + LocalTime.ofNanoOfDay(c.getFml().get(0).getModified()));
 			System.out.println(" Files: ");
-			for (FileMetaDepricated fileMeta : c.getFml()) {
-				System.out.println(" [" + fileMeta.getRepo() + "] : " + fileMeta.getPath());
+			for (FileEntity fileMeta : c.getFml()) {
+				//FIXME
+				//System.out.println(" [" + fileMeta.getRepo() + "] : " + fileMeta.getPath());
 			}
 			break;
 		default:

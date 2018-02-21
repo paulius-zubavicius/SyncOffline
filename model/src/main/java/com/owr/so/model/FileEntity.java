@@ -2,25 +2,36 @@ package com.owr.so.model;
 
 import java.io.Serializable;
 
-@Deprecated
-public class FileMetaDepricated implements Serializable {
+public class FileEntity implements Serializable {
 
 	private static final long serialVersionUID = -3211564506768018649L;
 
-	private String md5;
+	private String name;
+	private String hashSum;
 	private long size;
 	private long modified;
 	private long accessed;
 
-	private transient String path;
-	private transient String repo;
-	
-	public String getMd5() {
-		return md5;
+	private transient DirEntity dir;
+
+	public String getAbsolutePath() {
+		return dir.getPath() + "/" + name;
 	}
 
-	public void setMd5(String md5) {
-		this.md5 = md5;
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getHashSum() {
+		return hashSum;
+	}
+
+	public void setHashSum(String hashSum) {
+		this.hashSum = hashSum;
 	}
 
 	public long getSize() {
@@ -47,20 +58,12 @@ public class FileMetaDepricated implements Serializable {
 		this.accessed = accessed;
 	}
 
-	public String getPath() {
-		return path;
+	public DirEntity getDir() {
+		return dir;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	public String getRepo() {
-		return repo;
-	}
-
-	public void setRepo(String repo) {
-		this.repo = repo;
+	public void setDir(DirEntity dir) {
+		this.dir = dir;
 	}
 
 }
