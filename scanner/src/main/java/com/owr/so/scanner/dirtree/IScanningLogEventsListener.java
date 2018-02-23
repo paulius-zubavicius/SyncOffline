@@ -19,7 +19,7 @@ public interface IScanningLogEventsListener {
 
 	void readFailed(Path file, IOException exc);
 
-	void readFileOk(FileEntity entity);
+	void readFileOk(FileEntity entity, boolean modifications);
 
 	void businessCaseException(Exception e, Options options);
 

@@ -81,7 +81,7 @@ public class Main {
 			scanner.scanFull(metaFileStr, scanDirStr);
 			break;
 		case SCAN_UPDATE:
-			scanner.scanUpdate(metaFileStr, scanDirStr);
+			scanner.scanUpdate(metaFileStr);
 			break;
 		default:
 			throw new RuntimeException("Unexpected action: " + action);

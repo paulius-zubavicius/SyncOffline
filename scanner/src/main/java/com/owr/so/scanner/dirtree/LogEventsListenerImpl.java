@@ -37,14 +37,21 @@ public class LogEventsListenerImpl implements IScanningLogEventsListener {
 	}
 
 	@Override
-	public void readFileOk(FileEntity entity) {
-		System.out.println(String.format("   %-100s %s %s", entity.getName(),
-				ConvertUtil.getSizeInHumanFormat(entity.getSize()), entity.getHashSum()));
+	public void readFileOk(FileEntity entity, boolean modifications) {
+		if (modifications) {
+			System.out.println(String.format("   %-100s %s %s", entity.getName(),
+					ConvertUtil.getSizeInHumanFormat(entity.getSize()), entity.getHashSum()));
+		}
 	}
 
 	@Override
 	public void businessCaseException(Exception e, Options options) {
-		System.err.println(e.getMessage());
+		if (e.getMessage() != null) {
+			System.err.println(e.getMessage());
+		} else {
+			e.printStackTrace();
+		}
+
 		System.out.println();
 
 		HelpFormatter formatter = new HelpFormatter();

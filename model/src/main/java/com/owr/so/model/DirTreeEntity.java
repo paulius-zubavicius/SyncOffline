@@ -12,7 +12,7 @@ public class DirTreeEntity implements Serializable {
 
 	private String dirTreeRootPath;
 
-	private Map<String, DirEntity> dirTree = new HashMap<>();
+	private HashMap<String, DirEntity> dirTree = new HashMap<>();
 
 	/**
 	 * Plain list of files: will be removed
@@ -63,6 +63,17 @@ public class DirTreeEntity implements Serializable {
 
 	public Map<String, List<FileEntity>> getFilesByHashSum() {
 		return filesByHashSum;
+	}
+	
+	public void initTransientFields(FileEntity entity) {
+
+		files.add(entity);
+		filesByPath.put(entity.getAbsolutePath(), entity);
+		if (!filesByHashSum.containsKey(entity.getHashSum())) {
+			filesByHashSum.put(entity.getHashSum(), new ArrayList<>());
+		}
+		filesByHashSum.get(entity.getHashSum()).add(entity);
+
 	}
 
 }

@@ -6,8 +6,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 
+import com.owr.so.model.DirEntity;
 import com.owr.so.model.DirTreeEntity;
+import com.owr.so.model.FileEntity;
 import com.owr.so.scanner.dirtree.DirTreeScanner;
 import com.owr.so.scanner.dirtree.IScanningLogEventsListener;
 import com.owr.so.storage.Storage;
@@ -93,8 +97,8 @@ public class Scanner {
 		scan(false, metaFileStr, scanDirStr);
 	}
 
-	public void scanUpdate(String metaFileStr, String scanDirStr) {
-		scan(true, metaFileStr, scanDirStr);
+	public void scanUpdate(String metaFileStr) {
+		scan(true, metaFileStr, null);
 	}
 
 	private void scan(boolean updateMetaFile, String metaFileStr, String scanDirStr) {
@@ -104,13 +108,14 @@ public class Scanner {
 		DirTreeScanner dirTreeScan = new DirTreeScanner();
 		DirTreeEntity newDirTreeEntity = null;
 
-		Path dirTreePath = Paths.get(scanDirStr);
 		Path metaFilePath = Paths.get(metaFileStr);
 
 		if (updateMetaFile) {
-			newDirTreeEntity = dirTreeScan.scanUpdate(loadMetaFile(metaFileStr), dirTreePath, logEventsListener);
+			DirTreeEntity dirTreeCurrent = loadMetaFile(metaFileStr);
+			newDirTreeEntity = dirTreeScan.scanUpdate(dirTreeCurrent, Paths.get(dirTreeCurrent.getDirTreeRootPath()),
+					logEventsListener);
 		} else {
-			newDirTreeEntity = dirTreeScan.scanNew(metaFilePath, dirTreePath, logEventsListener);
+			newDirTreeEntity = dirTreeScan.scanNew(metaFilePath, Paths.get(scanDirStr), logEventsListener);
 		}
 
 		// Save to file
@@ -138,11 +143,28 @@ public class Scanner {
 	private DirTreeEntity loadMetaFile(String dirTreeMetaFileStr) {
 		Path path = Paths.get(dirTreeMetaFileStr);
 		Storage<DirTreeEntity> str = new Storage<>();
+		DirTreeEntity result = null;
 		try {
-			return str.load(path, DirTreeEntity.class);
+			result = str.load(path, DirTreeEntity.class);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		Collection<DirEntity> dirs = result.getDirTree().values();
+		List<FileEntity> fileEntity = null;
+		for (DirEntity dirEntity : dirs) {
+			
+			fileEntity = dirEntity.getFiles();
+			
+			for (FileEntity fEntity : fileEntity) {
+				
+				fEntity.setDir(dirEntity);
+				result.initTransientFields(fEntity);
+			}
+		}
+		
+		return result;
 	}
+
+	
 
 }

@@ -5,7 +5,6 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 
 import com.owr.so.model.DirEntity;
 import com.owr.so.model.DirTreeEntity;
@@ -50,19 +49,21 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 			DirEntity dirEntity = newTree.getDirTree().get(file.getParent().toString());
 			assert null == dirEntity;
 			entity.setDir(dirEntity);
+			// Add self
+			dirEntity.getFiles().add(entity);
 
 			FileEntity oldOneEntity = currentTree.getFilesByPath().get(file.toAbsolutePath().toString());
 
-			if (checkForModification(entity, oldOneEntity)) {
+			boolean modifications = checkForModification(entity, oldOneEntity);
+			if (modifications) {
 				entity.setHashSum(CheckSumUtil.checkSum(file));
 			} else {
 				entity.setHashSum(oldOneEntity.getHashSum());
 			}
 
-			// Adding to result
-			addToTransiantMaps(newTree, entity);
+			newTree.initTransientFields(entity);
 
-			listener.readFileOk(entity);
+			listener.readFileOk(entity, modifications);
 		} else {
 			listener.skiping(file, attrs);
 		}
@@ -74,19 +75,6 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 	public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
 		listener.readFailed(file, exc);
 		return FileVisitResult.CONTINUE;
-	}
-
-	private void addToTransiantMaps(DirTreeEntity result, FileEntity entity) {
-
-		result.getFiles().add(entity);
-		result.getFilesByPath().put(entity.getAbsolutePath(), entity);
-		if (!result.getFilesByHashSum().containsKey(entity.getHashSum())) {
-			result.getFilesByHashSum().put(entity.getHashSum(), new ArrayList<>());
-		}
-		result.getFilesByHashSum().get(entity.getHashSum()).add(entity);
-
-		entity.getDir().getFiles().add(entity);
-
 	}
 
 	private boolean checkForModification(FileEntity fNew, FileEntity fOld) {
