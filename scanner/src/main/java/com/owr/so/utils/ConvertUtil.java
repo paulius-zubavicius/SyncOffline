@@ -44,16 +44,16 @@ public class ConvertUtil {
 		int integer = (int) (sec / HOUR);
 		if (integer > 0) {
 			sec %= HOUR;
-			result += integer + "h ";
+			result += integer + " h ";
 		}
 
 		integer = (int) (sec / MIN);
 		if (integer > 0) {
 			sec %= MIN;
-			result += integer + "min ";
+			result += integer + " min ";
 		}
 
-		result += sec + "sec ";
+		result += sec + " sec ";
 
 		return result;
 	}

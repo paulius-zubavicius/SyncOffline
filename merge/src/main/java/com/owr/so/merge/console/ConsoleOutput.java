@@ -11,18 +11,17 @@ import com.owr.so.merge.diff.ConflictReason;
 import com.owr.so.merge.diff.Operation;
 import com.owr.so.merge.diff.SimpleDiff;
 import com.owr.so.model.FileEntity;
-import com.owr.so.model.Version;
 
 public class ConsoleOutput {
 
 	public static void printConsoleHelp() {
 
-		System.out.println();
-		System.out.println(" Files Repo Merge (data model version: " + Version.version + ")");
-		System.out.println();
-		System.out.println(" Usage:");
-		System.out.println(" java -jar merge.jar repoName1 repoName2");
-		System.out.println();
+//		System.out.println();
+//		System.out.println(" Files Repo Merge (data model version: " + Version.version + ")");
+//		System.out.println();
+//		System.out.println(" Usage:");
+//		System.out.println(" java -jar merge.jar repoName1 repoName2");
+//		System.out.println();
 
 	}
 

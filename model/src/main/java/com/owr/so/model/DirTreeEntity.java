@@ -64,11 +64,11 @@ public class DirTreeEntity implements Serializable {
 	public Map<String, List<FileEntity>> getFilesByHashSum() {
 		return filesByHashSum;
 	}
-	
+
 	public void initTransientFields(FileEntity entity) {
 
 		files.add(entity);
-		filesByPath.put(entity.getAbsolutePath(), entity);
+		filesByPath.put(entity.getAbsolutePath().toString(), entity);
 		if (!filesByHashSum.containsKey(entity.getHashSum())) {
 			filesByHashSum.put(entity.getHashSum(), new ArrayList<>());
 		}

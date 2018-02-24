@@ -11,6 +11,7 @@ import java.time.ZoneId;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 
+import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
 import com.owr.so.utils.ConvertUtil;
 
@@ -20,25 +21,55 @@ import com.owr.so.utils.ConvertUtil;
  */
 public class LogEventsListenerImpl implements IScanningLogEventsListener {
 
+	// Modified/new files
+	private int statModNewFiles;
+
+	// Modified/new size
+	private int statModNewSize;
+
+	private int statSkipSymLinks;
+	private int statSkipOthers;
+	private int statSkipDirs;
+
 	@Override
-	public void skiping(Path file, BasicFileAttributes attrs) {
-		System.err.println("XXX Skipping: " + file.toString());
+	public void skipped(Path file, BasicFileAttributes attrs) {
+
+		String reason = "";
+
+		if (attrs.isSymbolicLink()) {
+			reason += "SymbolicLink ";
+			statSkipSymLinks++;
+		}
+
+		if (attrs.isDirectory()) {
+			reason += "Dir ";
+			statSkipDirs++;
+		}
+
+		if (attrs.isOther()) {
+			reason += "Oher ";
+			statSkipOthers++;
+		}
+
+		System.err.println(reason + ": " + file.toString() + " - Skipped");
 
 	}
 
 	@Override
 	public void readFailed(Path file, IOException exc) {
-		System.err.println("XXX Failed: " + file.toString());
+		System.err.println("!!! Failed: " + file.toString());
 	}
 
 	@Override
 	public void readDirOk(String dirPathString, Path dir, BasicFileAttributes attrs) {
-		System.out.println(dirPathString);
+		System.out.println("[" + dirPathString + "]");
 	}
 
 	@Override
 	public void readFileOk(FileEntity entity, boolean modifications) {
 		if (modifications) {
+			statModNewFiles++;
+			statModNewSize += entity.getSize();
 			System.out.println(String.format("   %-100s %s %s", entity.getName(),
 					ConvertUtil.getSizeInHumanFormat(entity.getSize()), entity.getHashSum()));
 		}
@@ -82,8 +113,28 @@ public class LogEventsListenerImpl implements IScanningLogEventsListener {
 	}
 
 	@Override
-	public void scanDone(Duration timeElapsed) {
-		System.out.println("Done. It took :" + ConvertUtil.getTimeInHumanFormat(timeElapsed));
+	public void scanDone(Duration timeElapsed, DirTreeEntity newDirTreeEntity) {
+
+		System.out.println();
+		// Some statistics
+		// All files:
+		System.out.println("Read files       : " + newDirTreeEntity.getFiles().size());
+		long readSize = 0;
+		for (FileEntity ent : newDirTreeEntity.getFiles()) {
+			readSize += ent.getSize();
+		}
+		System.out.println("Read size        : " + ConvertUtil.getSizeInHumanFormat(readSize));
+		// Scanned files:
+		System.out.println("Scanned/new files: " + statModNewFiles);
+		// Read bytes:
+		System.out.println("Scanned/new size : " + ConvertUtil.getSizeInHumanFormat(statModNewSize));
+		// Skipped files:
+		System.out.println("Skipped SymLinks : " + statSkipSymLinks);
+		System.out.println("Skipped dirs     : " + statSkipDirs);
+		System.out.println("Skipped other    : " + statSkipOthers);
+
+		System.out.println();
+		System.out.println("Done in " + ConvertUtil.getTimeInHumanFormat(timeElapsed));
 	}
 
 }

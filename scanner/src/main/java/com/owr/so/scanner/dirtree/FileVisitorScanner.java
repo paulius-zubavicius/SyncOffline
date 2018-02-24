@@ -9,7 +9,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import com.owr.so.model.DirEntity;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
-import com.owr.so.utils.CheckSumUtil;
+import com.owr.so.utils.FileEntityUtil;
 
 /**
  * @author Paulius Zubavicius
@@ -29,8 +29,8 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+		String dirPathString = FileEntityUtil.getExcludeRootPath(dir, newTree.getDirTreeRootPath());
 
-		String dirPathString = dir.toAbsolutePath().toString();
 		newTree.getDirTree().put(dirPathString, new DirEntity(dirPathString));
 		listener.readDirOk(dirPathString, dir, attrs);
 		return FileVisitResult.CONTINUE;
@@ -46,17 +46,19 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 			entity.setModified(attrs.lastModifiedTime().toMillis());
 			entity.setSize(attrs.size());
 
-			DirEntity dirEntity = newTree.getDirTree().get(file.getParent().toString());
+			String excludedFilePath = FileEntityUtil.getExcludeRootPath(file.getParent(), newTree.getDirTreeRootPath());
+
+			DirEntity dirEntity = newTree.getDirTree().get(excludedFilePath);
 			assert null == dirEntity;
 			entity.setDir(dirEntity);
 			// Add it self
 			dirEntity.getFiles().add(entity);
 
-			FileEntity oldOneEntity = currentTree.getFilesByPath().get(file.toAbsolutePath().toString());
+			FileEntity oldOneEntity = currentTree.getFilesByPath().get(FileEntityUtil.getExcludeRootPath(file.toAbsolutePath(),newTree.getDirTreeRootPath() ));
 
 			boolean modifications = checkForModification(entity, oldOneEntity);
 			if (modifications) {
-				entity.setHashSum(CheckSumUtil.checkSum(file));
+				entity.setHashSum(FileEntityUtil.checkSum(file));
 			} else {
 				entity.setHashSum(oldOneEntity.getHashSum());
 			}
@@ -65,7 +67,7 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 			listener.readFileOk(entity, modifications);
 		} else {
-			listener.skiping(file, attrs);
+			listener.skipped(file, attrs);
 		}
 
 		return FileVisitResult.CONTINUE;
@@ -91,5 +93,7 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 		return false;
 	}
+
+	
 
 }

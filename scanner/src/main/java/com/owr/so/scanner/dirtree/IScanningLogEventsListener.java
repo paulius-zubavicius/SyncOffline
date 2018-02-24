@@ -7,6 +7,7 @@ import java.time.Duration;
 
 import org.apache.commons.cli.Options;
 
+import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
 
 /**
@@ -15,7 +16,7 @@ import com.owr.so.model.FileEntity;
  */
 public interface IScanningLogEventsListener {
 
-	void skiping(Path file, BasicFileAttributes attrs);
+	void skipped(Path file, BasicFileAttributes attrs);
 
 	void readFailed(Path file, IOException exc);
 
@@ -25,7 +26,7 @@ public interface IScanningLogEventsListener {
 
 	void metaFileStatus(boolean metaFileExists, long lastTimeModified, String rootDir, boolean rootDirExists);
 
-	void scanDone(Duration timeElapsed);
+	void scanDone(Duration timeElapsed, DirTreeEntity newDirTreeEntity);
 
 	void readDirOk(String dirPathString, Path dir, BasicFileAttributes attrs);
 

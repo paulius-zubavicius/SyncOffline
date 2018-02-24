@@ -130,7 +130,7 @@ public class Scanner {
 		Instant intant2 = Instant.now();
 		Duration timeElapsed = Duration.between(intant1, intant2);
 
-		logEventsListener.scanDone(timeElapsed);
+		logEventsListener.scanDone(timeElapsed, newDirTreeEntity);
 
 	}
 

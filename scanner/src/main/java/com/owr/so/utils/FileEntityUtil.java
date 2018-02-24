@@ -8,7 +8,7 @@ import java.nio.file.Path;
  * @author Paulius Zubavicius
  *
  */
-public class CheckSumUtil {
+public class FileEntityUtil {
 
 	public static String checkSum(Path path) {
 		FileInputStream fis = null;
@@ -28,6 +28,11 @@ public class CheckSumUtil {
 			}
 
 		}
+	}
+
+	public static String getExcludeRootPath(Path dir, String rootPath) {
+		String excludedPath = dir.toAbsolutePath().toString();
+		return excludedPath.substring(rootPath.length());
 	}
 
 }
