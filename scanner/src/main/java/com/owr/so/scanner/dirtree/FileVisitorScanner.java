@@ -49,7 +49,7 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 			DirEntity dirEntity = newTree.getDirTree().get(file.getParent().toString());
 			assert null == dirEntity;
 			entity.setDir(dirEntity);
-			// Add self
+			// Add it self
 			dirEntity.getFiles().add(entity);
 
 			FileEntity oldOneEntity = currentTree.getFilesByPath().get(file.toAbsolutePath().toString());
