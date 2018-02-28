@@ -12,11 +12,6 @@ public class DirEntity implements Serializable {
 
 	private List<FileEntity> files = new ArrayList<>();
 
-	/**
-	 * Repository name (json file name)
-	 */
-	private transient String repoName;
-
 	public DirEntity() {
 
 	}
@@ -39,14 +34,6 @@ public class DirEntity implements Serializable {
 
 	public void setFiles(List<FileEntity> files) {
 		this.files = files;
-	}
-
-	public String getRepoName() {
-		return repoName;
-	}
-
-	public void setRepoName(String repoName) {
-		this.repoName = repoName;
 	}
 
 }

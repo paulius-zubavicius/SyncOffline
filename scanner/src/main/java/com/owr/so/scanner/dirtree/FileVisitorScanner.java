@@ -54,7 +54,8 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 			// Add it self
 			dirEntity.getFiles().add(entity);
 
-			FileEntity oldOneEntity = currentTree.getFilesByPath().get(FileEntityUtil.getExcludeRootPath(file.toAbsolutePath(),newTree.getDirTreeRootPath() ));
+			FileEntity oldOneEntity = currentTree.getFilesByPath()
+					.get(FileEntityUtil.getExcludeRootPath(file.toAbsolutePath(), newTree.getDirTreeRootPath()));
 
 			boolean modifications = checkForModification(entity, oldOneEntity);
 			if (modifications) {
@@ -93,7 +94,5 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 		return false;
 	}
-
-	
 
 }

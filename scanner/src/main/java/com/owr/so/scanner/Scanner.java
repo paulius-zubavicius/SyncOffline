@@ -6,14 +6,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collection;
-import java.util.List;
 
-import com.owr.so.model.DirEntity;
 import com.owr.so.model.DirTreeEntity;
-import com.owr.so.model.FileEntity;
 import com.owr.so.scanner.dirtree.DirTreeScanner;
 import com.owr.so.scanner.dirtree.IScanningLogEventsListener;
+import com.owr.so.storage.DirTreeEntityLoader;
 import com.owr.so.storage.Storage;
 
 /**
@@ -48,7 +45,7 @@ public class Scanner {
 			} else {
 
 				if (pathExists(metaFileStr)) {
-					DirTreeEntity currentTree = loadMetaFile(metaFileStr);
+					DirTreeEntity currentTree = DirTreeEntityLoader.load(metaFileStr);
 
 					if (pathExists(currentTree.getDirTreeRootPath())) {
 						return EnumActionByFlags.SCAN_UPDATE;
@@ -84,7 +81,7 @@ public class Scanner {
 
 		if (metaFileExists) {
 			lastTimeModified = file.lastModified();
-			entity = loadMetaFile(metaFileStr);
+			entity = DirTreeEntityLoader.load(metaFileStr);
 			rootDir = entity.getDirTreeRootPath();
 			rootDirExists = pathExists(rootDir);
 		}
@@ -111,7 +108,7 @@ public class Scanner {
 		Path metaFilePath = Paths.get(metaFileStr);
 
 		if (updateMetaFile) {
-			DirTreeEntity dirTreeCurrent = loadMetaFile(metaFileStr);
+			DirTreeEntity dirTreeCurrent = DirTreeEntityLoader.load(metaFileStr);
 			newDirTreeEntity = dirTreeScan.scanUpdate(dirTreeCurrent, Paths.get(dirTreeCurrent.getDirTreeRootPath()),
 					logEventsListener);
 		} else {
@@ -119,14 +116,9 @@ public class Scanner {
 		}
 
 		// Save to file
-		Storage<DirTreeEntity> str = new Storage<>();
+		saveResult(metaFilePath, newDirTreeEntity);
 
-		try {
-			str.save(metaFilePath, newDirTreeEntity);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
+		// How long it was?
 		Instant intant2 = Instant.now();
 		Duration timeElapsed = Duration.between(intant1, intant2);
 
@@ -134,37 +126,20 @@ public class Scanner {
 
 	}
 
+	private void saveResult(Path metaFilePath, DirTreeEntity newDirTreeEntity) {
+		Storage<DirTreeEntity> str = new Storage<>();
+
+		try {
+			str.save(metaFilePath, newDirTreeEntity);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private boolean pathExists(String pathStr) {
 		Path path = Paths.get(pathStr);
 		File file = path.toFile();
 		return file.exists();
 	}
-
-	private DirTreeEntity loadMetaFile(String dirTreeMetaFileStr) {
-		Path path = Paths.get(dirTreeMetaFileStr);
-		Storage<DirTreeEntity> str = new Storage<>();
-		DirTreeEntity result = null;
-		try {
-			result = str.load(path, DirTreeEntity.class);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		Collection<DirEntity> dirs = result.getDirTree().values();
-		List<FileEntity> fileEntity = null;
-		for (DirEntity dirEntity : dirs) {
-			
-			fileEntity = dirEntity.getFiles();
-			
-			for (FileEntity fEntity : fileEntity) {
-				
-				fEntity.setDir(dirEntity);
-				result.initTransientFields(fEntity);
-			}
-		}
-		
-		return result;
-	}
-
-	
 
 }
