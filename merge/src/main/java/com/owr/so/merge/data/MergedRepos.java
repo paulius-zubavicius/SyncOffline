@@ -10,6 +10,7 @@ import com.owr.so.merge.diff.RepoFile;
 import com.owr.so.merge.diff.SimpleDiff;
 import com.owr.so.model.FileEntity;
 
+@Deprecated
 public class MergedRepos {
 
 	private List<SimpleDiff> diffs = new ArrayList<>();

@@ -59,7 +59,7 @@ public class Main {
 
 			return;
 		}
-		ConsoleOutput.printConsoleHelp();
+		//ConsoleOutput.printConsoleHelp();
 
 	}
 

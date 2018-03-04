@@ -6,7 +6,8 @@ import java.util.List;
 
 import com.owr.so.model.FileEntity;
 
-public class ConflictDiff implements Diff , Serializable {
+@Deprecated
+public class ConflictDiff /*implements Diff , Serializable*/ {
 
 	private static final long serialVersionUID = -2707421901915614824L;
 
@@ -30,10 +31,10 @@ public class ConflictDiff implements Diff , Serializable {
 
 	}
 
-	@Override
-	public Operation getOperation() {
-		return Operation.Conflict;
-	}
+//	@Override
+//	public Operation getOperation() {
+//		return Operation.Conflict;
+//	}
 
 	public List<FileEntity> getFml() {
 		return fml;

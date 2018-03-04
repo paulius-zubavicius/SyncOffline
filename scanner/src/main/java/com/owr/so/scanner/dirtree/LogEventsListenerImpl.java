@@ -71,7 +71,7 @@ public class LogEventsListenerImpl implements IScanningLogEventsListener {
 			statModNewFiles++;
 			statModNewSize += entity.getSize();
 			System.out.println(String.format("   %-100s %s %s", entity.getName(),
-					ConvertUtil.getSizeInHumanFormat(entity.getSize()), entity.getHashSum()));
+					ConvertUtil.getSizeInHumanFormat(entity.getSize()), entity.getChecksum()));
 		}
 	}
 

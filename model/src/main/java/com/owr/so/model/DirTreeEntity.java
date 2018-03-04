@@ -25,9 +25,9 @@ public class DirTreeEntity implements Serializable {
 	private transient Map<String, FileEntity> filesByPath = new HashMap<>();
 
 	/**
-	 * For searching by content hashSum
+	 * For searching by content checksum
 	 */
-	private transient Map<String, List<FileEntity>> filesByHashSum = new HashMap<>();
+	private transient Map<String, List<FileEntity>> filesByChecksum = new HashMap<>();
 
 	public String getDirTreeRootPath() {
 		return dirTreeRootPath;
@@ -41,18 +41,6 @@ public class DirTreeEntity implements Serializable {
 		return dirTree;
 	}
 
-	public void setFiles(List<FileEntity> files) {
-		this.files = files;
-	}
-
-	public void setFilesByPath(Map<String, FileEntity> filesByPath) {
-		this.filesByPath = filesByPath;
-	}
-
-	public void setFilesByHashSum(Map<String, List<FileEntity>> filesByHashSum) {
-		this.filesByHashSum = filesByHashSum;
-	}
-
 	public List<FileEntity> getFiles() {
 		return files;
 	}
@@ -61,18 +49,18 @@ public class DirTreeEntity implements Serializable {
 		return filesByPath;
 	}
 
-	public Map<String, List<FileEntity>> getFilesByHashSum() {
-		return filesByHashSum;
+	public Map<String, List<FileEntity>> getFilesByChecksum() {
+		return filesByChecksum;
 	}
 
 	public void initTransientFields(FileEntity entity) {
 
 		files.add(entity);
-		filesByPath.put(entity.getAbsolutePath().toString(), entity);
-		if (!filesByHashSum.containsKey(entity.getHashSum())) {
-			filesByHashSum.put(entity.getHashSum(), new ArrayList<>());
+		filesByPath.put(entity.getPath().toString(), entity);
+		if (!filesByChecksum.containsKey(entity.getChecksum())) {
+			filesByChecksum.put(entity.getChecksum(), new ArrayList<>());
 		}
-		filesByHashSum.get(entity.getHashSum()).add(entity);
+		filesByChecksum.get(entity.getChecksum()).add(entity);
 
 	}
 

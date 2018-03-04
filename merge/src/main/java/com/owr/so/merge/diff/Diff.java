@@ -2,7 +2,9 @@ package com.owr.so.merge.diff;
 
 public interface Diff {
 
-	Operation getOperation();
+	boolean isInConflict();
+	
+//	Operation getOperation();
 
 //	RepoFile getSource();
 

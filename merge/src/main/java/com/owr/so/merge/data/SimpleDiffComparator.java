@@ -5,6 +5,7 @@ import java.util.Comparator;
 import com.owr.so.merge.diff.RepoFile;
 import com.owr.so.merge.diff.SimpleDiff;
 
+@Deprecated
 public class SimpleDiffComparator implements Comparator<SimpleDiff> {
 
 	@Override

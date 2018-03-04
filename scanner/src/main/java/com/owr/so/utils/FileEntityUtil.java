@@ -10,11 +10,11 @@ import java.nio.file.Path;
  */
 public class FileEntityUtil {
 
-	public static String checkSum(Path path) {
+	public static String fileChecksum(Path filePath) {
 		FileInputStream fis = null;
 		try {
-			fis = new FileInputStream(path.toFile());
-			return org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+			fis = new FileInputStream(filePath.toFile());
+			return org.apache.commons.codec.digest.DigestUtils.md5Hex(fis).toLowerCase();
 
 		} catch (IOException e) {
 			throw new RuntimeException(e);

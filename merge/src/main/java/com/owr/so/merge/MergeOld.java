@@ -12,8 +12,8 @@ import com.owr.so.model.FileEntity;
 
 public class MergeOld {
 
-	private static final int SINGLE = 1;
-
+//	private static final int SINGLE = 1;
+//
 //	public void merge(FilesRepoDepricated filesRepo1, FilesRepoDepricated filesRepo2, MergedRepos result) {
 //
 //		mergeRepo(result, filesRepo1, filesRepo2, false);
@@ -37,7 +37,7 @@ public class MergeOld {
 //				// Place the same
 //
 //				// is it different content?
-//				if (!fm1.getHashSum().equalsIgnoreCase(fm2.getHashSum())) {
+//				if (!fm1.getChecksum().equalsIgnoreCase(fm2.getChecksum())) {
 //
 //					// 
 //					if (fm1.getModified() > fm2.getModified()) {
@@ -104,7 +104,7 @@ public class MergeOld {
 //	}
 //
 //	private List<FileEntity> findByMd5(FileEntity fm, FilesRepoDepricated filesRepo) {
-//		List<FileEntity> result =filesRepo.getBranchDataByMd5().get(fm.getHashSum());
+//		List<FileEntity> result =filesRepo.getBranchDataByMd5().get(fm.getChecksum());
 //		if (result == null) {
 //			result = new ArrayList<>();
 //		}

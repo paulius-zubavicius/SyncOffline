@@ -59,9 +59,9 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 			boolean modifications = checkForModification(entity, oldOneEntity);
 			if (modifications) {
-				entity.setHashSum(FileEntityUtil.checkSum(file));
+				entity.setChecksum(FileEntityUtil.fileChecksum(file));
 			} else {
-				entity.setHashSum(oldOneEntity.getHashSum());
+				entity.setChecksum(oldOneEntity.getChecksum());
 			}
 
 			newTree.initTransientFields(entity);

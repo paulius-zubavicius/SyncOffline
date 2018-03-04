@@ -7,7 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class SimpleDiff implements Diff, Serializable {
+@Deprecated
+public class SimpleDiff /*implements Diff, Serializable*/ {
 
  	private static final long serialVersionUID = 659631169942015805L;
  	
@@ -60,9 +61,9 @@ public class SimpleDiff implements Diff, Serializable {
 		return new EqualsBuilder().append(source, absDiff.getSource()).append(target, absDiff.getSource()).isEquals();
 	}
 
-	@Override
-	public Operation getOperation() {
-		return operation;
-	}
+//	@Override
+//	public Operation getOperation() {
+//		return operation;
+//	}
 
 }

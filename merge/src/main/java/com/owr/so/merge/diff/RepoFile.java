@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+
+@Deprecated
 public class RepoFile implements Serializable {
 
 	private static final long serialVersionUID = -7192398703705372475L;

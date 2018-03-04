@@ -7,14 +7,17 @@ public class FileEntity implements Serializable {
 	private static final long serialVersionUID = -3211564506768018649L;
 
 	private String name;
-	private String hashSum;
+	private String checksum;
 	private long size;
 	private long modified;
 	private long accessed;
 
 	private transient DirEntity dir;
 
-	public String getAbsolutePath() {
+	/**
+	 * @return path of the file without root path prefix
+	 */
+	public String getPath() {
 		return dir.getPath() + "/" + name;
 	}
 
@@ -26,12 +29,12 @@ public class FileEntity implements Serializable {
 		this.name = name;
 	}
 
-	public String getHashSum() {
-		return hashSum;
+	public String getChecksum() {
+		return checksum;
 	}
 
-	public void setHashSum(String hashSum) {
-		this.hashSum = hashSum;
+	public void setChecksum(String checksum) {
+		this.checksum = checksum;
 	}
 
 	public long getSize() {
