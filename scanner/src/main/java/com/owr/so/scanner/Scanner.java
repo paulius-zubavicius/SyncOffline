@@ -7,11 +7,13 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 
+import com.owr.so.commons.DirTreeEntityLoader;
+import com.owr.so.commons.FileUtil;
+import com.owr.so.commons.OSType;
+import com.owr.so.commons.Storage;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.scanner.dirtree.DirTreeScanner;
 import com.owr.so.scanner.dirtree.IScanningLogEventsListener;
-import com.owr.so.storage.DirTreeEntityLoader;
-import com.owr.so.storage.Storage;
 
 /**
  * @author Paulius Zubavicius
@@ -36,7 +38,7 @@ public class Scanner {
 
 			if (fNew) {
 
-				if (pathExists(scanDirStr)) {
+				if (FileUtil.pathExists(scanDirStr)) {
 					return EnumActionByFlags.SCAN_FULL;
 				}
 
@@ -44,10 +46,10 @@ public class Scanner {
 
 			} else {
 
-				if (pathExists(metaFileStr)) {
+				if (FileUtil.pathExists(metaFileStr)) {
 					DirTreeEntity currentTree = DirTreeEntityLoader.load(metaFileStr);
 
-					if (pathExists(currentTree.getDirTreeRootPath())) {
+					if (FileUtil.pathExists(currentTree.getDirTreeRootPath())) {
 						return EnumActionByFlags.SCAN_UPDATE;
 					}
 
@@ -77,16 +79,18 @@ public class Scanner {
 		boolean metaFileExists = file.exists();
 		long lastTimeModified = 0;
 		String rootDir = "";
+		String osType = "";
 		boolean rootDirExists = false;
 
 		if (metaFileExists) {
 			lastTimeModified = file.lastModified();
 			entity = DirTreeEntityLoader.load(metaFileStr);
 			rootDir = entity.getDirTreeRootPath();
-			rootDirExists = pathExists(rootDir);
+			rootDirExists = FileUtil.pathExists(rootDir);
+			osType = entity.getOsCode() +" - " + OSType.getOSTypeByCode(entity.getOsCode());
 		}
 
-		logEventsListener.metaFileStatus(metaFileExists, lastTimeModified, rootDir, rootDirExists);
+		logEventsListener.metaFileStatus(metaFileExists, lastTimeModified, rootDir, rootDirExists, osType);
 
 	}
 
@@ -134,12 +138,6 @@ public class Scanner {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	private boolean pathExists(String pathStr) {
-		Path path = Paths.get(pathStr);
-		File file = path.toFile();
-		return file.exists();
 	}
 
 }

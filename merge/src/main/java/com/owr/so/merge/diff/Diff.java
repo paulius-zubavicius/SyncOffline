@@ -4,6 +4,12 @@ public interface Diff {
 
 	boolean isInConflict();
 	
+//	void setRepoId(int repoId);
+//	
+//	int getRepoId();
+	
+	
+	
 //	Operation getOperation();
 
 //	RepoFile getSource();

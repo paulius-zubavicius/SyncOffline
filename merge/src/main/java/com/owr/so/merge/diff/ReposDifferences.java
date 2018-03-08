@@ -1,25 +1,16 @@
-package com.owr.so.merge;
+package com.owr.so.merge.diff;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.owr.so.merge.diff.DirNewDiff;
-import com.owr.so.merge.diff.FileDuplicatesDiff;
-import com.owr.so.merge.diff.FileModifiedDiff;
-import com.owr.so.merge.diff.FileMovedDiff;
-import com.owr.so.merge.diff.FileNewDiff;
-import com.owr.so.merge.diff.TreesDiffCollections;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
 
 /**
  * @author Paulius Zubavicius
  *
- *         Class for repositories differences.
- * 
- * 
- *
+ *         Finds and collects repositories tree differences
  */
 public class ReposDifferences {
 
@@ -32,23 +23,23 @@ public class ReposDifferences {
 	 *            - could be value like ""; "/dir"; "/dir/dir" pattern for dir
 	 *            level: [/dirName]
 	 */
-	public TreesDiffCollections treesDifferences(DirTreeEntity tree1, DirTreeEntity tree2, String subDir) {
+	public TreesDiffCollections treesDifferences(DirTreeEntity tree1, DirTreeEntity tree2) {
 
 		diffs = new TreesDiffCollections();
 
-		treeDiff(tree1, tree2, subDir, false);
-		treeDiff(tree2, tree1, subDir, true);
+		treeOneSideDiff(tree1, tree2, false);
+		treeOneSideDiff(tree2, tree1, true);
 
 		return diffs;
 	}
 
-	private void treeDiff(DirTreeEntity tree1, DirTreeEntity tree2, String subDir, boolean mirrorDiffScan) {
+	private void treeOneSideDiff(DirTreeEntity tree1, DirTreeEntity tree2, boolean mirrorDiffScan) {
 
 		// Files
 		List<FileEntity> tree1Files = tree1.getFiles();
 		for (FileEntity tree1File : tree1Files) {
 
-			if (tree1File.getPath().startsWith(subDir)) {
+			if (tree1File.getPath().startsWith(tree1.getSubDir())) {
 				findDiffSubdir(tree1File, tree1, tree2, mirrorDiffScan);
 			}
 		}
@@ -57,7 +48,7 @@ public class ReposDifferences {
 		Set<String> tree1Dirs = tree1.getDirTree().keySet();
 
 		for (String tree1Dir : tree1Dirs) {
-			if (tree1Dir.startsWith(subDir)) {
+			if (tree1Dir.startsWith(tree1.getSubDir())) {
 				findNewEmptyDir(tree1Dir, tree1, tree2);
 			}
 		}
@@ -81,9 +72,7 @@ public class ReposDifferences {
 		if (tree2File != null) {
 
 			// Place the same
-			if (mirrorDiffScan) {
-				filePathTheSame(tree1File, tree2File, mirrorDiffScan);
-			}
+			filePathTheSame(tree1File, tree2File, mirrorDiffScan);
 		} else {
 
 			// New or moved
@@ -92,13 +81,14 @@ public class ReposDifferences {
 	}
 
 	private void filePathTheSame(FileEntity tree1File, FileEntity tree2File, boolean mirrorDiffScan) {
+		if (!mirrorDiffScan) {
+			// is modified?
+			if (!tree1File.getChecksum().equals(tree2File.getChecksum())) {
 
-		// is content different?
-		if (!tree1File.getChecksum().equals(tree2File.getChecksum())) {
-
-			// If modified time the same - it's conflict
-			diffs.getModifiedFiles().add(
-					new FileModifiedDiff(tree1File, tree1File, tree1File.getModified() == tree1File.getModified()));
+				// If modified time the same - it's conflict
+				diffs.getModifiedFiles().add(
+						new FileModifiedDiff(tree1File, tree2File, tree1File.getModified() == tree1File.getModified()));
+			}
 		}
 	}
 
@@ -108,33 +98,53 @@ public class ReposDifferences {
 
 		List<FileEntity> files1 = findByChecksum(tree1File, tree1);
 		List<FileEntity> files2 = findByChecksum(tree1File, tree2);
-		FileEntity tree2File;
 
+		/*
+		 * Removing with identical paths on both sides, cause it could be files copies
+		 * but it doesn't mean a conflict
+		 */
+		removingNotConflictingFiles(files1, files2);
+
+		// [1:1] Moved (renamed)
 		if (files1.size() == 1 && files2.size() == 1) {
-			// Moved (renamed)
 
-			tree2File = files2.get(0);
+			// Two side effect
+			if (!mirrorScan) {
+				FileEntity tree2File = files2.get(0);
 
-			diffs.getMovedFiles()
-					.add(new FileMovedDiff(tree1File, tree2File, tree1File.getAccessed() == tree2File.getAccessed()));
+				diffs.getMovedFiles().add(
+						new FileMovedDiff(tree1File, tree2File, tree1File.getAccessed() == tree2File.getAccessed()));
+			}
+		} else
+		// [N:0] New (or deleted in "tree2")
+		if (files2.isEmpty()) {
 
-		} else if (files2.isEmpty()) {
-
-			// New (or deleted in "tree2")
 			diffs.getNewFiles().add(new FileNewDiff(tree1File));
-		} else {
+		} else
+		// [N:N] Duplicates conflict
+		if (files1.size() > 1 && files2.size() > 1) {
 
+			/**
+			 * <pre>
+			 *  [abc]  \ / [abc]
+			 *          ?
+			 *  [abc]  / \ [abc]
+			 * </pre>
+			 */
+
+			// Two side effects
+			if (!mirrorScan) {
+				diffs.getDuplicates().add(new FileDuplicatesDiff(files1, files2));
+			}
+		} else
+		// [1:N] [N:1]
+		if ((files1.size() == 1 && files2.size() > 1) || (files1.size() > 1 && files2.size() == 1)) {
 			/**
 			 * <pre>
 			 *         / ? [abc]
 			 *  [abc] - 
 			 *         \ ? [abc]
 			 *         
-			 *         
-			 *  [abc]  \ / [abc]
-			 *          ?
-			 *  [abc]  / \ [abc]
-			 *  
 			 *  
 			 *  [abc] ? \  
 			 *           - [abc]
@@ -143,8 +153,26 @@ public class ReposDifferences {
 			 * </pre>
 			 */
 
-			if (!mirrorScan) {
-				diffs.getDuplicates().add(new FileDuplicatesDiff(files1, files2));
+			// One side effect
+			diffs.getDuplicates().add(new FileDuplicatesDiff(files1, files2));
+		} else {
+			throw new RuntimeException("Unexpected case");
+		}
+	}
+
+	private void removingNotConflictingFiles(List<FileEntity> files1, List<FileEntity> files2) {
+
+		if (files1.size() > 1 && files2.size() > 1) {
+
+			for (int i1 = 0; i1 < files1.size(); i1++) {
+				for (int i2 = 0; i2 < files2.size(); i2++) {
+					if (files1.get(i1).getPath().equals(files2.get(i2).getPath())) {
+						files1.remove(i1);
+						files2.remove(i2);
+						i1--;
+						i2--;
+					}
+				}
 			}
 		}
 	}

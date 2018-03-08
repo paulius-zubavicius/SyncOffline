@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 
+import com.owr.so.commons.OSType;
 import com.owr.so.model.DirTreeEntity;
 
 /**
@@ -27,6 +28,7 @@ public class DirTreeScanner {
 
 		DirTreeEntity result = new DirTreeEntity();
 		result.setDirTreeRootPath(dirTreePath.toString());
+		result.setOsCode(OSType.getOSTypeCurrentStr());
 		FileVisitorScanner scanner = new FileVisitorScanner(result, currentTree, listener);
 
 		try {

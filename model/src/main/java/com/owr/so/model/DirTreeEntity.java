@@ -12,6 +12,8 @@ public class DirTreeEntity implements Serializable {
 
 	private String dirTreeRootPath;
 
+	private String osCode;
+
 	private HashMap<String, DirEntity> dirTree = new HashMap<>();
 
 	/**
@@ -29,12 +31,27 @@ public class DirTreeEntity implements Serializable {
 	 */
 	private transient Map<String, List<FileEntity>> filesByChecksum = new HashMap<>();
 
+	/**
+	 * If sub directory is specified
+	 */
+	private transient String subDir = "";
+
+	private transient boolean firstRepo;
+
 	public String getDirTreeRootPath() {
 		return dirTreeRootPath;
 	}
 
 	public void setDirTreeRootPath(String dirTreeRootPath) {
 		this.dirTreeRootPath = dirTreeRootPath;
+	}
+
+	public String getOsCode() {
+		return osCode;
+	}
+
+	public void setOsCode(String osCode) {
+		this.osCode = osCode;
 	}
 
 	public Map<String, DirEntity> getDirTree() {
@@ -51,6 +68,22 @@ public class DirTreeEntity implements Serializable {
 
 	public Map<String, List<FileEntity>> getFilesByChecksum() {
 		return filesByChecksum;
+	}
+
+	public String getSubDir() {
+		return subDir;
+	}
+
+	public void setSubDir(String subDir) {
+		this.subDir = subDir;
+	}
+
+	public boolean isFirstRepo() {
+		return firstRepo;
+	}
+
+	public void setFirstRepo(boolean firstRepo) {
+		this.firstRepo = firstRepo;
 	}
 
 	public void initTransientFields(FileEntity entity) {

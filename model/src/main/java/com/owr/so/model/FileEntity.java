@@ -2,7 +2,7 @@ package com.owr.so.model;
 
 import java.io.Serializable;
 
-public class FileEntity implements Serializable {
+public class FileEntity extends Entity implements Serializable {
 
 	private static final long serialVersionUID = -3211564506768018649L;
 

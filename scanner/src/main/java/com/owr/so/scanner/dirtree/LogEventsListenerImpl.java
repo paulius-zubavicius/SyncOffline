@@ -47,7 +47,7 @@ public class LogEventsListenerImpl implements IScanningLogEventsListener {
 		}
 
 		if (attrs.isOther()) {
-			reason += "Oher ";
+			reason += "Other ";
 			statSkipOthers++;
 		}
 
@@ -91,7 +91,8 @@ public class LogEventsListenerImpl implements IScanningLogEventsListener {
 	}
 
 	@Override
-	public void metaFileStatus(boolean metaFileExists, long lastTimeModified, String rootDir, boolean rootDirExists) {
+	public void metaFileStatus(boolean metaFileExists, long lastTimeModified, String rootDir, boolean rootDirExists,
+			String osCode) {
 		String lastModifiedStr = "<?>";
 		if (metaFileExists) {
 			LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastTimeModified),
@@ -109,6 +110,7 @@ public class LogEventsListenerImpl implements IScanningLogEventsListener {
 		System.out.println("Last modified    : " + lastModifiedStr);
 		System.out.println("Scanned root dir : " + (metaFileExists ? "[" + rootDir + "]" : "<?>"));
 		System.out.println("Root dir exists  : " + (metaFileExists ? (rootDirExists ? "Yes" : "No") : "<?>"));
+		System.out.println("OS code - type   : " + osCode);
 
 	}
 

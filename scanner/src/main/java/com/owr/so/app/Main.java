@@ -1,4 +1,4 @@
-package com.owr.so.console;
+package com.owr.so.app;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;

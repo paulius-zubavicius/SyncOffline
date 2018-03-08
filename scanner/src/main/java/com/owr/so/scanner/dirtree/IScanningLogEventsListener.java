@@ -24,7 +24,7 @@ public interface IScanningLogEventsListener {
 
 	void businessCaseException(Exception e, Options options);
 
-	void metaFileStatus(boolean metaFileExists, long lastTimeModified, String rootDir, boolean rootDirExists);
+	void metaFileStatus(boolean metaFileExists, long lastTimeModified, String rootDir, boolean rootDirExists, String osCode);
 
 	void scanDone(Duration timeElapsed, DirTreeEntity newDirTreeEntity);
 
