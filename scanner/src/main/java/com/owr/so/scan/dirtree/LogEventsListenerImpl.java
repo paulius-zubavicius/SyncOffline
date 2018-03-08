@@ -1,4 +1,4 @@
-package com.owr.so.scanner.dirtree;
+package com.owr.so.scan.dirtree;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,7 +13,7 @@ import org.apache.commons.cli.Options;
 
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
-import com.owr.so.utils.ConvertUtil;
+import com.owr.so.scan.utils.ConvertUtil;
 
 /**
  * @author Paulius Zubavicius

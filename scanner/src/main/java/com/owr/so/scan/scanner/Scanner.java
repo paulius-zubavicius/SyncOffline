@@ -1,4 +1,4 @@
-package com.owr.so.scanner;
+package com.owr.so.scan.scanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import com.owr.so.commons.FileUtil;
 import com.owr.so.commons.OSType;
 import com.owr.so.commons.Storage;
 import com.owr.so.model.DirTreeEntity;
-import com.owr.so.scanner.dirtree.DirTreeScanner;
-import com.owr.so.scanner.dirtree.IScanningLogEventsListener;
+import com.owr.so.scan.dirtree.DirTreeScanner;
+import com.owr.so.scan.dirtree.IScanningLogEventsListener;
 
 /**
  * @author Paulius Zubavicius

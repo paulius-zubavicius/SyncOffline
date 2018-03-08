@@ -1,4 +1,4 @@
-package com.owr.so.scanner;
+package com.owr.so.scan.scanner;
 
 /**
  * @author Paulius Zubavicius

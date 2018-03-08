@@ -1,4 +1,4 @@
-package com.owr.so.utils;
+package com.owr.so.scan.utils;
 
 import java.time.Duration;
 

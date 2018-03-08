@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.owr.so</groupId>
-	<artifactId>scanner</artifactId>
+	<artifactId>scan</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SyncOffline</name>
 
@@ -20,6 +20,11 @@
 		<dependency>
 			<groupId>com.owr.so</groupId>
 			<artifactId>model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.owr.so</groupId>
+			<artifactId>commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

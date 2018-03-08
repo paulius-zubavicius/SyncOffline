@@ -1,4 +1,4 @@
-package com.owr.so.app;
+package com.owr.so.merge.app;
 
 import java.io.IOException;
 

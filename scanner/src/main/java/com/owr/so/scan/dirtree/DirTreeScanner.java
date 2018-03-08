@@ -1,4 +1,4 @@
-package com.owr.so.scanner.dirtree;
+package com.owr.so.scan.dirtree;
 
 import java.io.IOException;
 import java.nio.file.Files;

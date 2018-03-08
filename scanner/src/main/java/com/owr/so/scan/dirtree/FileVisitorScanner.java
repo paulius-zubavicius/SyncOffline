@@ -1,4 +1,4 @@
-package com.owr.so.scanner.dirtree;
+package com.owr.so.scan.dirtree;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -9,7 +9,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import com.owr.so.model.DirEntity;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
-import com.owr.so.utils.FileEntityUtil;
+import com.owr.so.scan.utils.FileEntityUtil;
 
 /**
  * @author Paulius Zubavicius

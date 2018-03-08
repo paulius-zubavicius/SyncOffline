@@ -1,4 +1,4 @@
-package com.owr.so.app;
+package com.owr.so.scan.app;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -7,10 +7,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.owr.so.scanner.EnumActionByFlags;
-import com.owr.so.scanner.Scanner;
-import com.owr.so.scanner.dirtree.IScanningLogEventsListener;
-import com.owr.so.scanner.dirtree.LogEventsListenerImpl;
+import com.owr.so.scan.dirtree.IScanningLogEventsListener;
+import com.owr.so.scan.dirtree.LogEventsListenerImpl;
+import com.owr.so.scan.scanner.EnumActionByFlags;
+import com.owr.so.scan.scanner.Scanner;
 
 /**
  * @author Paulius Zubavicius
