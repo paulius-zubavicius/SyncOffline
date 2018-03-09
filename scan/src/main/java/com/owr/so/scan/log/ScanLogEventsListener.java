@@ -1,4 +1,4 @@
-package com.owr.so.scan.dirtree;
+package com.owr.so.scan.log;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -11,15 +11,15 @@ import java.time.ZoneId;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 
+import com.owr.so.commons.ConvertUtil;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
-import com.owr.so.scan.utils.ConvertUtil;
 
 /**
  * @author Paulius Zubavicius
  *
  */
-public class LogEventsListenerImpl implements IScanningLogEventsListener {
+public class ScanLogEventsListener implements IScanLogEventsListener {
 
 	// Modified/new files
 	private int statModNewFiles;

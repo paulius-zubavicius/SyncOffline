@@ -13,7 +13,7 @@ import com.owr.so.commons.OSType;
 import com.owr.so.commons.Storage;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.scan.dirtree.DirTreeScanner;
-import com.owr.so.scan.dirtree.IScanningLogEventsListener;
+import com.owr.so.scan.log.IScanLogEventsListener;
 
 /**
  * @author Paulius Zubavicius
@@ -21,9 +21,9 @@ import com.owr.so.scan.dirtree.IScanningLogEventsListener;
  */
 public class Scanner {
 
-	private IScanningLogEventsListener logEventsListener;
+	private IScanLogEventsListener logEventsListener;
 
-	public Scanner(IScanningLogEventsListener logEventsListener) {
+	public Scanner(IScanLogEventsListener logEventsListener) {
 		this.logEventsListener = logEventsListener;
 	}
 

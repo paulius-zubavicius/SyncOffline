@@ -7,8 +7,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.owr.so.scan.dirtree.IScanningLogEventsListener;
-import com.owr.so.scan.dirtree.LogEventsListenerImpl;
+import com.owr.so.scan.log.IScanLogEventsListener;
+import com.owr.so.scan.log.ScanLogEventsListener;
 import com.owr.so.scan.scanner.EnumActionByFlags;
 import com.owr.so.scan.scanner.Scanner;
 
@@ -36,7 +36,7 @@ public class Main {
 		/**
 		 * Log events listener
 		 */
-		IScanningLogEventsListener logEventsListener = new LogEventsListenerImpl();
+		IScanLogEventsListener logEventsListener = new ScanLogEventsListener();
 
 		/**
 		 * Parse

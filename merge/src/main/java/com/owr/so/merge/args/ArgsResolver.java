@@ -9,6 +9,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.owr.so.commons.DirTreeEntityLoader;
+import com.owr.so.merge.log.IMergeLogEventsListener;
+import com.owr.so.merge.log.MergeLogEventsListener;
 import com.owr.so.model.DirTreeEntity;
 
 public class ArgsResolver {
@@ -37,6 +39,11 @@ public class ArgsResolver {
 		 * Options
 		 */
 		Options options = creteArgsOptions();
+
+		/**
+		 * Log events listener
+		 */
+		IMergeLogEventsListener logEventsListener = new MergeLogEventsListener();
 
 		/**
 		 * Parse
@@ -99,6 +106,8 @@ public class ArgsResolver {
 			System.exit(0);
 		}
 
+		logEventsListener.dataRead(tree1, tree2, metaFile1Path, metaFile2Path);
+
 		guiMode = line.hasOption(OPT_GUI);
 	}
 
@@ -121,12 +130,12 @@ public class ArgsResolver {
 		options.addOption(Option.builder(OPT_SHORT_META2).required().hasArg().valueSeparator().longOpt(OPT_SHORT_META2)
 				.desc("Meta file (2) of scanned directory tree.").build());
 
-		options.addOption(Option.builder(OPT_SHORT_SUBDIR1).longOpt(OPT_LONG_SUBDIR1).required(false).hasArg()
+		options.addOption(Option.builder(OPT_SHORT_SUBDIR1).longOpt(OPT_SHORT_SUBDIR1).required(false).hasArg()
 				.valueSeparator()
 				.desc("Merge sub directory only. It should existing in meta file (1). Subdir should be without root part of path.")
 				.build());
 
-		options.addOption(Option.builder(OPT_SHORT_SUBDIR2).longOpt(OPT_LONG_SUBDIR2).required(false).hasArg()
+		options.addOption(Option.builder(OPT_SHORT_SUBDIR2).longOpt(OPT_SHORT_SUBDIR2).required(false).hasArg()
 				.valueSeparator()
 				.desc("Merge sub directory only. It should existing in meta file (2). Subdir should be without root part of path.")
 				.build());

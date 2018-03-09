@@ -1,4 +1,4 @@
-package com.owr.so.scan.dirtree;
+package com.owr.so.scan.log;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -14,7 +14,7 @@ import com.owr.so.model.FileEntity;
  * @author Paulius Zubavicius
  *
  */
-public interface IScanningLogEventsListener {
+public interface IScanLogEventsListener {
 
 	void skipped(Path file, BasicFileAttributes attrs);
 

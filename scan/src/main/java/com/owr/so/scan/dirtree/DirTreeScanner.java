@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import com.owr.so.commons.OSType;
 import com.owr.so.model.DirTreeEntity;
+import com.owr.so.scan.log.IScanLogEventsListener;
 
 /**
  * @author Paulius Zubavicius
@@ -14,17 +15,17 @@ import com.owr.so.model.DirTreeEntity;
  */
 public class DirTreeScanner {
 
-	public DirTreeEntity scanNew(Path dirTreeMetaFile, Path dirTreePath, IScanningLogEventsListener listener) {
+	public DirTreeEntity scanNew(Path dirTreeMetaFile, Path dirTreePath, IScanLogEventsListener listener) {
 		return createNewTree(dirTreePath, new DirTreeEntity(), listener);
 	}
 
-	public DirTreeEntity scanUpdate(DirTreeEntity currentTree, Path dirTreePath, IScanningLogEventsListener listener) {
+	public DirTreeEntity scanUpdate(DirTreeEntity currentTree, Path dirTreePath, IScanLogEventsListener listener) {
 		return createNewTree(dirTreePath, currentTree, listener);
 
 	}
 
 	private DirTreeEntity createNewTree(Path dirTreePath, DirTreeEntity currentTree,
-			IScanningLogEventsListener listener) {
+			IScanLogEventsListener listener) {
 
 		DirTreeEntity result = new DirTreeEntity();
 		result.setDirTreeRootPath(dirTreePath.toString());

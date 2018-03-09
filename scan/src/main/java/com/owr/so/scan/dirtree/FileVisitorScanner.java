@@ -9,6 +9,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import com.owr.so.model.DirEntity;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
+import com.owr.so.scan.log.IScanLogEventsListener;
 import com.owr.so.scan.utils.FileEntityUtil;
 
 /**
@@ -17,11 +18,11 @@ import com.owr.so.scan.utils.FileEntityUtil;
  */
 public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
-	private IScanningLogEventsListener listener;
+	private IScanLogEventsListener listener;
 	private DirTreeEntity currentTree;
 	private DirTreeEntity newTree;
 
-	public FileVisitorScanner(DirTreeEntity newTree, DirTreeEntity currentTree, IScanningLogEventsListener listener) {
+	public FileVisitorScanner(DirTreeEntity newTree, DirTreeEntity currentTree, IScanLogEventsListener listener) {
 		this.listener = listener;
 		this.currentTree = currentTree;
 		this.newTree = newTree;
