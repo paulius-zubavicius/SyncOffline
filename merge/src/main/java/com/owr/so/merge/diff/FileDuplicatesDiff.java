@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.owr.so.model.FileEntity;
 
-public class FileDuplicatesDiff implements Diff {
+public class FileDuplicatesDiff extends UserResolution {
 
 	private List<FileEntity> files1;
 	private List<FileEntity> files2;
@@ -20,11 +20,6 @@ public class FileDuplicatesDiff implements Diff {
 
 	public List<FileEntity> getFiles2() {
 		return files2;
-	}
-
-	@Override
-	public boolean isInConflict() {
-		return true;
 	}
 
 }

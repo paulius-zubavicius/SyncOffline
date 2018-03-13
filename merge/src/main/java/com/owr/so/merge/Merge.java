@@ -7,12 +7,15 @@ import com.owr.so.merge.diff.FileMovedDiff;
 import com.owr.so.merge.diff.FileNewDiff;
 import com.owr.so.merge.diff.ReposDifferences;
 import com.owr.so.merge.diff.TreesDiffCollections;
+import com.owr.so.merge.edit.EditDifferences;
+import com.owr.so.merge.log.IMergeLogEventsListener;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
 
 public class Merge {
 
-	public void mergeFlow(DirTreeEntity tree1, DirTreeEntity tree2, boolean guiMode) {
+	public void mergeFlow(DirTreeEntity tree1, DirTreeEntity tree2, boolean guiMode,
+			IMergeLogEventsListener logEventsListener) {
 
 		ReposDifferences diff = new ReposDifferences();
 
@@ -20,11 +23,15 @@ public class Merge {
 
 		printDebug(diffCollection);
 
-		// Manual input
+		EditDifferences editor = new EditDifferences();
+
+		editor.edit(diffCollection, tree1, tree2, guiMode);
 
 		// auto merge (renamed dir only)
 
 		// output module
+
+		System.out.println("Done");
 
 	}
 
@@ -39,7 +46,7 @@ public class Merge {
 
 				System.out.println("(" + modFile.getFile1().getRepoId() + ")" + modFile.getFile1().getPath());
 				System.out.println("(" + modFile.getFile2().getRepoId() + ")" + modFile.getFile2().getPath());
-				System.out.println("Conflict: " + modFile.isInConflict() + "");
+				System.out.println("Conflict: " + modFile.getAction() + "");
 				System.out.println("----------------------------------------------------------------");
 			}
 		}
@@ -53,7 +60,7 @@ public class Merge {
 
 				System.out.println("(" + modFile.getFile1().getRepoId() + ")" + modFile.getFile1().getPath());
 				System.out.println("(" + modFile.getFile2().getRepoId() + ")" + modFile.getFile2().getPath());
-				System.out.println("Conflict: " + modFile.isInConflict() + "");
+				System.out.println("Conflict: " + modFile.getAction() + "");
 				System.out.println("----------------------------------------------------------------");
 			}
 		}
@@ -92,7 +99,7 @@ public class Merge {
 			System.out.println("================================================================");
 
 			for (DirNewDiff modFile : diffCollection.getNewDirs()) {
-				System.out.println("("+modFile.getDir1().getRepoId()+")" +modFile.getDir1().getPath());
+				System.out.println("(" + modFile.getDir1().getRepoId() + ")" + modFile.getDir1().getPath());
 				System.out.println("----------------------------------------------------------------");
 			}
 		}

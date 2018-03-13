@@ -2,7 +2,7 @@ package com.owr.so.merge.diff;
 
 import com.owr.so.model.FileEntity;
 
-public class FileNewDiff implements Diff {
+public class FileNewDiff extends UserResolution {
 
 	private FileEntity file1;
 
@@ -12,11 +12,6 @@ public class FileNewDiff implements Diff {
 
 	public FileEntity getFile1() {
 		return file1;
-	}
-
-	@Override
-	public boolean isInConflict() {
-		return false;
 	}
 
 }

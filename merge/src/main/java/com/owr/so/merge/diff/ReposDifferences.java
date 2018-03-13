@@ -86,8 +86,7 @@ public class ReposDifferences {
 			if (!tree1File.getChecksum().equals(tree2File.getChecksum())) {
 
 				// If modified time the same - it's conflict
-				diffs.getModifiedFiles().add(
-						new FileModifiedDiff(tree1File, tree2File, tree1File.getModified() == tree1File.getModified()));
+				diffs.getModifiedFiles().add(new FileModifiedDiff(tree1File, tree2File));
 			}
 		}
 	}
@@ -112,8 +111,7 @@ public class ReposDifferences {
 			if (!mirrorScan) {
 				FileEntity tree2File = files2.get(0);
 
-				diffs.getMovedFiles().add(
-						new FileMovedDiff(tree1File, tree2File, tree1File.getAccessed() == tree2File.getAccessed()));
+				diffs.getMovedFiles().add(new FileMovedDiff(tree1File, tree2File));
 			}
 		} else
 		// [N:0] New (or deleted in "tree2")

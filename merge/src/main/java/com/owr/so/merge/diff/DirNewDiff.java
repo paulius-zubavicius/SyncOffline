@@ -2,7 +2,7 @@ package com.owr.so.merge.diff;
 
 import com.owr.so.model.DirEntity;
 
-public class DirNewDiff implements Diff {
+public class DirNewDiff extends UserResolution {
 
 	private DirEntity dir1;
 
@@ -12,11 +12,6 @@ public class DirNewDiff implements Diff {
 
 	public DirEntity getDir1() {
 		return dir1;
-	}
-
-	@Override
-	public boolean isInConflict() {
-		return false;
 	}
 
 }

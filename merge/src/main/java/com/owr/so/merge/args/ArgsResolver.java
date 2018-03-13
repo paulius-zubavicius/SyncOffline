@@ -15,6 +15,7 @@ import com.owr.so.model.DirTreeEntity;
 
 public class ArgsResolver {
 
+	// FIXME defect: not working with SHORT arguments
 	private static final String OPT_LONG_META1 = "metafile1";
 	private static final String OPT_SHORT_META1 = "f1";
 
@@ -33,17 +34,12 @@ public class ArgsResolver {
 	private DirTreeEntity tree2 = null;
 	private boolean guiMode;
 
-	public ArgsResolver(String[] args) {
+	public ArgsResolver(String[] args, IMergeLogEventsListener logEventsListener) {
 
 		/**
 		 * Options
 		 */
 		Options options = creteArgsOptions();
-
-		/**
-		 * Log events listener
-		 */
-		IMergeLogEventsListener logEventsListener = new MergeLogEventsListener();
 
 		/**
 		 * Parse
