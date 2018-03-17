@@ -2,6 +2,7 @@ package com.owr.so.merge.edit;
 
 import com.owr.so.merge.diff.TreesDiffCollections;
 import com.owr.so.merge.edit.console.EditDiffsCui;
+import com.owr.so.merge.edit.gui.EditDiffsGui;
 import com.owr.so.model.DirTreeEntity;
 
 public class EditDifferences {
@@ -12,12 +13,12 @@ public class EditDifferences {
 
 		if (guiMode) {
 			// Not implemented
-			// EditDiffsGui gui = new EditDiffsGui();
-
+			EditDiffsGui gui = new EditDiffsGui();
+			gui.edit(treeDiffs, tree1, tree2);
+		} else {
+			EditDiffsCui cui = new EditDiffsCui();
+			cui.edit(treeDiffs, tree1, tree2);
 		}
-
-		EditDiffsCui cui = new EditDiffsCui();
-		cui.edit(treeDiffs, tree1, tree2);
 
 	}
 

@@ -14,6 +14,9 @@ public class DirTreeEntity implements Serializable {
 
 	private String osCode;
 
+	// TODO
+	// private String id;
+
 	private HashMap<String, DirEntity> dirTree = new HashMap<>();
 
 	/**

@@ -4,8 +4,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.owr.so.merge.diff.DiffAction;
 import com.owr.so.merge.diff.FileMovedDiff;
@@ -21,15 +24,19 @@ public class EditMoved extends MenuController {
 
 		menuKeys.add(KEY_EXIT);
 
-		String keyInput = null;
-		while (!KEY_EXIT.equalsIgnoreCase(keyInput)) {
+		String cmd = null;
+		List<String> parseFail = null;
+		while (!KEY_EXIT.equalsIgnoreCase(cmd)) {
 
 			printContent(src);
 
-			keyInput = waitForInput("Menu option: ", menuKeys);
+			cmd = waitForInput("Menu option: ", menuKeys, true);
 
+			parseFail = executeCommands(cmd, src);
+			if (!parseFail.isEmpty()) {
+				System.out.println("Failed commands: " + Arrays.toString(parseFail.toArray()));
+			}
 		}
-
 	}
 
 	private void printContent(List<FileMovedDiff> src) {
@@ -65,27 +72,20 @@ public class EditMoved extends MenuController {
 		FileEntity f2 = diff.getFile2();
 
 		System.out.println();
-		System.out.println("[" + nr + "] / " + diff.getAction() + "----------------------------------------------");
-		System.out.println();
-		System.out.println("  (" + f1.getRepoId() + ")");
-		System.out.println("   - " + showTheStatus(nr, f1, diff));
-		System.out.println("   - Access date: " + convertToHumanReadable(f1.getAccessed()));
-		System.out.println("   - " + f1.getPath());
-		System.out.println();
-		System.out.println("  (" + f2.getRepoId() + ")");
-		System.out.println("   - " + showTheStatus(nr, f2, diff));
-		System.out.println("   - Access date: " + convertToHumanReadable(f2.getAccessed()));
-		System.out.println("   - " + f2.getPath());
+		System.out.println(
+				"Diff number: " + nr + " / " + diff.getAction() + "----------------------------------------------");
 		System.out.println();
 
-		// if (diff.getFile1().getAccessed() == diff.getFile2().getAccessed()) {
-		// System.out.println(" Other actions:");
-		// System.out.println(
-		// " CONFLICT: The timestamps of access are the same. To solve conflict choose
-		// newer file with command: ");
-		// System.out.println(" [" + nr + "T1] - Newer file in repo (1) ");
-		// System.out.println(" [" + nr + "T2] - Newer file in repo (2) ");
-		// }
+		sysOutFileInfo(f1, diff, nr);
+		sysOutFileInfo(f2, diff, nr);
+
+	}
+
+	private void sysOutFileInfo(FileEntity f, FileMovedDiff diff, int nr) {
+		System.out.println("  (" + f.getRepoId() + ")" + f.getPath());
+		System.out.println("         - Access date: " + convertToHumanReadable(f.getAccessed()));
+		System.out.println("         - " + showTheStatus(nr, f, diff));
+		System.out.println();
 
 	}
 
@@ -111,29 +111,60 @@ public class EditMoved extends MenuController {
 				return "This will be REVERTED";
 			}
 
-			// System.out.println(
-			// activeAction(DiffAction.UPDATE, diff.getAction()) + ": The older (" + older +
-			// ") will be updated.");
-			// System.out.println(activeAction(DiffAction.REVERT, diff.getAction()) + ": The
-			// newer (" + newer
-			// + ") will be reverted.");
-			// System.out.println(activeAction(DiffAction.IGNORE, diff.getAction()) + ": It
-			// will take no action.");
 		}
 
 		return "";
 	}
 
-	// private String activeAction(DiffAction lineAction, DiffAction action) {
-	// return (lineAction.equals(action) ? " * " +
-	// lineAction.toString().toUpperCase()
-	// : " " + lineAction.toString().toLowerCase());
-	// }
-
 	private String convertToHumanReadable(long accessed) {
 		LocalDateTime accessed1 = LocalDateTime.ofInstant(Instant.ofEpochMilli(accessed),
 				TimeZone.getDefault().toZoneId());
 		return accessed1.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+	}
+
+	private List<String> executeCommands(String cmdLine, List<FileMovedDiff> src) {
+
+		List<String> failedResult = new ArrayList<>();
+
+		ParsedCmd parsedCmd = null;
+
+		if (StringUtils.isNotBlank(cmdLine)) {
+
+			String cmds[] = cmdLine.split(" ");
+
+			for (String cmd : cmds) {
+				parsedCmd = new ParsedCmd(cmd);
+
+				if (parsedCmd.isValid(src.size())) {
+
+					makeChanges(src, parsedCmd, cmd, failedResult);
+
+				} else {
+					// Add to skiped
+					failedResult.add(cmd);
+				}
+
+			}
+
+		} else {
+			failedResult.add("<empty cmd>");
+		}
+
+		return failedResult;
+	}
+
+	private void makeChanges(List<FileMovedDiff> src, ParsedCmd parsedCmd, String originalCmd,
+			List<String> failedResult) {
+		// Do the action
+		// TODO make change in list objects
+		if (parsedCmd.isValidTimeStampToutchCmd(src.size())) {
+			// TODO patikrint ar tai tikrai IGNORE / CONFLICT
+		} else if (parsedCmd.isValidEditCmd(src.size())) {
+			// TODO patikrint ar galima tokia komanda naudot
+		} else {
+			failedResult.add(originalCmd);
+		}
+
 	}
 
 }
