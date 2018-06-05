@@ -6,15 +6,27 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
+import com.owr.so.merge.IMergeHandler;
 import com.owr.so.merge.diff.TreesDiffCollections;
-import com.owr.so.model.DirTreeEntity;
+import com.owr.so.merge.edit.IDiffsEditor;
+import com.owr.so.merge.log.IUIEventsListener;
+import com.owr.so.merge.log.UIDefaultEventsListener;
+import com.owr.so.model.DirTreesBundle;
 
-public class EditDiffsCui {
+public class DiffsEditorCui implements IDiffsEditor {
 
 	private static final String KEY_QUIT = "Q";
 	private static final String KEY_GEN = "G";
 
-	public void edit(TreesDiffCollections treesDiffs, DirTreeEntity tree1, DirTreeEntity tree2) {
+	private IUIEventsListener eventsListener = new UIDefaultEventsListener();
+
+	@Override
+	public void runUI(IMergeHandler mergeHandler) {
+		System.out.println("Collecting diferences of files trees...");
+
+		DirTreesBundle dirTreesBundle = mergeHandler.loadTrees(eventsListener);
+
+		TreesDiffCollections treesDiffs = mergeHandler.compareTrees(dirTreesBundle, eventsListener);
 
 		printClear(15);
 

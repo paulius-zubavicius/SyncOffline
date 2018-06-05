@@ -8,9 +8,6 @@ public class EditModified {
 
 	public EditModified(List<FileModifiedDiff> src) {
 
-		
-		
-		
 	}
 
 }

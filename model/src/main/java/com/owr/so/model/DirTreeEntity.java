@@ -1,6 +1,7 @@
 package com.owr.so.model;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +15,7 @@ public class DirTreeEntity implements Serializable {
 
 	private String osCode;
 
-	// TODO
-	// private String id;
+	private int id;
 
 	private HashMap<String, DirEntity> dirTree = new HashMap<>();
 
@@ -39,7 +39,9 @@ public class DirTreeEntity implements Serializable {
 	 */
 	private transient String subDir = "";
 
-	private transient boolean firstRepo;
+	private transient String metaFilePath = null;
+
+	private transient Duration metaFileDuration = null;
 
 	public String getDirTreeRootPath() {
 		return dirTreeRootPath;
@@ -55,6 +57,14 @@ public class DirTreeEntity implements Serializable {
 
 	public void setOsCode(String osCode) {
 		this.osCode = osCode;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public Map<String, DirEntity> getDirTree() {
@@ -81,12 +91,20 @@ public class DirTreeEntity implements Serializable {
 		this.subDir = subDir;
 	}
 
-	public boolean isFirstRepo() {
-		return firstRepo;
+	public String getMetaFilePath() {
+		return metaFilePath;
 	}
 
-	public void setFirstRepo(boolean firstRepo) {
-		this.firstRepo = firstRepo;
+	public void setMetaFilePath(String metaFilePath) {
+		this.metaFilePath = metaFilePath;
+	}
+
+	public Duration getMetaFileDuration() {
+		return metaFileDuration;
+	}
+
+	public void setMetaFileDuration(Duration metaFileDuration) {
+		this.metaFileDuration = metaFileDuration;
 	}
 
 	public void initTransientFields(FileEntity entity) {

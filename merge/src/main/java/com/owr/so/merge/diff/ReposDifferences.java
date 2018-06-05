@@ -164,11 +164,21 @@ public class ReposDifferences {
 
 			for (int i1 = 0; i1 < files1.size(); i1++) {
 				for (int i2 = 0; i2 < files2.size(); i2++) {
+
 					if (files1.get(i1).getPath().equals(files2.get(i2).getPath())) {
 						files1.remove(i1);
 						files2.remove(i2);
+
 						i1--;
 						i2--;
+						
+						if (i1 < 0) {
+							i1 = 0;
+						}
+
+						if (i2 < 0) {
+							i2 = 0;
+						}
 					}
 				}
 			}

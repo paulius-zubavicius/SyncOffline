@@ -9,8 +9,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.owr.so.commons.DirTreeEntityLoader;
-import com.owr.so.merge.log.IMergeLogEventsListener;
-import com.owr.so.merge.log.MergeLogEventsListener;
+import com.owr.so.merge.log.IUIEventsListener;
+import com.owr.so.merge.log.UIDefaultEventsListener;
 import com.owr.so.model.DirTreeEntity;
 
 public class ArgsResolver {
@@ -30,11 +30,7 @@ public class ArgsResolver {
 
 	private static final String OPT_GUI = "gui";
 
-	private DirTreeEntity tree1 = null;
-	private DirTreeEntity tree2 = null;
-	private boolean guiMode;
-
-	public ArgsResolver(String[] args, IMergeLogEventsListener logEventsListener) {
+	public ArgsValues resolve(String[] args) {
 
 		/**
 		 * Options
@@ -80,19 +76,12 @@ public class ArgsResolver {
 				InputValidator.validateSubDirBeforeLoading(metaFile1Path, subdir2);
 			}
 
-			/**
-			 * Loading trees
-			 */
-			tree1 = DirTreeEntityLoader.load(metaFile1Path, 1);
 			if (line.hasOption(OPT_SHORT_SUBDIR1)) {
-				InputValidator.validateSubDirAfterLoading(tree1, subdir1, 1);
-				tree1.setSubDir(subdir1);
+				InputValidator.validateSubDirBeforeLoading(subdir1, 1);
 			}
 
-			tree2 = DirTreeEntityLoader.load(metaFile2Path, 2);
 			if (line.hasOption(OPT_SHORT_SUBDIR2)) {
-				InputValidator.validateSubDirAfterLoading(tree2, subdir2, 2);
-				tree2.setSubDir(subdir2);
+				InputValidator.validateSubDirBeforeLoading(subdir2, 2);
 			}
 
 		} catch (RuntimeException e) {
@@ -102,21 +91,7 @@ public class ArgsResolver {
 			System.exit(0);
 		}
 
-		logEventsListener.dataRead(tree1, tree2, metaFile1Path, metaFile2Path);
-
-		guiMode = line.hasOption(OPT_GUI);
-	}
-
-	public DirTreeEntity getTree1() {
-		return tree1;
-	}
-
-	public DirTreeEntity getTree2() {
-		return tree2;
-	}
-
-	public boolean isGuiMode() {
-		return guiMode;
+		return new ArgsValues(metaFile1Path, metaFile2Path, subdir1, subdir2, line.hasOption(OPT_GUI));
 	}
 
 	private static Options creteArgsOptions() {

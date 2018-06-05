@@ -1,109 +1,83 @@
 package com.owr.so.merge;
 
-import com.owr.so.merge.diff.DirNewDiff;
-import com.owr.so.merge.diff.FileDuplicatesDiff;
-import com.owr.so.merge.diff.FileModifiedDiff;
-import com.owr.so.merge.diff.FileMovedDiff;
-import com.owr.so.merge.diff.FileNewDiff;
+import com.owr.so.commons.DirTreeEntityLoader;
+import com.owr.so.merge.args.ArgsValues;
+import com.owr.so.merge.args.InputValidator;
 import com.owr.so.merge.diff.ReposDifferences;
 import com.owr.so.merge.diff.TreesDiffCollections;
-import com.owr.so.merge.edit.EditDifferences;
-import com.owr.so.merge.log.IMergeLogEventsListener;
-import com.owr.so.model.DirTreeEntity;
-import com.owr.so.model.FileEntity;
+import com.owr.so.merge.edit.DiffsEditorFactory;
+import com.owr.so.merge.edit.IDiffsEditor;
+import com.owr.so.merge.log.IUIEventsListener;
+import com.owr.so.model.DirTreesBundle;
 
-public class Merge {
+public class Merge implements IMergeHandler {
 
-	public void mergeFlow(DirTreeEntity tree1, DirTreeEntity tree2, boolean guiMode,
-			IMergeLogEventsListener logEventsListener) {
+	private static final int REPO_ID_1 = 1;
+	private static final int REPO_ID_2 = 2;
+
+	private ArgsValues argsValues;
+
+	public Merge(ArgsValues argsValues) {
+
+		this.argsValues = argsValues;
+
+		IDiffsEditor editor = DiffsEditorFactory.getInstance(argsValues.isGuiMode());
+		editor.runUI(this);
+
+	}
+
+	@Override
+	public DirTreesBundle loadTrees(IUIEventsListener eventsListener) {
+
+		DirTreesBundle result = new DirTreesBundle();
+		String subDir;
+
+		subDir = argsValues.getSubdir1();
+		result.setTree1(DirTreeEntityLoader.load(argsValues.getMetaFile1Path(), REPO_ID_1));
+		if (subDir != null) {
+			InputValidator.validateSubDirAfterLoading(result.getTree1(), subDir, REPO_ID_1);
+			result.getTree1().setSubDir(subDir);
+		}
+
+		subDir = argsValues.getSubdir2();
+		result.setTree2(DirTreeEntityLoader.load(argsValues.getMetaFile2Path(), REPO_ID_2));
+		if (subDir != null) {
+			InputValidator.validateSubDirAfterLoading(result.getTree2(), subDir, REPO_ID_2);
+			result.getTree2().setSubDir(subDir);
+		}
+
+		eventsListener.treesLoaded(argsValues);
+
+		return result;
+	}
+
+	@Override
+	public TreesDiffCollections compareTrees(DirTreesBundle dirTrees, IUIEventsListener eventsListener) {
 
 		ReposDifferences diff = new ReposDifferences();
+		TreesDiffCollections diffCollection = diff.treesDifferences(dirTrees.getTree1(), dirTrees.getTree2());
 
-		TreesDiffCollections diffCollection = diff.treesDifferences(tree1, tree2);
+		eventsListener.treesCompared(diffCollection);
 
-		printDebug(diffCollection);
+		return diffCollection;
+	}
 
-		EditDifferences editor = new EditDifferences();
-
-		editor.edit(diffCollection, tree1, tree2, guiMode);
+	@Override
+	public void uiEditDone(TreesDiffCollections diffCollection, DirTreesBundle dirTrees,
+			IUIEventsListener eventsListener) {
+		// TODO Auto-generated method stub
 
 		// auto merge (renamed dir only)
 
 		// output module
 
 		System.out.println("Done");
-
 	}
 
-	private void printDebug(TreesDiffCollections diffCollection) {
-
-		if (!diffCollection.getModifiedFiles().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("Modified files");
-			System.out.println("================================================================");
-
-			for (FileModifiedDiff modFile : diffCollection.getModifiedFiles()) {
-
-				System.out.println("(" + modFile.getFile1().getRepoId() + ")" + modFile.getFile1().getPath());
-				System.out.println("(" + modFile.getFile2().getRepoId() + ")" + modFile.getFile2().getPath());
-				System.out.println("Conflict: " + modFile.getAction() + "");
-				System.out.println("----------------------------------------------------------------");
-			}
-		}
-
-		if (!diffCollection.getMovedFiles().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("Moved files");
-			System.out.println("================================================================");
-
-			for (FileMovedDiff modFile : diffCollection.getMovedFiles()) {
-
-				System.out.println("(" + modFile.getFile1().getRepoId() + ")" + modFile.getFile1().getPath());
-				System.out.println("(" + modFile.getFile2().getRepoId() + ")" + modFile.getFile2().getPath());
-				System.out.println("Conflict: " + modFile.getAction() + "");
-				System.out.println("----------------------------------------------------------------");
-			}
-		}
-
-		if (!diffCollection.getNewFiles().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("New files");
-			System.out.println("================================================================");
-
-			for (FileNewDiff modFile : diffCollection.getNewFiles()) {
-				System.out.println("(" + modFile.getFile1().getRepoId() + ")" + modFile.getFile1().getPath());
-				System.out.println("----------------------------------------------------------------");
-			}
-		}
-
-		if (!diffCollection.getDuplicates().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("Duplicates");
-			System.out.println("================================================================");
-
-			for (FileDuplicatesDiff modFile : diffCollection.getDuplicates()) {
-
-				for (FileEntity fileEntity : modFile.getFiles1()) {
-					System.out.println("(" + fileEntity.getRepoId() + ")" + fileEntity.getPath());
-				}
-
-				for (FileEntity fileEntity : modFile.getFiles2()) {
-					System.out.println("(" + fileEntity.getRepoId() + ")" + fileEntity.getPath());
-				}
-			}
-		}
-
-		if (!diffCollection.getNewDirs().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("New dirs");
-			System.out.println("================================================================");
-
-			for (DirNewDiff modFile : diffCollection.getNewDirs()) {
-				System.out.println("(" + modFile.getDir1().getRepoId() + ")" + modFile.getDir1().getPath());
-				System.out.println("----------------------------------------------------------------");
-			}
-		}
-
+	@Override
+	public void uiEditCanceled() {
+		System.out.println("Canceled. Exiting...");
+		System.exit(0);
 	}
 
 }

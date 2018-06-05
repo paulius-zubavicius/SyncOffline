@@ -58,7 +58,7 @@ public class InputValidator {
 
 	}
 
-	public static void validateSubDirAfterLoading(DirTreeEntity tree, String subdir, int parameterNo) {
+	public static void validateSubDirBeforeLoading(String subdir, int parameterNo) {
 
 		String separator = OSType.getOSFileSeparator();
 
@@ -76,11 +76,15 @@ public class InputValidator {
 			throw new RuntimeException("Sub directory path shouldn't end with: [" + separator + "]");
 		}
 
+	}
+
+	public static void validateSubDirAfterLoading(DirTreeEntity tree, String subdir, int repoId) {
+
 		boolean caseSensitive = !OSType.isTheSame(tree.getOsCode(), OSType.WIN);
 
 		if (!isItSubdirOfTree(tree, subdir, caseSensitive)) {
 			throw new RuntimeException(
-					"Sub directory (" + parameterNo + ") [" + subdir + "] doesn't exist in tree (" + parameterNo + ")");
+					"Sub directory (" + repoId + ") [" + subdir + "] doesn't exist in tree (" + repoId + ")");
 		}
 
 	}
