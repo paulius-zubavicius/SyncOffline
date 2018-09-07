@@ -21,7 +21,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 
-public class TabInfo extends Tab {
+public class TabInfo extends Tab implements ReloadableTab{
 
 	public TabInfo(DirTreesBundle dirTreesBundle) {
 		super("Info");
@@ -79,6 +79,12 @@ public class TabInfo extends Tab {
 
 		createSyncSubDirSection(gridPane, dirTreesBundle);
 
+	}
+	
+	@Override
+	public void reload() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void createSyncSubDirSection(GridPane gridPane, DirTreesBundle dirTreesBundle) {
@@ -325,5 +331,7 @@ public class TabInfo extends Tab {
 		result.setVgrow(Priority.SOMETIMES);
 		return result;
 	}
+
+	
 
 }

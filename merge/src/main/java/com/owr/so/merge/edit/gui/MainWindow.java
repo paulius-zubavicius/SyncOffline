@@ -3,6 +3,7 @@ package com.owr.so.merge.edit.gui;
 import org.springframework.stereotype.Component;
 
 import com.owr.so.merge.diff.TreesDiffCollections;
+import com.owr.so.merge.edit.gui.diff.modified.FileModifiedTab;
 import com.owr.so.merge.log.IUIEventsListener;
 import com.owr.so.model.DirTreesBundle;
 
@@ -73,7 +74,7 @@ public class MainWindow {
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
 		tabPane.getTabs().add(new TabInfo(dirTreesBundle));
-		tabPane.getTabs().add(new Tab("Modified"));
+		tabPane.getTabs().add(new FileModifiedTab(treeDiffs.getModifiedFiles()));
 		tabPane.getTabs().add(new Tab("Moved & renamed"));
 		tabPane.getTabs().add(new Tab("New files"));
 		tabPane.getTabs().add(new Tab("New dirs"));

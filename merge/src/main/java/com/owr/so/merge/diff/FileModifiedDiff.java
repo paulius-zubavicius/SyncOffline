@@ -11,11 +11,7 @@ public class FileModifiedDiff extends UserResolution {
 		this.file1 = file1;
 		this.file2 = file2;
 
-		if (file1.getModified() == file2.getModified()) {
-			super.setAction(DiffAction.IGNORE);
-		} else {
-			super.setAction(DiffAction.UPDATE);
-		}
+		setAction(DiffAction.UPDATE);
 
 	}
 
