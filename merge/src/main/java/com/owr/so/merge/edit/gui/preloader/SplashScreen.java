@@ -24,7 +24,7 @@ public class SplashScreen extends Preloader {
 		this.stage.initStyle(StageStyle.UNDECORATED);
 		this.stage.setScene(createScene());
 		this.stage.setAlwaysOnTop(true);
-		//this.stage.getIcons().add(new Image("icon.png"));
+		this.stage.getIcons().add(new Image("icon.png"));
 		this.stage.show();
 	}
 
@@ -68,9 +68,7 @@ public class SplashScreen extends Preloader {
 					e.printStackTrace();
 				}
 
-				Platform.runLater(() -> {
-					stage.hide();
-				});
+				Platform.runLater(() -> stage.hide());
 
 			}).start();
 
