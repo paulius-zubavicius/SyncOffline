@@ -1,4 +1,4 @@
-package com.owr.so.scan.log;
+package com.owr.so.scan.events;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -8,9 +8,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-
 import com.owr.so.commons.ConvertUtil;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
@@ -19,7 +16,7 @@ import com.owr.so.model.FileEntity;
  * @author Paulius Zubavicius
  *
  */
-public class ScanLogEventsListener implements IScanLogEventsListener {
+public class EventsListenerImpl implements IScanEventsListener, IDirTreeEventsListener {
 
 	// Modified/new files
 	private int statModNewFiles;
@@ -73,21 +70,6 @@ public class ScanLogEventsListener implements IScanLogEventsListener {
 			System.out.println(String.format("   %-100s %s %s", entity.getName(),
 					ConvertUtil.getSizeInHumanFormat(entity.getSize()), entity.getChecksum()));
 		}
-	}
-
-	@Override
-	public void businessCaseException(Exception e, Options options) {
-		if (e.getMessage() != null) {
-			System.err.println(e.getMessage());
-		} else {
-			e.printStackTrace();
-		}
-
-		System.out.println();
-
-		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("java -jar scan.jar", options, true);
-
 	}
 
 	@Override

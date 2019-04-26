@@ -3,42 +3,43 @@ package com.owr.so.scan.dirtree;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
 
 import com.owr.so.commons.OSType;
 import com.owr.so.model.DirTreeEntity;
-import com.owr.so.scan.log.IScanLogEventsListener;
+import com.owr.so.scan.events.IDirTreeEventsListener;
 
 /**
  * @author Paulius Zubavicius
- *
  */
 public class DirTreeScanner {
 
-	public DirTreeEntity scanNew(Path dirTreeMetaFile, Path dirTreePath, IScanLogEventsListener listener) {
-		return createNewTree(dirTreePath, new DirTreeEntity(), listener);
+	private IDirTreeEventsListener listener;
+	
+    public DirTreeScanner(IDirTreeEventsListener listener) {
+		this.listener = listener;
 	}
 
-	public DirTreeEntity scanUpdate(DirTreeEntity currentTree, Path dirTreePath, IScanLogEventsListener listener) {
-		return createNewTree(dirTreePath, currentTree, listener);
+	public DirTreeEntity scanNew(Path dirTreeMetaFile, Path dirTreePath) {
+        return createNewTree(dirTreePath, new DirTreeEntity());
+    }
 
-	}
+    public DirTreeEntity scanUpdate(DirTreeEntity currentTree, Path dirTreePath) {
+        return createNewTree(dirTreePath, currentTree);
+    }
 
-	private DirTreeEntity createNewTree(Path dirTreePath, DirTreeEntity currentTree,
-			IScanLogEventsListener listener) {
+    private DirTreeEntity createNewTree(Path dirTreePath, DirTreeEntity currentTree) {
 
-		DirTreeEntity result = new DirTreeEntity();
-		result.setDirTreeRootPath(dirTreePath.toString());
-		result.setOsCode(OSType.getOSTypeCurrentStr());
-		FileVisitorScanner scanner = new FileVisitorScanner(result, currentTree, listener);
+        DirTreeEntity result = new DirTreeEntity();
+        result.setDirTreeRootPath(dirTreePath.toString());
+        result.setOsCode(OSType.getOSTypeCurrentStr());
 
-		try {
-			Files.walkFileTree(dirTreePath, new HashSet<>(), Integer.MAX_VALUE, scanner);
-		} catch (IOException e) {
-			listener.readFailed(dirTreePath, e);
-		}
+        try {
+            Files.walkFileTree(dirTreePath, new FileVisitorScanner(result, currentTree, listener));
+        } catch (IOException e) {
+        	listener.readFailed(dirTreePath, e);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
 }

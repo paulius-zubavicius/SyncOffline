@@ -1,4 +1,4 @@
-package com.owr.so.scan.log;
+package com.owr.so.scan.events;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -14,20 +14,16 @@ import com.owr.so.model.FileEntity;
  * @author Paulius Zubavicius
  *
  */
-public interface IScanLogEventsListener {
+public interface IScanEventsListener {
 
-	void skipped(Path file, BasicFileAttributes attrs);
 
-	void readFailed(Path file, IOException exc);
 
-	void readFileOk(FileEntity entity, boolean modifications);
-
-	void businessCaseException(Exception e, Options options);
+	//void businessCaseException(Exception e, Options options);
 
 	void metaFileStatus(boolean metaFileExists, long lastTimeModified, String rootDir, boolean rootDirExists, String osCode);
 
 	void scanDone(Duration timeElapsed, DirTreeEntity newDirTreeEntity);
 
-	void readDirOk(String dirPathString, Path dir, BasicFileAttributes attrs);
+
 
 }

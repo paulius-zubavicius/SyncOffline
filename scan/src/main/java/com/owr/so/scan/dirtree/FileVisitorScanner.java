@@ -9,7 +9,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import com.owr.so.model.DirEntity;
 import com.owr.so.model.DirTreeEntity;
 import com.owr.so.model.FileEntity;
-import com.owr.so.scan.log.IScanLogEventsListener;
+import com.owr.so.scan.events.IDirTreeEventsListener;
+import com.owr.so.scan.events.IScanEventsListener;
 import com.owr.so.scan.utils.FileEntityUtil;
 
 /**
@@ -18,11 +19,11 @@ import com.owr.so.scan.utils.FileEntityUtil;
  */
 public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
-	private IScanLogEventsListener listener;
+	private IDirTreeEventsListener listener;
 	private DirTreeEntity currentTree;
 	private DirTreeEntity newTree;
 
-	public FileVisitorScanner(DirTreeEntity newTree, DirTreeEntity currentTree, IScanLogEventsListener listener) {
+	public FileVisitorScanner(DirTreeEntity newTree, DirTreeEntity currentTree, IDirTreeEventsListener listener) {
 		this.listener = listener;
 		this.currentTree = currentTree;
 		this.newTree = newTree;
@@ -30,9 +31,7 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-		String dirPathString = FileEntityUtil.getExcludeRootPath(dir, newTree.getDirTreeRootPath());
-
-		newTree.getDirTree().put(dirPathString, new DirEntity(dirPathString));
+		String dirPathString = putToDirTree(dir);
 		listener.readDirOk(dirPathString, dir, attrs);
 		return FileVisitResult.CONTINUE;
 	}
@@ -47,10 +46,14 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 			entity.setModified(attrs.lastModifiedTime().toMillis());
 			entity.setSize(attrs.size());
 
-			String excludedFilePath = FileEntityUtil.getExcludeRootPath(file.getParent(), newTree.getDirTreeRootPath());
 
+			//FIXME move to separate method
+			String excludedFilePath = FileEntityUtil.getExcludeRootPath(file.getParent(), newTree.getDirTreeRootPath());
 			DirEntity dirEntity = newTree.getDirTree().get(excludedFilePath);
-			assert null == dirEntity;
+
+			if (dirEntity == null) {
+				throw new RuntimeException();
+			}
 			entity.setDir(dirEntity);
 			// Add it self
 			dirEntity.getFiles().add(entity);
@@ -79,6 +82,12 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 	public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
 		listener.readFailed(file, exc);
 		return FileVisitResult.CONTINUE;
+	}
+
+	private String putToDirTree(Path dir) {
+		String dirPathString = FileEntityUtil.getExcludeRootPath(dir, newTree.getDirTreeRootPath());
+		newTree.getDirTree().put(dirPathString, new DirEntity(dirPathString));
+		return dirPathString;
 	}
 
 	private boolean checkForModification(FileEntity fNew, FileEntity fOld) {
