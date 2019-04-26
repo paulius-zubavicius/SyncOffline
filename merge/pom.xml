@@ -10,7 +10,7 @@
     </parent>
 
     <properties>
-        <version.spring>4.3.4.RELEASE</version.spring>
+        <version.spring>4.3.18.RELEASE</version.spring>
     </properties>
 
     <dependencies>
