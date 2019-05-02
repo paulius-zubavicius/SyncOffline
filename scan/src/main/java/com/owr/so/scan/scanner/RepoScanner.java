@@ -4,7 +4,7 @@ import com.owr.so.commons.DirTreeEntityLoader;
 import com.owr.so.commons.FileUtil;
 import com.owr.so.commons.OSType;
 import com.owr.so.commons.Storage;
-import com.owr.so.model.DirTreeEntity;
+import com.owr.so.diff.model.DirTree;
 import com.owr.so.scan.dirtree.DirTreeScanner;
 import com.owr.so.scan.events.IScanEventsListener;
 
@@ -41,7 +41,7 @@ public class RepoScanner {
 			} else {
 
 				if (FileUtil.pathExists(metaFileStr)) {
-					DirTreeEntity currentTree = DirTreeEntityLoader.load(metaFileStr);
+					DirTree currentTree = DirTreeEntityLoader.load(metaFileStr);
 
 					if (FileUtil.pathExists(currentTree.getDirTreeRootPath())) {
 						scanUpdate(metaFileStr);
@@ -57,7 +57,6 @@ public class RepoScanner {
 				throw new Exception(
 						"Meta file not found. Please specify exiting meta file or specify new scanning directory path");
 			}
-
 	}
 
 	public void readMetaFileStatus(String metaFileStr) {
@@ -74,7 +73,7 @@ public class RepoScanner {
 
 		if (metaFileExists) {
 			lastTimeModified = file.lastModified();
-			DirTreeEntity entity = DirTreeEntityLoader.load(metaFileStr);
+			DirTree entity = DirTreeEntityLoader.load(metaFileStr);
 			rootDir = entity.getDirTreeRootPath();
 			rootDirExists = FileUtil.pathExists(rootDir);
 			osType = entity.getOsCode() + " - " + OSType.getOSTypeByCode(entity.getOsCode());
@@ -96,32 +95,32 @@ public class RepoScanner {
 		Instant instant1 = Instant.now();
 
 		DirTreeScanner dirTreeScan = new DirTreeScanner(null);
-		DirTreeEntity newDirTreeEntity = null;
+		DirTree newDirTree;
 
 		Path metaFilePath = Paths.get(metaFileStr);
 
 		if (updateMetaFile) {
-			DirTreeEntity dirTreeCurrent = DirTreeEntityLoader.load(metaFileStr);
-			newDirTreeEntity = dirTreeScan.scanUpdate(dirTreeCurrent, Paths.get(dirTreeCurrent.getDirTreeRootPath()));
+			DirTree dirTreeCurrent = DirTreeEntityLoader.load(metaFileStr);
+			newDirTree = dirTreeScan.scanUpdate(dirTreeCurrent, Paths.get(dirTreeCurrent.getDirTreeRootPath()));
 		} else {
-			newDirTreeEntity = dirTreeScan.scanNew(metaFilePath, Paths.get(scanDirStr));
+			newDirTree = dirTreeScan.scanNew(metaFilePath, Paths.get(scanDirStr));
 		}
 
 		// Save to file
-		saveResult(metaFilePath, newDirTreeEntity);
+		saveResult(metaFilePath, newDirTree);
 
 		// How long it was?
 		Duration timeElapsed = Duration.between(instant1, Instant.now());
 
-		evListener.scanDone(timeElapsed, newDirTreeEntity);
+		evListener.scanDone(timeElapsed, newDirTree);
 
 	}
 
-	private void saveResult(Path metaFilePath, DirTreeEntity newDirTreeEntity) {
-		Storage<DirTreeEntity> str = new Storage<>();
+	private void saveResult(Path metaFilePath, DirTree newDirTree) {
+		Storage<DirTree> str = new Storage<>();
 
 		try {
-			str.save(metaFilePath, newDirTreeEntity);
+			str.save(metaFilePath, newDirTree);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

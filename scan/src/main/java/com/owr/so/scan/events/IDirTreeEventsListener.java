@@ -1,13 +1,10 @@
 package com.owr.so.scan.events;
 
-import com.owr.so.model.DirTreeEntity;
-import com.owr.so.model.FileEntity;
-import org.apache.commons.cli.Options;
+import com.owr.so.diff.model.FileEntity;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.Duration;
 
 /**
  * @author Paulius Zubavicius

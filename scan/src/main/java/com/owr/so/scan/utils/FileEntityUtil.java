@@ -1,10 +1,10 @@
 package com.owr.so.scan.utils;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-
-import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * @author Paulius Zubavicius

@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import com.owr.so.commons.ConvertUtil;
-import com.owr.so.model.DirTreeEntity;
-import com.owr.so.model.FileEntity;
+import com.owr.so.diff.model.DirTree;
+import com.owr.so.diff.model.FileEntity;
 
 /**
  * @author Paulius Zubavicius
@@ -97,14 +97,14 @@ public class EventsListenerImpl implements IScanEventsListener, IDirTreeEventsLi
 	}
 
 	@Override
-	public void scanDone(Duration timeElapsed, DirTreeEntity newDirTreeEntity) {
+	public void scanDone(Duration timeElapsed, DirTree newDirTree) {
 
 		System.out.println();
 		// Some statistics
 		// All files:
-		System.out.println("Read files       : " + newDirTreeEntity.getFiles().size());
+		System.out.println("Read files       : " + newDirTree.getFiles().size());
 		long readSize = 0;
-		for (FileEntity ent : newDirTreeEntity.getFiles()) {
+		for (FileEntity ent : newDirTree.getFiles()) {
 			readSize += ent.getSize();
 		}
 		System.out.println("Read size        : " + ConvertUtil.getSizeInHumanFormat(readSize));

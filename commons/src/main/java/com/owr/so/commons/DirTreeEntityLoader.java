@@ -8,25 +8,25 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 
-import com.owr.so.model.DirEntity;
-import com.owr.so.model.DirTreeEntity;
-import com.owr.so.model.FileEntity;
+import com.owr.so.diff.model.DirEntity;
+import com.owr.so.diff.model.DirTree;
+import com.owr.so.diff.model.FileEntity;
 
 public class DirTreeEntityLoader {
 
-	public static DirTreeEntity load(String dirTreeMetaFileStr) {
+	public static DirTree load(String dirTreeMetaFileStr) {
 		return load(dirTreeMetaFileStr, 0);
 	}
 
-	public static DirTreeEntity load(String dirTreeMetaFileStr, int repoId) {
+	public static DirTree load(String dirTreeMetaFileStr, int repoId) {
 
-		Storage<DirTreeEntity> str = new Storage<>();
-		DirTreeEntity result = null;
+		Storage<DirTree> str = new Storage<>();
+		DirTree result = null;
 
 		Path metaFilePath = Paths.get(dirTreeMetaFileStr);
 
 		try {
-			result = str.load(metaFilePath, DirTreeEntity.class);
+			result = str.load(metaFilePath, DirTree.class);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

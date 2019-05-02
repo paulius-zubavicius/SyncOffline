@@ -8,9 +8,10 @@ import java.time.Duration;
  */
 public class ConvertUtil {
 
-	private static final double KB1 = 1024.0;
-	private static final double MB1 = KB1 * KB1;
-	private static final double GB1 = MB1 * MB1;
+	private static final double TWO_PWR_8 = 1024.0;
+	private static final double KB1 = TWO_PWR_8 * 1;
+	private static final double MB1 = TWO_PWR_8 * KB1;
+	private static final double GB1 = TWO_PWR_8 * MB1;
 
 	// private static final int MIN = 60;
 	// private static final int HOUR = MIN * 60;

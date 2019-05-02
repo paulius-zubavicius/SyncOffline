@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.owr.so.commons.OSType;
-import com.owr.so.model.DirTreeEntity;
+import com.owr.so.diff.model.DirTree;
 import com.owr.so.scan.events.IDirTreeEventsListener;
 
 /**
@@ -19,17 +19,17 @@ public class DirTreeScanner {
 		this.listener = listener;
 	}
 
-	public DirTreeEntity scanNew(Path dirTreeMetaFile, Path dirTreePath) {
-        return createNewTree(dirTreePath, new DirTreeEntity());
+	public DirTree scanNew(Path dirTreeMetaFile, Path dirTreePath) {
+        return createNewTree(dirTreePath, new DirTree());
     }
 
-    public DirTreeEntity scanUpdate(DirTreeEntity currentTree, Path dirTreePath) {
+    public DirTree scanUpdate(DirTree currentTree, Path dirTreePath) {
         return createNewTree(dirTreePath, currentTree);
     }
 
-    private DirTreeEntity createNewTree(Path dirTreePath, DirTreeEntity currentTree) {
+    private DirTree createNewTree(Path dirTreePath, DirTree currentTree) {
 
-        DirTreeEntity result = new DirTreeEntity();
+        DirTree result = new DirTree();
         result.setDirTreeRootPath(dirTreePath.toString());
         result.setOsCode(OSType.getOSTypeCurrentStr());
 

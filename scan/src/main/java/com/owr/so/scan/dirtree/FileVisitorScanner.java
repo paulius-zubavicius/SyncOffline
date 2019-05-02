@@ -6,11 +6,10 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import com.owr.so.model.DirEntity;
-import com.owr.so.model.DirTreeEntity;
-import com.owr.so.model.FileEntity;
+import com.owr.so.diff.model.DirEntity;
+import com.owr.so.diff.model.DirTree;
+import com.owr.so.diff.model.FileEntity;
 import com.owr.so.scan.events.IDirTreeEventsListener;
-import com.owr.so.scan.events.IScanEventsListener;
 import com.owr.so.scan.utils.FileEntityUtil;
 
 /**
@@ -20,10 +19,10 @@ import com.owr.so.scan.utils.FileEntityUtil;
 public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 	private IDirTreeEventsListener listener;
-	private DirTreeEntity currentTree;
-	private DirTreeEntity newTree;
+	private DirTree currentTree;
+	private DirTree newTree;
 
-	public FileVisitorScanner(DirTreeEntity newTree, DirTreeEntity currentTree, IDirTreeEventsListener listener) {
+	public FileVisitorScanner(DirTree newTree, DirTree currentTree, IDirTreeEventsListener listener) {
 		this.listener = listener;
 		this.currentTree = currentTree;
 		this.newTree = newTree;

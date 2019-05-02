@@ -17,10 +17,12 @@
 
 	<modules>
 		<module>commons</module>
-		<module>merge</module>
+		<module>diff</module>
 		<module>model</module>
 		<module>scan</module>
-	</modules>
+        <module>scan-cli</module>
+        <module>merge-gui</module>
+    </modules>
 
 	<dependencies>
 
@@ -31,11 +33,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>commons-cli</groupId>
-			<artifactId>commons-cli</artifactId>
-			<version>1.4</version>
-		</dependency>
+
 	</dependencies>
 
     <build>
