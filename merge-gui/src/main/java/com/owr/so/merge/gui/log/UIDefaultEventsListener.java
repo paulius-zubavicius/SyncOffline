@@ -12,7 +12,7 @@ import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
 import com.owr.so.diff.model.diffs.FileNewDiff;
-import com.owr.so.diff.model.DirTreesDifferences;
+import com.owr.so.diff.model.DirTreesDiffResult;
 import com.owr.so.diff.model.FileEntity;
 
 public class UIDefaultEventsListener implements IUIEventsListener {
@@ -25,7 +25,7 @@ public class UIDefaultEventsListener implements IUIEventsListener {
 	}
 
 	@Override
-	public void treesCompared(DirTreesDifferences diffCollection) {
+	public void treesCompared(DirTreesDiffResult diffCollection) {
 		// FIXME Romove later
 		printDebug(diffCollection);
 
@@ -41,7 +41,7 @@ public class UIDefaultEventsListener implements IUIEventsListener {
 		System.out.println();
 	}
 
-	private void printDebug(DirTreesDifferences diffCollection) {
+	private void printDebug(DirTreesDiffResult diffCollection) {
 
 		if (!diffCollection.getModifiedFiles().isEmpty()) {
 			System.out.println("================================================================");

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-//TODO ReposDifferences tests
+//TODO TreesDiff tests
 public class SubdirFilterTest {
 
 	private static final String SUBDIR = "/subdir0";

@@ -1,13 +1,11 @@
 package com.owr.so.diff.model;
 
 import com.owr.so.diff.model.diffs.*;
-import com.owr.so.merge.model.diff.*;
-import com.owr.so.model.diff.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DirTreesDifferences {
+public class DirTreesDiffResult {
 
 	private List<FileModifiedDiff> modifiedFiles = new ArrayList<>();
 

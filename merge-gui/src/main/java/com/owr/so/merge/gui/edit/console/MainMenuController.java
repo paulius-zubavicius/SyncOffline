@@ -3,7 +3,7 @@ package com.owr.so.merge.gui.edit.console;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.owr.so.diff.model.DirTreesDifferences;
+import com.owr.so.diff.model.DirTreesDiffResult;
 
 public class MainMenuController {
 
@@ -19,9 +19,9 @@ public class MainMenuController {
 	private int newDirs;
 	private int duplicates;
 	
-	private DirTreesDifferences treeDiffs;
+	private DirTreesDiffResult treeDiffs;
 
-	public MainMenuController(DirTreesDifferences treeDiffs) {
+	public MainMenuController(DirTreesDiffResult treeDiffs) {
 		
 		
 		this.treeDiffs = treeDiffs;

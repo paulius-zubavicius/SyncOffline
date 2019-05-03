@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.owr.so.merge.gui.IMergeHandler;
-import com.owr.so.diff.model.DirTreesDifferences;
+import com.owr.so.diff.model.DirTreesDiffResult;
 import com.owr.so.merge.gui.edit.IDiffsEditor;
 import com.owr.so.merge.gui.log.IUIEventsListener;
 import com.owr.so.merge.gui.log.UIDefaultEventsListener;
@@ -26,7 +26,7 @@ public class DiffsEditorCui implements IDiffsEditor {
 
 		DirTrees dirTrees = mergeHandler.loadTrees(eventsListener);
 
-		DirTreesDifferences treesDiffs = mergeHandler.compareTrees(dirTrees, eventsListener);
+		DirTreesDiffResult treesDiffs = mergeHandler.compareTrees(dirTrees, eventsListener);
 
 		printClear(15);
 

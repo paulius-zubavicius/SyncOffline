@@ -3,6 +3,7 @@ package com.owr.so.diff.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DirEntity extends Entity implements Serializable {
 
@@ -36,4 +37,18 @@ public class DirEntity extends Entity implements Serializable {
 		this.files = files;
 	}
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof DirEntity)) return false;
+		DirEntity dirEntity = (DirEntity) o;
+		return path.equals(dirEntity.path) &&
+				files.equals(dirEntity.files);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(path, files);
+	}
 }

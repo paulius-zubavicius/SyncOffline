@@ -1,6 +1,7 @@
 package com.owr.so.diff.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class FileEntity extends Entity implements Serializable {
 
@@ -69,4 +70,20 @@ public class FileEntity extends Entity implements Serializable {
 		this.dir = dir;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FileEntity that = (FileEntity) o;
+		return size == that.size &&
+				modified == that.modified &&
+				accessed == that.accessed &&
+				name.equals(that.name) &&
+				checksum.equals(that.checksum);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, checksum, size, modified, accessed);
+	}
 }

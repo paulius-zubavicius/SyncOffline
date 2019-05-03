@@ -1,14 +1,14 @@
 package com.owr.so.merge.gui.model;
 
 import com.owr.so.commons.DirTreeEntityLoader;
+import com.owr.so.diff.TreesDiff;
 import com.owr.so.merge.gui.DirTrees;
 import com.owr.so.merge.gui.IMergeHandler;
 import com.owr.so.merge.gui.args.ArgsValues;
 import com.owr.so.merge.gui.args.InputValidator;
 import com.owr.so.merge.gui.edit.DiffsEditorFactory;
 import com.owr.so.merge.gui.edit.IDiffsEditor;
-import com.owr.so.diff.ReposDifferences;
-import com.owr.so.diff.model.DirTreesDifferences;
+import com.owr.so.diff.model.DirTreesDiffResult;
 import com.owr.so.merge.gui.log.IUIEventsListener;
 
 public class Merge implements IMergeHandler {
@@ -53,10 +53,10 @@ public class Merge implements IMergeHandler {
 	}
 
 	@Override
-	public DirTreesDifferences compareTrees(DirTrees dirTrees, IUIEventsListener eventsListener) {
+	public DirTreesDiffResult compareTrees(DirTrees dirTrees, IUIEventsListener eventsListener) {
 
-		ReposDifferences diff = new ReposDifferences();
-		DirTreesDifferences diffCollection = diff.findDifferences(dirTrees.getTree1(), dirTrees.getTree2());
+		TreesDiff diff = new TreesDiff();
+		DirTreesDiffResult diffCollection = diff.findDifferences(dirTrees.getTree1(), dirTrees.getTree2());
 
 		eventsListener.treesCompared(diffCollection);
 
@@ -64,7 +64,7 @@ public class Merge implements IMergeHandler {
 	}
 
 	@Override
-	public void uiEditDone(DirTreesDifferences diffCollection, DirTrees dirTrees,
+	public void uiEditDone(DirTreesDiffResult diffCollection, DirTrees dirTrees,
 						   IUIEventsListener eventsListener) {
 		// TODO Auto-generated method stub
 

@@ -4,7 +4,7 @@ import com.owr.so.merge.gui.DirTrees;
 import com.owr.so.merge.gui.edit.gui.diff.modified.FileModifiedTab;
 import org.springframework.stereotype.Component;
 
-import com.owr.so.diff.model.DirTreesDifferences;
+import com.owr.so.diff.model.DirTreesDiffResult;
 import com.owr.so.merge.gui.log.IUIEventsListener;
 
 import javafx.geometry.NodeOrientation;
@@ -31,10 +31,10 @@ public class MainWindow {
 	private TabPane tabPane;
 
 	private DirTrees dirTrees;
-	private DirTreesDifferences treeDiffs;
+	private DirTreesDiffResult treeDiffs;
 	private IUIEventsListener eventsListener;
 
-	public MainWindow(DirTrees dirTrees, DirTreesDifferences treeDiffs, IUIEventsListener eventsListener) {
+	public MainWindow(DirTrees dirTrees, DirTreesDiffResult treeDiffs, IUIEventsListener eventsListener) {
 
 		this.dirTrees = dirTrees;
 		this.treeDiffs = treeDiffs;

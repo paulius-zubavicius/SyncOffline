@@ -3,7 +3,7 @@ package com.owr.so.merge.gui.edit.gui;
 import com.owr.so.merge.gui.DirTrees;
 import com.owr.so.merge.gui.IMergeHandler;
 import com.owr.so.merge.gui.edit.gui.preloader.SplashScreen;
-import com.owr.so.diff.model.DirTreesDifferences;
+import com.owr.so.diff.model.DirTreesDiffResult;
 import com.owr.so.merge.gui.edit.IDiffsEditor;
 import com.owr.so.merge.gui.log.IUIEventsListener;
 import com.owr.so.merge.gui.log.UIDefaultEventsListener;
@@ -32,7 +32,7 @@ public class DiffsEditorGui extends Application implements IDiffsEditor {
 
 		IUIEventsListener eventsListener = new UIDefaultEventsListener();
 		DirTrees dirTrees = mergeHandler.loadTrees(eventsListener);
-		DirTreesDifferences treeDiffs = mergeHandler.compareTrees(dirTrees, eventsListener);
+		DirTreesDiffResult treeDiffs = mergeHandler.compareTrees(dirTrees, eventsListener);
 
 		MainWindow mainWin = new MainWindow(dirTrees, treeDiffs, eventsListener);
 
