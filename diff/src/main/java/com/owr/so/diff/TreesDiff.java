@@ -7,7 +7,7 @@ import com.owr.so.diff.collector.TreesDiffCollector;
 import com.owr.so.diff.collector.dirmove.DirMoveDetector;
 import com.owr.so.diff.collector.similar.img.SimilarImgDetector;
 import com.owr.so.diff.model.DirTreesDiffResult;
-import com.owr.so.diff.model.DirTree;
+import com.owr.so.diff.model.RepoData;
 
 /**
  * @author Paulius Zubavicius
@@ -24,7 +24,7 @@ public class TreesDiff {
 	 * @param tree2
 	 *
 	 */
-	public DirTreesDiffResult findDifferences(DirTree tree1, DirTree tree2) {
+	public DirTreesDiffResult findDifferences(RepoData tree1, RepoData tree2) {
 
 		DirTreesDiffResult diffsResult = new DirTreesDiffResult();
 

@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DirEntity extends Entity implements Serializable {
+public class DirEntity implements Serializable {
 
 	private static final long serialVersionUID = 118318597202971234L;
 
-	private String path;
+//	private String path;
 
 	private List<FileEntity> files = new ArrayList<>();
 
@@ -17,17 +17,17 @@ public class DirEntity extends Entity implements Serializable {
 
 	}
 
-	public DirEntity(String path) {
-		this.path = path;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
+//	public DirEntity(String path) {
+//		this.path = path;
+//	}
+//
+//	public String getPath() {
+//		return path;
+//	}
+//
+//	public void setPath(String path) {
+//		this.path = path;
+//	}
 
 	public List<FileEntity> getFiles() {
 		return files;
@@ -37,18 +37,24 @@ public class DirEntity extends Entity implements Serializable {
 		this.files = files;
 	}
 
-
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof DirEntity)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof DirEntity))
+			return false;
 		DirEntity dirEntity = (DirEntity) o;
-		return path.equals(dirEntity.path) &&
-				files.equals(dirEntity.files);
+		return /* path.equals(dirEntity.path) && */ files.equals(dirEntity.files);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(path, files);
+		return Objects.hash(/* path, */ files);
 	}
+
+	@Override
+	public String toString() {
+		return "DirEntity [files=" + (files != null ? files.size() : 0) + "]";
+	}
+
 }

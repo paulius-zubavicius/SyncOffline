@@ -32,7 +32,6 @@ public class FileEntityUtil {
 
 	public static String getExcludeRootPath(Path dir, String rootPath) {
 		String excludedPath = dir.toAbsolutePath().toString();
-
 		return excludedPath.substring(rootPath.length());
 	}
 

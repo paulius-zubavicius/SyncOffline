@@ -1,6 +1,6 @@
 package com.owr.so.diff.collector;
 
-import com.owr.so.diff.model.DirTree;
+import com.owr.so.diff.model.RepoData;
 import com.owr.so.diff.model.DirTreesDiffResult;
 import com.owr.so.diff.model.FileEntity;
 import com.owr.so.diff.model.diffs.*;
@@ -12,7 +12,7 @@ public class TreesDiffCollector implements DiffCollector {
 
 
     @Override
-    public void apply(DirTree tree1, DirTree tree2, DirTreesDiffResult diffResult) {
+    public void apply(RepoData tree1, RepoData tree2, DirTreesDiffResult diffResult) {
 
         // FIXME refactor with sets, eq/hc of XxxDiff
         // TODO tests missing
@@ -21,7 +21,7 @@ public class TreesDiffCollector implements DiffCollector {
     }
 
 
-    private void treeOneSideDiff(DirTree tree1, DirTree tree2, DirTreesDiffResult diffs, boolean mirrorDiffScan) {
+    private void treeOneSideDiff(RepoData tree1, RepoData tree2, DirTreesDiffResult diffs, boolean mirrorDiffScan) {
 
         // Files
         tree1.getFiles().stream()
@@ -29,23 +29,23 @@ public class TreesDiffCollector implements DiffCollector {
                 .forEach(tree1File -> findDiffSubdir(tree1File, tree1, tree2, diffs, mirrorDiffScan));
 
         // Empty DIRs
-        tree1.getDirTree().keySet().stream()
+        tree1.getTrees().keySet().stream()
                 .filter(tree1Dir -> tree1Dir.startsWith(tree1.getSubDir()))
                 .forEach(tree1Dir -> findNewEmptyDir(tree1Dir, tree1, tree2, diffs));
 
     }
 
-    private void findNewEmptyDir(String tree1Dir, DirTree tree1, DirTree tree2, DirTreesDiffResult diffs) {
-        boolean notExistsInTree2 = tree2.getDirTree().get(tree1Dir) == null;
-        boolean emptyInTree1 = tree1.getDirTree().get(tree1Dir).getFiles().isEmpty();
+    private void findNewEmptyDir(String tree1Dir, RepoData tree1, RepoData tree2, DirTreesDiffResult diffs) {
+        boolean notExistsInTree2 = tree2.getTrees().get(tree1Dir) == null;
+        boolean emptyInTree1 = tree1.getTrees().get(tree1Dir).getFiles().isEmpty();
 
         if (notExistsInTree2 && emptyInTree1) {
-            diffs.getNewDirs().add(new DirNewDiff(tree1.getDirTree().get(tree1Dir)));
+            diffs.getNewDirs().add(new DirNewDiff(tree1.getTrees().get(tree1Dir)));
         }
 
     }
 
-    private void findDiffSubdir(FileEntity tree1File, DirTree tree1, DirTree tree2, DirTreesDiffResult diffs,
+    private void findDiffSubdir(FileEntity tree1File, RepoData tree1, RepoData tree2, DirTreesDiffResult diffs,
                                 boolean mirrorDiffScan) {
         // Find by path
         FileEntity tree2File = tree2.getFilesByPath().get(tree1File.getPath());
@@ -72,7 +72,7 @@ public class TreesDiffCollector implements DiffCollector {
         }
     }
 
-    private void filePathNotFound(FileEntity tree1File, DirTree tree1, DirTree tree2, DirTreesDiffResult diffs, boolean mirrorScan) {
+    private void filePathNotFound(FileEntity tree1File, RepoData tree1, RepoData tree2, DirTreesDiffResult diffs, boolean mirrorScan) {
 
         // "Not found" could mean 2 things: It's new or it's moved
 
@@ -167,7 +167,7 @@ public class TreesDiffCollector implements DiffCollector {
         }
     }
 
-    private List<FileEntity> findByChecksum(FileEntity tree1File, DirTree tree1) {
+    private List<FileEntity> findByChecksum(FileEntity tree1File, RepoData tree1) {
         return tree1.getFilesByChecksum().getOrDefault(tree1File.getChecksum(), new ArrayList<>());
     }
 }

@@ -5,11 +5,15 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.owr.so.diff.model.DirEntity;
-import com.owr.so.diff.model.DirTree;
 import com.owr.so.diff.model.FileEntity;
-import com.owr.so.scan.events.IDirTreeEventsListener;
+import com.owr.so.diff.model.RepoMetaData;
+import com.owr.so.scan.events.IScanEventsListener;
+import com.owr.so.scan.events.ScanEvent;
 import com.owr.so.scan.utils.FileEntityUtil;
 
 /**
@@ -18,20 +22,35 @@ import com.owr.so.scan.utils.FileEntityUtil;
  */
 public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
-	private IDirTreeEventsListener listener;
-	private DirTree currentTree;
-	private DirTree newTree;
+	private IScanEventsListener listener;
+	private Map<String, DirEntity> dirTree;
+	private List<String> excludes = new ArrayList<>();
+	private String path;
+	private RepoMetaData metaData;
+	private String prevDir = "";
 
-	public FileVisitorScanner(DirTree newTree, DirTree currentTree, IDirTreeEventsListener listener) {
+	public FileVisitorScanner(Map<String, DirEntity> dirTree, RepoMetaData metaData, String path, List<String> excludes,
+			IScanEventsListener listener) {
 		this.listener = listener;
-		this.currentTree = currentTree;
-		this.newTree = newTree;
+		this.dirTree = dirTree;
+		this.excludes = excludes;
+		this.path = path;
+		this.metaData = metaData;
 	}
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-		String dirPathString = putToDirTree(dir);
-		listener.readDirOk(dirPathString, dir, attrs);
+
+		String dirPathString = FileEntityUtil.getExcludeRootPath(dir, path);
+		if (excludes != null
+				&& excludes.stream().anyMatch(excStr -> !dirPathString.isEmpty() && dirPathString.startsWith(excStr))) {
+			listener.event(ScanEvent.SCAN_NEW_DIR_SKIPING, dir);
+			return FileVisitResult.SKIP_SUBTREE;
+		}
+
+		dirTree.put(dirPathString, new DirEntity());
+
+//		listener.event(ScanEvent.SCAN_NEW_DIR, dir);
 		return FileVisitResult.CONTINUE;
 	}
 
@@ -39,53 +58,53 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 
 		if (attrs.isRegularFile()) {
-			FileEntity entity = new FileEntity();
-			entity.setName(file.getFileName().toString());
-			entity.setAccessed(attrs.lastAccessTime().toMillis());
-			entity.setModified(attrs.lastModifiedTime().toMillis());
-			entity.setSize(attrs.size());
+			
+			if (!prevDir.equals(file.getParent().toAbsolutePath().toString())) {
+				prevDir = file.getParent().toAbsolutePath().toString();
+				listener.event(ScanEvent.SCAN_NEW_DIR, file.getParent());
+			}
 
-			// FIXME move to separate method
-			String excludedFilePath = FileEntityUtil.getExcludeRootPath(file.getParent(), newTree.getDirTreeRootPath());
-			DirEntity dirEntity = newTree.getDirTree().get(excludedFilePath);
+			String excludedFilePath = FileEntityUtil.getExcludeRootPath(file.getParent(), path);
+			DirEntity dirEntity = dirTree.get(excludedFilePath);
 
 			if (dirEntity == null) {
 				throw new RuntimeException();
 			}
-			entity.setDir(dirEntity);
-			// Add it self
+
+			FileEntity entity = createFileEntity(file, attrs);
 			dirEntity.getFiles().add(entity);
 
-			FileEntity oldOneEntity = currentTree.getFilesByPath()
-					.get(FileEntityUtil.getExcludeRootPath(file.toAbsolutePath(), newTree.getDirTreeRootPath()));
+			String key = FileEntityUtil.getExcludeRootPath(file.toAbsolutePath(), path);
+			FileEntity oldOneEntity = metaData.getFilesByPath().get(key);
 
-			boolean modifications = checkForModification(entity, oldOneEntity);
-			if (modifications) {
+			if (checkForModification(entity, oldOneEntity)) {
 				entity.setChecksum(FileEntityUtil.fileChecksum(file));
+				listener.event(ScanEvent.SCAN_FILE_OK_NEW, entity);
 			} else {
 				entity.setChecksum(oldOneEntity.getChecksum());
+				listener.event(ScanEvent.SCAN_FILE_OK_OLD, entity);
 			}
 
-			newTree.initTransientFields(entity);
-
-			listener.readFileOk(entity, modifications);
 		} else {
-			listener.skipped(file, attrs);
+			listener.event(ScanEvent.SCAN_FILE_SKIPPED, file, attrs);
 		}
 
 		return FileVisitResult.CONTINUE;
 	}
 
-	@Override
-	public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-		listener.readFailed(file, exc);
-		return FileVisitResult.CONTINUE;
+	private FileEntity createFileEntity(Path file, BasicFileAttributes attrs) {
+		FileEntity entity = new FileEntity();
+		entity.setName(file.getFileName().toString());
+		entity.setAccessed(attrs.lastAccessTime().toMillis());
+		entity.setModified(attrs.lastModifiedTime().toMillis());
+		entity.setSize(attrs.size());
+		return entity;
 	}
 
-	private String putToDirTree(Path dir) {
-		String dirPathString = FileEntityUtil.getExcludeRootPath(dir, newTree.getDirTreeRootPath());
-		newTree.getDirTree().put(dirPathString, new DirEntity(dirPathString));
-		return dirPathString;
+	@Override
+	public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+		listener.event(ScanEvent.SCAN_FAILED, file, exc);
+		return FileVisitResult.CONTINUE;
 	}
 
 	private boolean checkForModification(FileEntity fNew, FileEntity fOld) {

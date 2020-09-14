@@ -1,7 +1,7 @@
 package com.owr.so.autodetect.subdir;
 
 
-import com.owr.so.diff.model.DirTree;
+import com.owr.so.diff.model.RepoData;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
 public class SubDirAutoDetector {
 
 
-    public List<String> detectTree1InTree2(DirTree tree1, DirTree tree2) {
+    public List<String> detectTree1InTree2(RepoData tree1, RepoData tree2) {
         return null;
     }
 
