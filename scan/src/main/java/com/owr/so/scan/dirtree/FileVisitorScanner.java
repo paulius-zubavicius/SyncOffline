@@ -45,8 +45,7 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 			entity.setModified(attrs.lastModifiedTime().toMillis());
 			entity.setSize(attrs.size());
 
-
-			//FIXME move to separate method
+			// FIXME move to separate method
 			String excludedFilePath = FileEntityUtil.getExcludeRootPath(file.getParent(), newTree.getDirTreeRootPath());
 			DirEntity dirEntity = newTree.getDirTree().get(excludedFilePath);
 

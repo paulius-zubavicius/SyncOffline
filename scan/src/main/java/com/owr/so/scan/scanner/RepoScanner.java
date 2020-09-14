@@ -29,34 +29,34 @@ public class RepoScanner {
 
 	public void scanPath(String metaFileStr, String scanDirPath) throws Exception {
 
-			if (scanDirPath != null) {
+		if (scanDirPath != null) {
 
-				if (FileUtil.pathExists(scanDirPath)) {
-					scanFull(metaFileStr, scanDirPath);
+			if (FileUtil.pathExists(scanDirPath)) {
+				scanFull(metaFileStr, scanDirPath);
+				return;
+			}
+
+			throw new Exception("Scanning target directory path doesn't exists: [" + scanDirPath + "]");
+
+		} else {
+
+			if (FileUtil.pathExists(metaFileStr)) {
+				DirTree currentTree = DirTreeEntityLoader.load(metaFileStr);
+
+				if (FileUtil.pathExists(currentTree.getDirTreeRootPath())) {
+					scanUpdate(metaFileStr);
 					return;
 				}
 
-				throw new Exception("Scanning target directory path doesn't exists: [" + scanDirPath + "]");
+				throw new Exception("Scanning target directory path doesn't exists: ["
+						+ currentTree.getDirTreeRootPath()
+						+ "] Maybe target root directory was renamed or moved. Be sure that the meta file was created for current computer or disk.");
 
-			} else {
-
-				if (FileUtil.pathExists(metaFileStr)) {
-					DirTree currentTree = DirTreeEntityLoader.load(metaFileStr);
-
-					if (FileUtil.pathExists(currentTree.getDirTreeRootPath())) {
-						scanUpdate(metaFileStr);
-						return;
-					}
-
-					throw new Exception("Scanning target directory path doesn't exists: ["
-							+ currentTree.getDirTreeRootPath()
-							+ "] Maybe target root directory was renamed or moved. Be sure that the meta file was created for current computer or disk.");
-
-				}
-
-				throw new Exception(
-						"Meta file not found. Please specify exiting meta file or specify new scanning directory path");
 			}
+
+			throw new Exception(
+					"Meta file not found. Please specify exiting meta file or specify new scanning directory path");
+		}
 	}
 
 	public void readMetaFileStatus(String metaFileStr) {
@@ -82,11 +82,11 @@ public class RepoScanner {
 		evListener.metaFileStatus(metaFileExists, lastTimeModified, rootDir, rootDirExists, osType);
 	}
 
-    private void scanFull(String metaFileStr, String scanDirStr) {
+	private void scanFull(String metaFileStr, String scanDirStr) {
 		scanPath(false, metaFileStr, scanDirStr);
 	}
 
-    private void scanUpdate(String metaFileStr) {
+	private void scanUpdate(String metaFileStr) {
 		scanPath(true, metaFileStr, null);
 	}
 

@@ -10,14 +10,10 @@ import java.time.Duration;
  */
 public interface IScanEventsListener {
 
-
-
-	//void businessCaseException(Exception e, Options options);
-
-	void metaFileStatus(boolean metaFileExists, long lastTimeModified, String rootDir, boolean rootDirExists, String osCode);
+	// void businessCaseException(Exception e, Options options);
+	void metaFileStatus(boolean metaFileExists, long lastTimeModified, String rootDir, boolean rootDirExists,
+			String osCode);
 
 	void scanDone(Duration timeElapsed, DirTree newDirTree);
-
-
 
 }

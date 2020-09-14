@@ -1,0 +1,37 @@
+Todo
+
+Defects:
+	- works only on linux
+	- Win/Lin suderinamumas, Win metaFailus formatuoti su "/" skirtuku ir neliesti kodo kuris iesko mapuose ir pan. Tik tuomet viska reiktu mazosiomis raidemis laikyti
+	
+Features
+    Img comparator (for duplicates)
+
+	- parasyt modulius taip, jog butu nesunku pakisti storage pakeista implementacija visoms dalims (FTP?)
+	- MERGE addOn?
+		- idet komanda showDuplicates (kad ismestu sarasa dublikatu)
+		- idet foto atpazinima
+
+
+	- automatinis subdir artinkimas pries merginant
+	
+    ? konsolinis redagavimas - duoda issitaisyt konfliktus (?!?)
+	- dir move ir kita automatizacija - automatinis atpazinimas (opcija? ar tiesiog veikimas?)
+	- merginant ir  pagal hasha ir pagal advanced
+	- Possible duplicates stepas (tik toje pacioje repo, ir pagal hasha ir pagal advanced) - gal scanavimo metu?
+	- output'o modulis
+	
+MERGE:
+
+
+	- SCAN: itraukti identifikavimo string'a (arba ives ranka arba suformuos pagal kompo parametrus)
+
+	- Testai merge logikai ir validatoriams?
+
+	- Ranamint vietas kur 1/2 nereiskia pirmo repo ir antro repo
+	
+	
+GUI:
+
+	- Kai bus padarytas GUI - ismesti consolini varianta
+	
