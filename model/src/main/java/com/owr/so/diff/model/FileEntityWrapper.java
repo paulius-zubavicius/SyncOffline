@@ -19,7 +19,7 @@ public class FileEntityWrapper {
 	}
 
 	public String getPath() {
-		return path;
+		return path + "/" + file.getName();
 	}
 
 	public FileEntity getFile() {
