@@ -2,13 +2,14 @@ package com.owr.so.diff.model;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RepoData {
 
 	private LocalDateTime lastScan = null;
 
-	private Map<String, Map<String, DirEntity>> trees = new HashMap<>();
+	private Map<String, List<FileEntity>> tree = new HashMap<>();
 
 	public LocalDateTime getLastScan() {
 		return lastScan;
@@ -18,8 +19,8 @@ public class RepoData {
 		this.lastScan = lastScan;
 	}
 
-	public Map<String, Map<String, DirEntity>> getTrees() {
-		return trees;
+	public Map<String, List<FileEntity>> getTree() {
+		return tree;
 	}
 
 	@Override

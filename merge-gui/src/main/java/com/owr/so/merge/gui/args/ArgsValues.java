@@ -2,42 +2,24 @@ package com.owr.so.merge.gui.args;
 
 public class ArgsValues {
 
-	private String metaFile1Path;
-	private String metaFile2Path;
+	private String repoFilePath1;
+	private String repoFilePath2;
 
-	private String subDir1;
-	private String subDir2;
+	ArgsValues(String repoFilePath1, String repoFilePath2) {
 
-	private boolean guiMode;
-
-	ArgsValues(String metaFile1Path, String metaFile2Path, String subDir1, String subDir2, boolean guiMode) {
-
-		this.metaFile1Path = metaFile1Path;
-		this.metaFile2Path = metaFile2Path;
-		this.subDir1 = subDir1;
-		this.subDir2 = subDir2;
-		this.guiMode = guiMode;
+		this.repoFilePath1 = repoFilePath1;
+		this.repoFilePath2 = repoFilePath2;
 
 	}
 
-	public String getMetaFile1Path() {
-		return metaFile1Path;
+	public String getRepoFilePath1() {
+		return repoFilePath1;
 	}
 
-	public String getMetaFile2Path() {
-		return metaFile2Path;
+	public String getRepoFilePath2() {
+		return repoFilePath2;
 	}
 
-	public String getSubDir1() {
-		return subDir1;
-	}
 
-	public String getSubDir2() {
-		return subDir2;
-	}
-
-	public boolean isGuiMode() {
-		return guiMode;
-	}
 
 }

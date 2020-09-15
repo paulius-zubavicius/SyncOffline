@@ -1,12 +1,14 @@
 package com.owr.so.diff.model;
 
 import java.util.List;
+import java.util.Map;
 
+@Deprecated
 public class DirTree {
 
 	private String id;
 
-	private List<DirEntity> trees;
+	private Map<String, List<FileEntity>> tree;
 
 	public String getId() {
 		return id;
@@ -16,12 +18,12 @@ public class DirTree {
 		this.id = id;
 	}
 
-	public List<DirEntity> getTrees() {
-		return trees;
+	public Map<String, List<FileEntity>> getTree() {
+		return tree;
 	}
 
-	public void setTrees(List<DirEntity> trees) {
-		this.trees = trees;
+	public void setTrees(Map<String, List<FileEntity>> tree) {
+		this.tree = tree;
 	}
 
 }

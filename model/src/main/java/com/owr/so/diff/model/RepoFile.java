@@ -4,44 +4,44 @@ import java.util.List;
 
 public class RepoFile {
 
-	private String pc;
+//	private String pc;
 
-	private boolean absolutePaths;
+	private PathType pathType;
 
-	private List<ScanPath> paths;
+	private String path;
 
-	public RepoFile() {
+	private List<String> excludes;
 
+//	public String getPc() {
+//		return pc;
+//	}
+//
+//	public void setPc(String pc) {
+//		this.pc = pc;
+//	}
+
+	public PathType getPathType() {
+		return pathType;
 	}
 
-	public RepoFile(String pc, boolean absolutePaths, List<ScanPath> paths) {
-		this.pc = pc;
-		this.paths = paths;
-		this.absolutePaths = absolutePaths;
+	public void setPathType(PathType pathType) {
+		this.pathType = pathType;
 	}
 
-	public String getPc() {
-		return pc;
+	public String getPath() {
+		return path;
 	}
 
-	public void setPc(String pc) {
-		this.pc = pc;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
-	public List<ScanPath> getPaths() {
-		return paths;
+	public List<String> getExcludes() {
+		return excludes;
 	}
 
-	public void setPaths(List<ScanPath> paths) {
-		this.paths = paths;
-	}
-
-	public boolean isAbsolutePaths() {
-		return absolutePaths;
-	}
-
-	public void setAbsolutePaths(boolean absolutePaths) {
-		this.absolutePaths = absolutePaths;
+	public void setExcludes(List<String> excludes) {
+		this.excludes = excludes;
 	}
 
 }

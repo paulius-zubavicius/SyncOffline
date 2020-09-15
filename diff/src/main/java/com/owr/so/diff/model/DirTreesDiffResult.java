@@ -15,7 +15,7 @@ public class DirTreesDiffResult {
 
 	private List<FileDuplicatesDiff> duplicates = new ArrayList<>();
 
-	private List<DirNewDiff> newDirs = new ArrayList<>();
+//	private List<DirNewDiff> newDirs = new ArrayList<>();
 
 	public List<FileModifiedDiff> getModifiedFiles() {
 		return modifiedFiles;
@@ -33,8 +33,8 @@ public class DirTreesDiffResult {
 		return duplicates;
 	}
 
-	public List<DirNewDiff> getNewDirs() {
-		return newDirs;
-	}
+//	public List<DirNewDiff> getNewDirs() {
+//		return newDirs;
+//	}
 
 }

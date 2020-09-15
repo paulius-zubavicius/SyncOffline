@@ -1,11 +1,12 @@
 package com.owr.so.autodetect.subdir;
 
 
-import com.owr.so.diff.model.RepoData;
-
 import java.util.List;
 
+import com.owr.so.diff.model.RepoData;
+
 // TODO idea: do not ask user about dir or sub dir, detect it automaticly for him
+@Deprecated
 public class SubDirAutoDetector {
 
 

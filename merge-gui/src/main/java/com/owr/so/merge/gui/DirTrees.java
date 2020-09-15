@@ -1,26 +1,31 @@
 package com.owr.so.merge.gui;
 
-import com.owr.so.diff.model.DirTree;
+import com.owr.so.diff.model.RepoMetaData;
 
 public class DirTrees {
 
-	private DirTree tree1;
-	private DirTree tree2;
+	private RepoMetaData meta1;
+	private RepoMetaData meta2;
 
-	public DirTree getTree1() {
-		return tree1;
+	public DirTrees(RepoMetaData meta1, RepoMetaData meta2) {
+		this.meta1 = meta1;
+		this.meta2 = meta2;
 	}
 
-	public void setTree1(DirTree tree1) {
-		this.tree1 = tree1;
+	public RepoMetaData getMeta1() {
+		return meta1;
 	}
 
-	public DirTree getTree2() {
-		return tree2;
+	public void setMeta1(RepoMetaData meta1) {
+		this.meta1 = meta1;
 	}
 
-	public void setTree2(DirTree tree2) {
-		this.tree2 = tree2;
+	public RepoMetaData getMeta2() {
+		return meta2;
+	}
+
+	public void setMeta2(RepoMetaData meta2) {
+		this.meta2 = meta2;
 	}
 
 }

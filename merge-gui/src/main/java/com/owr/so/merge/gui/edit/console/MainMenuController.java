@@ -11,12 +11,12 @@ public class MainMenuController {
 	private static final String KEY_2 = "2";
 	private static final String KEY_3 = "3";
 	private static final String KEY_4 = "4";
-	private static final String KEY_5 = "5";
+//	private static final String KEY_5 = "5";
 
 	private int modified;
 	private int moved;
 	private int newFiles;
-	private int newDirs;
+//	private int newDirs;
 	private int duplicates;
 	
 	private DirTreesDiffResult treeDiffs;
@@ -29,7 +29,7 @@ public class MainMenuController {
 		modified = treeDiffs.getModifiedFiles().size();
 		moved = treeDiffs.getMovedFiles().size();
 		newFiles = treeDiffs.getNewFiles().size();
-		newDirs = treeDiffs.getNewDirs().size();
+//		newDirs = treeDiffs.getNewDirs().size();
 		duplicates = treeDiffs.getDuplicates().size();
 	}
 
@@ -38,7 +38,7 @@ public class MainMenuController {
 		System.out.println(formtMenuLineStr(1, "Modified files................. ", modified));
 		System.out.println(formtMenuLineStr(2, "Moved/Renamed files............ ", moved));
 		System.out.println(formtMenuLineStr(3, "New files...................... ", newFiles));
-		System.out.println(formtMenuLineStr(4, "New direrctories............... ", newDirs));
+//		System.out.println(formtMenuLineStr(4, "New direrctories............... ", newDirs));
 		System.out.println(formtMenuLineStr(5, "Conflicted & dublicated files.. ", duplicates));
 
 	}
@@ -56,11 +56,11 @@ public class MainMenuController {
 			System.err.println("Not implemented");
 		}
 
-		if (isNewDirs() && KEY_4.equals(keyInput)) {
-			System.err.println("Not implemented");
-		}
+//		if (isNewDirs() && KEY_4.equals(keyInput)) {
+//			System.err.println("Not implemented");
+//		}
 
-		if (isDuplicates() && KEY_5.equals(keyInput)) {
+		if (isDuplicates() && KEY_4.equals(keyInput)) {
 			System.err.println("Not implemented");
 		}
 	}
@@ -77,11 +77,11 @@ public class MainMenuController {
 		if (isNewFiles()) {
 			mainMenu.add(KEY_3);
 		}
-		if (isNewDirs()) {
-			mainMenu.add(KEY_4);
-		}
+//		if (isNewDirs()) {
+//			mainMenu.add(KEY_4);
+//		}
 		if (isDuplicates()) {
-			mainMenu.add(KEY_5);
+			mainMenu.add(KEY_4);
 		}
 		return mainMenu;
 	}
@@ -98,9 +98,9 @@ public class MainMenuController {
 		return newFiles > 0;
 	}
 
-	private boolean isNewDirs() {
-		return newDirs > 0;
-	}
+//	private boolean isNewDirs() {
+//		return newDirs > 0;
+//	}
 
 	private boolean isDuplicates() {
 		return duplicates > 0;

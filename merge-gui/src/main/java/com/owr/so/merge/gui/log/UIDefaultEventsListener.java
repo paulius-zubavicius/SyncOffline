@@ -6,22 +6,21 @@ import java.nio.file.Paths;
 import java.time.Duration;
 
 import com.owr.so.commons.ConvertUtil;
-import com.owr.so.merge.gui.args.ArgsValues;
-import com.owr.so.diff.model.diffs.DirNewDiff;
+import com.owr.so.diff.model.DirTreesDiffResult;
+import com.owr.so.diff.model.FileEntityWrapper;
 import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
 import com.owr.so.diff.model.diffs.FileNewDiff;
-import com.owr.so.diff.model.DirTreesDiffResult;
-import com.owr.so.diff.model.FileEntity;
+import com.owr.so.merge.gui.args.ArgsValues;
 
 public class UIDefaultEventsListener implements IUIEventsListener {
 
 	@Override
 	public void treesLoaded(ArgsValues argsValues) {
 		long currentTime = System.currentTimeMillis();
-		printMetaFileInfo(currentTime, argsValues.getMetaFile1Path());
-		printMetaFileInfo(currentTime, argsValues.getMetaFile2Path());
+		printMetaFileInfo(currentTime, argsValues.getRepoFilePath1());
+		printMetaFileInfo(currentTime, argsValues.getRepoFilePath2());
 	}
 
 	@Override
@@ -50,8 +49,8 @@ public class UIDefaultEventsListener implements IUIEventsListener {
 
 			for (FileModifiedDiff modFile : diffCollection.getModifiedFiles()) {
 
-				System.out.println("(" + modFile.getFile1().getRepoId() + ")" + modFile.getFile1().getPath());
-				System.out.println("(" + modFile.getFile2().getRepoId() + ")" + modFile.getFile2().getPath());
+				System.out.println("(" + modFile.getFile1().getRepoName() + ")" + modFile.getFile1().getPath());
+				System.out.println("(" + modFile.getFile2().getRepoName() + ")" + modFile.getFile2().getPath());
 				System.out.println("Conflict: " + modFile.getAction() + "");
 				System.out.println("----------------------------------------------------------------");
 			}
@@ -64,8 +63,8 @@ public class UIDefaultEventsListener implements IUIEventsListener {
 
 			for (FileMovedDiff modFile : diffCollection.getMovedFiles()) {
 
-				System.out.println("(" + modFile.getFile1().getRepoId() + ")" + modFile.getFile1().getPath());
-				System.out.println("(" + modFile.getFile2().getRepoId() + ")" + modFile.getFile2().getPath());
+				System.out.println("(" + modFile.getFile1().getRepoName() + ")" + modFile.getFile1().getPath());
+				System.out.println("(" + modFile.getFile2().getRepoName() + ")" + modFile.getFile2().getPath());
 				System.out.println("Conflict: " + modFile.getAction() + "");
 				System.out.println("----------------------------------------------------------------");
 			}
@@ -77,7 +76,7 @@ public class UIDefaultEventsListener implements IUIEventsListener {
 			System.out.println("================================================================");
 
 			for (FileNewDiff modFile : diffCollection.getNewFiles()) {
-				System.out.println("(" + modFile.getFile1().getRepoId() + ")" + modFile.getFile1().getPath());
+				System.out.println("(" + modFile.getFile1().getRepoName() + ")" + modFile.getFile1().getPath());
 				System.out.println("----------------------------------------------------------------");
 			}
 		}
@@ -91,12 +90,12 @@ public class UIDefaultEventsListener implements IUIEventsListener {
 
 			for (FileDuplicatesDiff modFile : diffCollection.getDuplicates()) {
 
-				for (FileEntity fileEntity : modFile.getFiles1()) {
-					System.out.println("(" + fileEntity.getRepoId() + ")" + fileEntity.getPath());
+				for (FileEntityWrapper fileEntity : modFile.getFiles1()) {
+					System.out.println("(" + fileEntity.getRepoName() + ")" + fileEntity.getPath());
 				}
 
-				for (FileEntity fileEntity : modFile.getFiles2()) {
-					System.out.println("(" + fileEntity.getRepoId() + ")" + fileEntity.getPath());
+				for (FileEntityWrapper fileEntity : modFile.getFiles2()) {
+					System.out.println("(" + fileEntity.getRepoName() + ")" + fileEntity.getPath());
 				}
 			}
 
@@ -104,16 +103,16 @@ public class UIDefaultEventsListener implements IUIEventsListener {
 
 		}
 
-		if (!diffCollection.getNewDirs().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("New dirs");
-			System.out.println("================================================================");
-
-			for (DirNewDiff modFile : diffCollection.getNewDirs()) {
-				System.out.println("(" + modFile.getDir1().getRepoId() + ")" + modFile.getDir1().getPath());
-				System.out.println("----------------------------------------------------------------");
-			}
-		}
+//		if (!diffCollection.getNewDirs().isEmpty()) {
+//			System.out.println("================================================================");
+//			System.out.println("New dirs");
+//			System.out.println("================================================================");
+//
+//			for (DirNewDiff modFile : diffCollection.getNewDirs()) {
+//				System.out.println("(" + modFile.getDir1().getRepoId() + ")" + modFile.getDir1().getPath());
+//				System.out.println("----------------------------------------------------------------");
+//			}
+//		}
 
 	}
 

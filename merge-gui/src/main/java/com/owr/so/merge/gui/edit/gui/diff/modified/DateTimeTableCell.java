@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.FileEntity;
+import com.owr.so.diff.model.FileEntityWrapper;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.text.Font;
@@ -33,13 +34,14 @@ public class DateTimeTableCell extends TableCell<FileModifiedDiff, FileModifiedD
 			setText(null);
 
 		} else {
-			FileEntity entity = (firstFile ? item.getFile1() : item.getFile2());
-			FileEntity entityOther = (!firstFile ? item.getFile1() : item.getFile2());
+			FileEntityWrapper entity = (firstFile ? item.getFile1() : item.getFile2());
+			FileEntityWrapper entityOther = (!firstFile ? item.getFile1() : item.getFile2());
 
-			setText(LocalDateTime.ofInstant(Instant.ofEpochMilli(entity.getModified()), ZoneId.systemDefault())
+			setText(LocalDateTime
+					.ofInstant(Instant.ofEpochMilli(entity.getFile().getModified()), ZoneId.systemDefault())
 					.format(dtf));
 
-			FontWeight fw = ((entity.getModified() > entityOther.getModified()) ? BOLD : NORMAL);
+			FontWeight fw = ((entity.getFile().getModified() > entityOther.getFile().getModified()) ? BOLD : NORMAL);
 			setFont(Font.font("Verdana", fw, 12));
 
 		}

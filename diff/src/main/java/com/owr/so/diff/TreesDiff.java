@@ -2,12 +2,12 @@ package com.owr.so.diff;
 
 import java.util.List;
 
-import com.owr.so.diff.collector.DiffCollector;
+import com.owr.so.diff.collector.DiffFilter;
 import com.owr.so.diff.collector.TreesDiffCollector;
-import com.owr.so.diff.collector.dirmove.DirMoveDetector;
-import com.owr.so.diff.collector.similar.img.SimilarImgDetector;
+import com.owr.so.diff.collector.dirmove.DirMoveFilter;
+import com.owr.so.diff.collector.similar.img.SimilarImgFilter;
 import com.owr.so.diff.model.DirTreesDiffResult;
-import com.owr.so.diff.model.RepoData;
+import com.owr.so.diff.model.RepoMetaData;
 
 /**
  * @author Paulius Zubavicius
@@ -16,19 +16,19 @@ import com.owr.so.diff.model.RepoData;
  */
 public class TreesDiff {
 
-
-	private static final List<DiffCollector> plugins = List.of(new TreesDiffCollector(), new SimilarImgDetector(), new DirMoveDetector());
+	private static final List<DiffFilter> filters = List.of(new SimilarImgFilter(), new DirMoveFilter());
 
 	/**
 	 * @param tree1
 	 * @param tree2
 	 *
 	 */
-	public DirTreesDiffResult findDifferences(RepoData tree1, RepoData tree2) {
+	public DirTreesDiffResult findDifferences(RepoMetaData tree1, RepoMetaData tree2) {
 
 		DirTreesDiffResult diffsResult = new DirTreesDiffResult();
 
-		plugins.forEach(diffCollector -> diffCollector.apply(tree1, tree2, diffsResult));
+		new TreesDiffCollector().collect(tree1, tree2, diffsResult);
+		filters.forEach(diffCollector -> diffCollector.apply(tree1, tree2, diffsResult));
 
 		return diffsResult;
 	}

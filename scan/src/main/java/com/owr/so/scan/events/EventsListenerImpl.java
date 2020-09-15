@@ -4,7 +4,10 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Duration;
 
 import com.owr.so.commons.ConvertUtil;
+import com.owr.so.commons.IScanEventsListener;
+import com.owr.so.commons.ScanEvent;
 import com.owr.so.diff.model.FileEntity;
+import com.owr.so.diff.model.FileEntityWrapper;
 import com.owr.so.diff.model.RepoData;
 import com.owr.so.diff.model.RepoMetaData;
 
@@ -32,12 +35,10 @@ public class EventsListenerImpl implements IScanEventsListener {
 		case SCAN_FILE_OK_OLD:
 			break;
 
-		case VALIDATION_BLANK_ID:
 		case VALIDATION_MOUNTED_DISC:
 		case VALIDATION_OTHER_PCS_REPO:
 		case VALIDATION_BLANK_PATH:
 		case VALIDATION_NOT_A_REPO_FILE:
-		case VALIDATION_PATH_NAMES_NOT_UNIQUE:
 		case VALIDATION_REPO_FILE_NOT_EXIST:
 			System.err.println("Warn: " + printObjs(data));
 			break;
@@ -128,11 +129,11 @@ public class EventsListenerImpl implements IScanEventsListener {
 		System.out.println();
 		// All files:
 
-		RepoMetaData rmd = new RepoMetaData(newDirTree);
+		RepoMetaData rmd = new RepoMetaData(newDirTree, null);
 		System.out.println("Read files       : " + rmd.getFiles().size());
 		long readSize = 0;
-		for (FileEntity ent : rmd.getFiles()) {
-			readSize += ent.getSize();
+		for (FileEntityWrapper ent : rmd.getFiles()) {
+			readSize += ent.getFile().getSize();
 		}
 		System.out.println("Read size        : " + ConvertUtil.getSizeInHumanFormat(readSize));
 		// Scanned files:

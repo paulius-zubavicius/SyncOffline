@@ -1,4 +1,4 @@
-package com.owr.so.scan.events;
+package com.owr.so.commons;
 
 /**
  * @author Paulius Zubavicius

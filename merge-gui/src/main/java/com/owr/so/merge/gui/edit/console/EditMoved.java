@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.owr.so.diff.model.DiffAction;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
 import com.owr.so.diff.model.FileEntity;
+import com.owr.so.diff.model.FileEntityWrapper;
 
 public class EditMoved extends MenuController {
 
@@ -68,8 +69,8 @@ public class EditMoved extends MenuController {
 
 	private void printDiffTitle(int nr, FileMovedDiff diff) {
 
-		FileEntity f1 = diff.getFile1();
-		FileEntity f2 = diff.getFile2();
+		FileEntityWrapper f1 = diff.getFile1();
+		FileEntityWrapper f2 = diff.getFile2();
 
 		System.out.println();
 		System.out.println(
@@ -81,33 +82,33 @@ public class EditMoved extends MenuController {
 
 	}
 
-	private void sysOutFileInfo(FileEntity f, FileMovedDiff diff, int nr) {
-		System.out.println("  (" + f.getRepoId() + ")" + f.getPath());
-		System.out.println("         - Access date: " + convertToHumanReadable(f.getAccessed()));
+	private void sysOutFileInfo(FileEntityWrapper f, FileMovedDiff diff, int nr) {
+		System.out.println("  (" + f.getRepoName() + ")" + f.getPath());
+		System.out.println("         - Access date: " + convertToHumanReadable(f.getFile().getAccessed()));
 		System.out.println("         - " + showTheStatus(nr, f, diff));
 		System.out.println();
 
 	}
 
-	private String showTheStatus(int nr, FileEntity f, FileMovedDiff diff) {
+	private String showTheStatus(int nr, FileEntityWrapper f, FileMovedDiff diff) {
 
-		if (diff.getFile1().getAccessed() == diff.getFile2().getAccessed()) {
+		if (diff.getFile1().getFile().getAccessed() == diff.getFile2().getFile().getAccessed()) {
 			return "CONFLICT: both files are the same age. Choose this file as a newer with cmd: [" + nr + "T"
-					+ f.getRepoId() + "]";
+					+ f.getRepoName() + "]";
 		} else {
 
-			int newer = diff.getFile2().getRepoId();
-			int older = diff.getFile1().getRepoId();
-			if (diff.getFile1().getAccessed() > diff.getFile2().getAccessed()) {
-				newer = diff.getFile1().getRepoId();
-				older = diff.getFile2().getRepoId();
+			String newer = diff.getFile2().getRepoName();
+			String older = diff.getFile1().getRepoName();
+			if (diff.getFile1().getFile().getAccessed() > diff.getFile2().getFile().getAccessed()) {
+				newer = diff.getFile1().getRepoName();
+				older = diff.getFile2().getRepoName();
 			}
 
-			if (f.getRepoId() == older && DiffAction.UPDATE.equals(diff.getAction())) {
+			if (f.getRepoName().equals(older) && DiffAction.UPDATE.equals(diff.getAction())) {
 				return "This will be UPDATED";
 			}
 
-			if (f.getRepoId() == newer && DiffAction.REVERT.equals(diff.getAction())) {
+			if (f.getRepoName().equals(newer) && DiffAction.REVERT.equals(diff.getAction())) {
 				return "This will be REVERTED";
 			}
 

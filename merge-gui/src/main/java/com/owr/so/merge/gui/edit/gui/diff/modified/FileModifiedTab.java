@@ -77,7 +77,7 @@ public class FileModifiedTab extends Tab implements ReloadableTab {
 						setStyle("");
 					} else {
 
-						boolean firstNewer = item.getFile1().getModified() > item.getFile2().getModified();
+						boolean firstNewer = item.getFile1().getFile().getModified() > item.getFile2().getFile().getModified();
 
 						setGraphic(icons.getImgView(item.getAction().toString()));
 						setTextFill(getColor(item.getAction()));

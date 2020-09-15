@@ -9,11 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.owr.so.diff.model.DirEntity;
+import com.owr.so.commons.IScanEventsListener;
+import com.owr.so.commons.ScanEvent;
 import com.owr.so.diff.model.FileEntity;
 import com.owr.so.diff.model.RepoMetaData;
-import com.owr.so.scan.events.IScanEventsListener;
-import com.owr.so.scan.events.ScanEvent;
 import com.owr.so.scan.utils.FileEntityUtil;
 
 /**
@@ -23,14 +22,14 @@ import com.owr.so.scan.utils.FileEntityUtil;
 public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 	private IScanEventsListener listener;
-	private Map<String, DirEntity> dirTree;
+	private Map<String, List<FileEntity>> dirTree;
 	private List<String> excludes = new ArrayList<>();
 	private String path;
 	private RepoMetaData metaData;
 	private String prevDir = "";
 
-	public FileVisitorScanner(Map<String, DirEntity> dirTree, RepoMetaData metaData, String path, List<String> excludes,
-			IScanEventsListener listener) {
+	public FileVisitorScanner(Map<String, List<FileEntity>> dirTree, RepoMetaData metaData, String path,
+			List<String> excludes, IScanEventsListener listener) {
 		this.listener = listener;
 		this.dirTree = dirTree;
 		this.excludes = excludes;
@@ -48,7 +47,7 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 			return FileVisitResult.SKIP_SUBTREE;
 		}
 
-		dirTree.put(dirPathString, new DirEntity());
+		dirTree.put(dirPathString, new ArrayList<>());
 
 //		listener.event(ScanEvent.SCAN_NEW_DIR, dir);
 		return FileVisitResult.CONTINUE;
@@ -58,24 +57,25 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 
 		if (attrs.isRegularFile()) {
-			
+
 			if (!prevDir.equals(file.getParent().toAbsolutePath().toString())) {
 				prevDir = file.getParent().toAbsolutePath().toString();
 				listener.event(ScanEvent.SCAN_NEW_DIR, file.getParent());
 			}
 
 			String excludedFilePath = FileEntityUtil.getExcludeRootPath(file.getParent(), path);
-			DirEntity dirEntity = dirTree.get(excludedFilePath);
+			List<FileEntity> dirEntity = dirTree.get(excludedFilePath);
 
 			if (dirEntity == null) {
 				throw new RuntimeException();
 			}
 
 			FileEntity entity = createFileEntity(file, attrs);
-			dirEntity.getFiles().add(entity);
+			dirEntity.add(entity);
 
 			String key = FileEntityUtil.getExcludeRootPath(file.toAbsolutePath(), path);
-			FileEntity oldOneEntity = metaData.getFilesByPath().get(key);
+			FileEntity oldOneEntity = metaData.getFilesByPath().get(key) == null ? null
+					: metaData.getFilesByPath().get(key).getFile();
 
 			if (checkForModification(entity, oldOneEntity)) {
 				entity.setChecksum(FileEntityUtil.fileChecksum(file));

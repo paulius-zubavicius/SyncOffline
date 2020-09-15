@@ -3,6 +3,7 @@ package com.owr.so.diff.model.diffs;
 import com.owr.so.diff.model.UserResolution;
 import com.owr.so.diff.model.DirEntity;
 
+@Deprecated
 public class DirNewDiff extends UserResolution {
 
 	private DirEntity dir1;

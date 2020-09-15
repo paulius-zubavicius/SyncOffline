@@ -1,19 +1,19 @@
 package com.owr.so.diff.model.diffs;
 
 import com.owr.so.diff.model.DiffAction;
+import com.owr.so.diff.model.FileEntityWrapper;
 import com.owr.so.diff.model.UserResolution;
-import com.owr.so.diff.model.FileEntity;
 
 public class FileMovedDiff extends UserResolution {
 
-	private FileEntity file1;
-	private FileEntity file2;
+	private FileEntityWrapper file1;
+	private FileEntityWrapper file2;
 
-	public FileMovedDiff(FileEntity file1, FileEntity file2) {
+	public FileMovedDiff(FileEntityWrapper file1, FileEntityWrapper file2) {
 		this.file1 = file1;
 		this.file2 = file2;
 
-		if (file1.getAccessed() == file2.getAccessed()) {
+		if (file1.getFile().getAccessed() == file2.getFile().getAccessed()) {
 			super.setAction(DiffAction.IGNORE);
 		} else {
 			super.setAction(DiffAction.UPDATE);
@@ -21,18 +21,18 @@ public class FileMovedDiff extends UserResolution {
 
 	}
 
-	public FileEntity getFile1() {
+	public FileEntityWrapper getFile1() {
 		return file1;
 	}
 
-	public FileEntity getFile2() {
+	public FileEntityWrapper getFile2() {
 		return file2;
 	}
 
 	@Override
 	public void setAction(DiffAction action) {
 
-		if (file1.getAccessed() == file2.getAccessed()) {
+		if (file1.getFile().getAccessed() == file2.getFile().getAccessed()) {
 			super.setAction(DiffAction.IGNORE);
 		} else {
 			super.setAction(action);
