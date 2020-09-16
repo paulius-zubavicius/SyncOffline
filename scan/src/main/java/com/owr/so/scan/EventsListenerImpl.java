@@ -1,4 +1,4 @@
-package com.owr.so.scan.events;
+package com.owr.so.scan;
 
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Duration;

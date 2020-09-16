@@ -1,4 +1,4 @@
-package com.owr.so.scan.dirtree;
+package com.owr.so.scan;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -47,6 +47,7 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 		dirTree.put(FileEntityUtil.getExcludeRootPath(dir, path), new ArrayList<>());
 
+//		listener.event(ScanEvent.SCAN_NEW_DIR, dir);
 		return FileVisitResult.CONTINUE;
 	}
 

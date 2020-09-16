@@ -9,8 +9,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.owr.so.scan.app.RepoScanner;
-import com.owr.so.scan.events.EventsListenerImpl;
+import com.owr.so.scan.RepoScanner;
 
 /**
  * @author Paulius Zubavicius

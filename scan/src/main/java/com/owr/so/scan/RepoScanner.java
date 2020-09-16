@@ -1,4 +1,4 @@
-package com.owr.so.scan.app;
+package com.owr.so.scan;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,7 +18,6 @@ import com.owr.so.diff.model.FileEntity;
 import com.owr.so.diff.model.RepoData;
 import com.owr.so.diff.model.RepoFile;
 import com.owr.so.diff.model.RepoMetaData;
-import com.owr.so.scan.dirtree.FileVisitorScanner;
 
 /**
  * @author Paulius Zubavicius
