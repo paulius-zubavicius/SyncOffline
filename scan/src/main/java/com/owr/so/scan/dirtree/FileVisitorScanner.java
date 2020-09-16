@@ -39,22 +39,24 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-
-		String dirPathString = FileEntityUtil.getExcludeRootPath(dir, path);
-		if (excludes != null
-				&& excludes.stream().anyMatch(excStr -> !dirPathString.isEmpty() && dirPathString.startsWith(excStr))) {
+		
+		if (skipPath(dir)) {
 			listener.event(ScanEvent.SCAN_NEW_DIR_SKIPING, dir);
-			return FileVisitResult.SKIP_SUBTREE;
+			return FileVisitResult.CONTINUE;
 		}
 
-		dirTree.put(dirPathString, new ArrayList<>());
+		dirTree.put(FileEntityUtil.getExcludeRootPath(dir, path), new ArrayList<>());
 
-//		listener.event(ScanEvent.SCAN_NEW_DIR, dir);
 		return FileVisitResult.CONTINUE;
 	}
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+		
+		if (skipPath(file)) {
+			listener.event(ScanEvent.SCAN_NEW_DIR_SKIPING, file);
+			return FileVisitResult.CONTINUE;
+		}
 
 		if (attrs.isRegularFile()) {
 
@@ -90,6 +92,12 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 		}
 
 		return FileVisitResult.CONTINUE;
+	}
+
+	private boolean skipPath(Path file) {
+		String dirPathString = FileEntityUtil.getExcludeRootPath(file, path);
+		return excludes != null
+				&& excludes.stream().anyMatch(excStr -> !dirPathString.isEmpty() && dirPathString.startsWith(excStr));
 	}
 
 	private FileEntity createFileEntity(Path file, BasicFileAttributes attrs) {
