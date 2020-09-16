@@ -18,9 +18,7 @@
 	<modules>
 		<module>commons</module>
 		<module>diff</module>
-		<module>model</module>
 		<module>scan</module>	
-		<module>merge-gui</module>
 
 	</modules>
 

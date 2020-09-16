@@ -1,9 +1,8 @@
 package com.owr.so.diff.model.diffs;
 
 import com.owr.so.diff.model.DiffAction;
-import com.owr.so.diff.model.UserResolution;
-import com.owr.so.diff.model.FileEntity;
 import com.owr.so.diff.model.FileEntityWrapper;
+import com.owr.so.diff.model.UserResolution;
 
 public class FileModifiedDiff extends UserResolution {
 
