@@ -4,21 +4,11 @@ import java.util.List;
 
 public class RepoFile {
 
-//	private String pc;
-
 	private PathType pathType;
 
 	private String path;
 
 	private List<String> excludes;
-
-//	public String getPc() {
-//		return pc;
-//	}
-//
-//	public void setPc(String pc) {
-//		this.pc = pc;
-//	}
 
 	public PathType getPathType() {
 		return pathType;

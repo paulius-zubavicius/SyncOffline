@@ -17,12 +17,8 @@ import com.owr.so.diff.model.RepoMetaData;
  */
 public class EventsListenerImpl implements IScanEventsListener {
 
-	// Modified/new files
 	private int statModNewFiles = 0;
-
-	// Modified/new size
 	private int statModNewSize = 0;
-
 	private int statSkipSymLinks = 0;
 	private int statSkipOthers = 0;
 	private int statSkipDirs = 0;
@@ -50,10 +46,6 @@ public class EventsListenerImpl implements IScanEventsListener {
 			break;
 		case SCAN_FILE_OK_NEW:
 			FileEntity fe = ((FileEntity) data[0]);
-//			statModNewFiles++;
-//			statModNewSize += fe.getSize();
-//			System.out.println(" - " + fe.getName());
-//			
 			statModNewFiles++;
 			statModNewSize += fe.getSize();
 			System.out.println(String.format("   %-100s %s %s", fe.getName(),
@@ -65,7 +57,6 @@ public class EventsListenerImpl implements IScanEventsListener {
 			break;
 		case SCAN_NEW_DIR_SKIPING:
 			statExcDirs++;
-			// System.out.println("---: " + data[0]);
 			break;
 
 		case SCAN_FILE_SKIPPED:
@@ -98,38 +89,12 @@ public class EventsListenerImpl implements IScanEventsListener {
 		return str;
 	}
 
-//
-////	@Override
-//	public void metaFileStatus(boolean metaFileExists, long lastTimeModified, String rootDir, boolean rootDirExists,
-//			String osCode) {
-//		String lastModifiedStr = "<?>";
-//		if (metaFileExists) {
-//			LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastTimeModified),
-//					ZoneId.systemDefault());
-//
-//			LocalDateTime today = LocalDateTime.now();
-//			LocalDateTime lastScan = Instant.ofEpochMilli(lastTimeModified).atZone(ZoneId.systemDefault())
-//					.toLocalDateTime();
-//
-//			Duration p = Duration.between(lastScan, today);
-//			lastModifiedStr = "" + date.toString() + " (" + p.toHours() + " hours ago" + ")";
-//		}
-//
-//		System.out.println("Meta file exists : " + (metaFileExists ? "Yes" : "No"));
-//		System.out.println("Last modified    : " + lastModifiedStr);
-//		System.out.println("Scanned root dir : " + (metaFileExists ? "[" + rootDir + "]" : "<?>"));
-//		System.out.println("Root dir exists  : " + (metaFileExists ? (rootDirExists ? "Yes" : "No") : "<?>"));
-//		System.out.println("OS code - type   : " + osCode);
-//
-//	}
-
-//	@Override
 	private void summary(Duration timeElapsed, RepoData newDirTree) {
 
 		System.out.println();
 		// All files:
 
-		RepoMetaData rmd = new RepoMetaData(newDirTree, null);
+		RepoMetaData rmd = new RepoMetaData(newDirTree, null, null);
 		System.out.println("Read files       : " + rmd.getFiles().size());
 		long readSize = 0;
 		for (FileEntityWrapper ent : rmd.getFiles()) {
@@ -141,7 +106,7 @@ public class EventsListenerImpl implements IScanEventsListener {
 		// Read bytes:
 		System.out.println("Scanned/new size : " + ConvertUtil.getSizeInHumanFormat(statModNewSize));
 		// Skipped files:
-		
+
 		System.out.println("Excluded dirs    : " + statExcDirs);
 		System.out.println("Skipped SymLinks : " + statSkipSymLinks);
 		System.out.println("Skipped dirs     : " + statSkipDirs);

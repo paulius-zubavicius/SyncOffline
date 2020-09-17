@@ -22,38 +22,25 @@ public class RepoMetaData {
 	 */
 	private Map<String, List<FileEntityWrapper>> filesByChecksum = new HashMap<>();
 
-	/**
-	 * repo Id by checksum
-	 */
-//	private Map<String, String> repoIdByChecksum = new HashMap<>();
 	private String repoName;
 
-	public RepoMetaData(RepoData data, String repoName) {
+	public RepoMetaData(RepoData data, String repoRootDir, String repoName) {
 		this.repoName = repoName;
-//		data.getTree().forEach((relativeDirPath, dirContent) -> {
-//			dirContent.forEach(fileEntity -> repoIdByChecksum.put(fileEntity.getChecksum(), repoName));
-//		});
 
 		data.getTree().forEach((relativeDirPath, dirContent) -> {
-			dirContent.forEach(fileEntity -> initTransientFields(repoName, relativeDirPath, fileEntity));
+			dirContent.forEach(fileEntity -> initTransientFields(repoName, repoRootDir, relativeDirPath, fileEntity));
 		});
 	}
-
-//	public RepoMetaData(RepoData data) {
-//		data.getTree().forEach((relativeDirPath, dirContent) -> {
-//			dirContent.forEach(fileEntity -> initTransientFields(fileEntity, relativeDirPath));
-//		});
-//	}
 
 	/**
 	 * If sub directory is specifie. Could be value like ""; "/dir"; "/dir/dir"
 	 * pattern for dir level: [/dirName]
 	 */
 
-	private void initTransientFields(String repoName, String dirPath, FileEntity entity) {
-		FileEntityWrapper wrapper = new FileEntityWrapper(repoName, dirPath, entity);
+	private void initTransientFields(String repoName, String repoRootDir, String relativeDirPath, FileEntity entity) {
+		FileEntityWrapper wrapper = new FileEntityWrapper(repoName, repoRootDir, relativeDirPath, entity);
 		files.add(wrapper);
-		filesByPath.put(dirPath + "/" + entity.getName(), wrapper);
+		filesByPath.put(relativeDirPath + "/" + entity.getName(), wrapper);
 		if (!filesByChecksum.containsKey(entity.getChecksum())) {
 			filesByChecksum.put(entity.getChecksum(), new ArrayList<>());
 		}
@@ -69,24 +56,12 @@ public class RepoMetaData {
 		return files;
 	}
 
-//	public void setFiles(List<FileEntity> files) {
-//		this.files = files;
-//	}
-
 	public Map<String, FileEntityWrapper> getFilesByPath() {
 		return filesByPath;
 	}
 
-//	public void setFilesByPath(Map<String, FileEntity> filesByPath) {
-//		this.filesByPath = filesByPath;
-//	}
-
 	public Map<String, List<FileEntityWrapper>> getFilesByChecksum() {
 		return filesByChecksum;
 	}
-
-//	public void setFilesByChecksum(Map<String, List<FilePathEntity>> filesByChecksum) {
-//		this.filesByChecksum = filesByChecksum;
-//	}
 
 }

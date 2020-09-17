@@ -1,141 +1,52 @@
 package com.owr.so.diff.out;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import com.owr.so.commons.ConvertUtil;
-import com.owr.so.diff.args.ArgsValues;
+import com.owr.so.commons.DataLoader;
 import com.owr.so.diff.model.DirTreesDiffResult;
-import com.owr.so.diff.model.FileEntityWrapper;
-import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
-import com.owr.so.diff.model.diffs.FileModifiedDiff;
-import com.owr.so.diff.model.diffs.FileMovedDiff;
-import com.owr.so.diff.model.diffs.FileNewDiff;
 
 public class OutputHandler implements IOutputHandler {
 
+	private List<IDiffOutput> outs = Arrays.asList(new ConsoleOut(), new ConsoleShellOut());
+
 	@Override
-	public void treesLoaded(ArgsValues argsValues) {
-		long currentTime = System.currentTimeMillis();
-		printMetaFileInfo(currentTime, argsValues.getRepoFilePath1());
-		printMetaFileInfo(currentTime, argsValues.getRepoFilePath2());
+	public void treesLoaded(DataLoader dl1, DataLoader dl2) {
+		LocalDateTime currentTime = LocalDateTime.now();
+		printMetaFileInfo(currentTime, dl1);
+		printMetaFileInfo(currentTime, dl2);
 	}
 
 	@Override
 	public void treesCompared(DirTreesDiffResult treeDiffs) {
 
-		printDetailedInfo(treeDiffs);
+		outs.forEach(out -> out.outModified(treeDiffs.getModifiedFiles()));
+		outs.forEach(out -> out.outMoved(treeDiffs.getMovedFiles()));
+		outs.forEach(out -> out.outNew(treeDiffs.getNewFiles()));
+		outs.forEach(out -> out.outDuplicates(treeDiffs.getDuplicates()));
+
+		summary(treeDiffs);
+
+	}
+
+	private void printMetaFileInfo(LocalDateTime currentTime, DataLoader dl1) {
+		System.out.println("Repo file : " + dl1.getRepoFilePath());
+		System.out.println("Data file : " + dl1.getDataFilePath());
+		System.out.println("Age       : "
+				+ ConvertUtil.getTimeInHumanFormat(Duration.between(dl1.getRepoData().getLastScan(), currentTime)));
+		System.out.println();
+	}
+
+	private void summary(DirTreesDiffResult treeDiffs) {
 		System.out.println("============================[Summary]============================");
 		System.out.println();
-		System.out.println(formtMenuLineStr("Modified files................. ", treeDiffs.getModifiedFiles().size()));
-		System.out.println(formtMenuLineStr("Moved/Renamed files............ ", treeDiffs.getMovedFiles().size()));
-		System.out.println(formtMenuLineStr("New files...................... ", treeDiffs.getNewFiles().size()));
-//System.out.println(formtMenuLineStr(4, "New direrctories............... ", newDirs));
-		System.out.println(formtMenuLineStr("Conflicted & dublicated files.. ", treeDiffs.getDuplicates().size()));
-
-	}
-
-	private String formtMenuLineStr(String menuStr, int listSize) {
-
-		String result = "";
-
-		if (listSize < 1) {
-			result += menuStr;
-			result += "";
-		} else {
-			result += menuStr;
-			result += listSize + " change" + (listSize > 1 ? "s" : "");
-		}
-
-		return result;
-	}
-
-	private void printMetaFileInfo(long currentTime, String metaFilePath) {
-		Path path = Paths.get(metaFilePath);
-		File file = path.toFile();
-		Duration duration = Duration.ofMillis(currentTime - file.lastModified());
-
-		System.out.println("Repo file : " + file.getPath());
-		System.out.println("How old   : " + ConvertUtil.getTimeInHumanFormat(duration));
-		System.out.println();
-	}
-
-	private void printDetailedInfo(DirTreesDiffResult diffCollection) {
-
-		if (!diffCollection.getModifiedFiles().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("Modified files");
-			System.out.println("================================================================");
-
-			for (FileModifiedDiff modFile : diffCollection.getModifiedFiles()) {
-
-				System.out.println("(" + modFile.getFile1().getRepoName() + ")" + modFile.getFile1().getPath());
-				System.out.println("(" + modFile.getFile2().getRepoName() + ")" + modFile.getFile2().getPath());
-				System.out.println("Conflict: " + modFile.getAction() + "");
-				System.out.println("----------------------------------------------------------------");
-			}
-		}
-
-		if (!diffCollection.getMovedFiles().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("Moved files");
-			System.out.println("================================================================");
-
-			for (FileMovedDiff modFile : diffCollection.getMovedFiles()) {
-
-				System.out.println("(" + modFile.getFile1().getRepoName() + ")" + modFile.getFile1().getPath());
-				System.out.println("(" + modFile.getFile2().getRepoName() + ")" + modFile.getFile2().getPath());
-				System.out.println("Conflict: " + modFile.getAction() + "");
-				System.out.println("----------------------------------------------------------------");
-			}
-		}
-
-		if (!diffCollection.getNewFiles().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("New files");
-			System.out.println("================================================================");
-
-			for (FileNewDiff modFile : diffCollection.getNewFiles()) {
-				System.out.println("(" + modFile.getFile1().getRepoName() + ")" + modFile.getFile1().getPath());
-				System.out.println("----------------------------------------------------------------");
-			}
-		}
-
-		if (!diffCollection.getDuplicates().isEmpty()) {
-			System.out.println("================================================================");
-			System.out.println("Duplicates");
-			System.out.println("================================================================");
-
-			System.out.println();
-
-			for (FileDuplicatesDiff modFile : diffCollection.getDuplicates()) {
-
-				for (FileEntityWrapper fileEntity : modFile.getFiles1()) {
-					System.out.println("(" + fileEntity.getRepoName() + ")" + fileEntity.getPath());
-				}
-
-				for (FileEntityWrapper fileEntity : modFile.getFiles2()) {
-					System.out.println("(" + fileEntity.getRepoName() + ")" + fileEntity.getPath());
-				}
-			}
-
-			System.out.println("----------------------------------------------------------------");
-
-		}
-
-//		if (!diffCollection.getNewDirs().isEmpty()) {
-//			System.out.println("================================================================");
-//			System.out.println("New dirs");
-//			System.out.println("================================================================");
-//
-//			for (DirNewDiff modFile : diffCollection.getNewDirs()) {
-//				System.out.println("(" + modFile.getDir1().getRepoId() + ")" + modFile.getDir1().getPath());
-//				System.out.println("----------------------------------------------------------------");
-//			}
-//		}
-
+		System.out.println("Modified files................. " + treeDiffs.getModifiedFiles().size() + " changes");
+		System.out.println("Moved/Renamed files............ " + treeDiffs.getMovedFiles().size() + " changes");
+		System.out.println("New files...................... " + treeDiffs.getNewFiles().size() + " changes");
+		System.out.println("Conflicted & dublicated files.. " + treeDiffs.getDuplicates().size() + " changes");
 	}
 
 }

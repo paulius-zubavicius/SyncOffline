@@ -16,8 +16,6 @@ public class TreesDiffFilter implements DiffFilter {
 	@Override
 	public void apply(RepoMetaData tree1, RepoMetaData tree2, DirTreesDiffResult result) {
 
-		// FIXME refactor with sets, eq/hc of XxxDiff
-		// TODO tests missing
 		treeOneSideDiff(tree1, tree2, result, false);
 		treeOneSideDiff(tree2, tree1, result, true);
 
@@ -25,30 +23,10 @@ public class TreesDiffFilter implements DiffFilter {
 
 	private void treeOneSideDiff(RepoMetaData tree1, RepoMetaData tree2, DirTreesDiffResult diffs,
 			boolean mirrorDiffScan) {
-
-		// Files
-
 		tree1.getFilesByPath().forEach((dirPath1, file1) -> {
 			findDiffSubdir(file1, tree1, tree2, diffs, mirrorDiffScan);
 		});
-//		tree1.getFiles().stream().filter(tree1File -> tree1File.getPath().startsWith(tree1.getSubDir()))
-//				.forEach(tree1File -> findDiffSubdir(tree1File, tree1, tree2, diffs, mirrorDiffScan));
-
-		// Empty DIRs
-//		tree1.getTree().keySet().stream().filter(tree1Dir -> tree1Dir.startsWith(tree1.getSubDir()))
-//				.forEach(tree1Dir -> findNewEmptyDir(tree1Dir, tree1, tree2, diffs));
-
 	}
-
-//	private void findNewEmptyDir(String tree1Dir, RepoData tree1, RepoData tree2, DirTreesDiffResult diffs) {
-//		boolean notExistsInTree2 = tree2.getTree().get(tree1Dir) == null;
-//		boolean emptyInTree1 = tree1.getTree().get(tree1Dir).getFiles().isEmpty();
-//
-//		if (notExistsInTree2 && emptyInTree1) {
-//			diffs.getNewDirs().add(new DirNewDiff(tree1.getTree().get(tree1Dir)));
-//		}
-//
-//	}
 
 	private void findDiffSubdir(FileEntityWrapper file1, RepoMetaData tree1, RepoMetaData tree2,
 			DirTreesDiffResult diffs, boolean mirrorDiffScan) {
@@ -148,7 +126,6 @@ public class TreesDiffFilter implements DiffFilter {
 
 	private void removingNonConflictingFiles(List<FileEntityWrapper> files1, List<FileEntityWrapper> files2) {
 
-		// TODO refactor
 		if (files1.size() > 1 && files2.size() > 1) {
 
 			for (int i1 = 0; i1 < files1.size(); i1++) {

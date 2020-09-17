@@ -29,7 +29,7 @@ public class RepoScanner {
 
 		DataLoader dl = new DataLoader(repoPath, listener);
 
-		RepoData newDataTree = scanTree(dl.getRepo(), dl.getRepoData(), dl.getMeta(), listener);
+		RepoData newDataTree = scanTree(dl.getRepoFile(), dl.getRepoData(), dl.getMeta(), listener);
 		Storage.save(dl.getDataFilePath(), newDataTree);
 	}
 

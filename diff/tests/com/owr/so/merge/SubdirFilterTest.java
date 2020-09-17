@@ -8,9 +8,9 @@ package com.owr.so.merge;
 //TODO TreesDiff tests
 public class SubdirFilterTest {
 
-	private static final String SUBDIR = "/subdir0";
-	private static final String SUBDIR_EMPTY = "";
-	private static final String SUBDIR_DEEPER = "/subdir0/subdir1";
+//	private static final String SUBDIR = "/subdir0";
+//	private static final String SUBDIR_EMPTY = "";
+//	private static final String SUBDIR_DEEPER = "/subdir0/subdir1";
 
 //	// @Test
 //	public void filterSuccessesTest() {

@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class RepoData {
 
-	private LocalDateTime lastScan = null;
+	private LocalDateTime lastScan = LocalDateTime.now();
 
 	private Map<String, List<FileEntity>> tree = new HashMap<>();
 

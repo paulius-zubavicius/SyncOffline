@@ -13,19 +13,19 @@ import com.owr.so.diff.model.DirTreesDiffResult;
 import com.owr.so.diff.out.IOutputHandler;
 import com.owr.so.diff.out.OutputHandler;
 
-public class Merge {
+public class RepoDiff {
 
 	private static final List<DiffFilter> filters = List.of(new TreesDiffFilter(), new MovedDirFilter(),
 			new SimilarImgFilter());
 
 	private IOutputHandler outHandler = new OutputHandler();
 
-	public Merge(ArgsValues argsValues) {
-
-		outHandler.treesLoaded(argsValues);
+	public RepoDiff(ArgsValues argsValues) {
 
 		DataLoader dl1 = new DataLoader(Path.of(argsValues.getRepoFilePath1()));
 		DataLoader dl2 = new DataLoader(Path.of(argsValues.getRepoFilePath2()));
+		
+		outHandler.treesLoaded(dl1, dl2);
 
 		DirTreesDiffResult treesDiffs = new DirTreesDiffResult();
 

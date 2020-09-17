@@ -7,7 +7,7 @@ import com.owr.so.diff.args.ArgsResolver;
 public class App {
 
 	public static void main(String[] args) throws IOException {
-		new Merge(new ArgsResolver().resolve(args));
+		new RepoDiff(new ArgsResolver().resolve(args));
 	}
 
 }

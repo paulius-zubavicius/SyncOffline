@@ -1,16 +1,17 @@
 package com.owr.so.diff.model;
 
 public class FileEntityWrapper {
-
-	private String path;
+	private String repoRootDir;
+	private String relativeDirPath;
 
 	private String repoName;
 
 	private FileEntity file;
 
-	public FileEntityWrapper(String repoName, String path, FileEntity file) {
+	public FileEntityWrapper(String repoName, String repoRootDir, String relativeDirPath, FileEntity file) {
 		this.repoName = repoName;
-		this.path = path;
+		this.repoRootDir = repoRootDir;
+		this.relativeDirPath = relativeDirPath;
 		this.file = file;
 	}
 
@@ -19,11 +20,15 @@ public class FileEntityWrapper {
 	}
 
 	public String getPath() {
-		return path + "/" + file.getName();
+		return relativeDirPath + "/" + file.getName();
 	}
 
 	public FileEntity getFile() {
 		return file;
+	}
+
+	public String getRepoRootDir() {
+		return repoRootDir;
 	}
 
 }

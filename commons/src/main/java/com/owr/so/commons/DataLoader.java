@@ -14,8 +14,9 @@ public class DataLoader {
 
 	private RepoMetaData meta;
 	private RepoData repoData;
-	private RepoFile repo;
+	private RepoFile repoFile;
 	private Path dataFilePath;
+	private Path repoFilePath;
 
 	public DataLoader(Path repoPath) {
 		this(repoPath, (event, data) -> {
@@ -28,19 +29,23 @@ public class DataLoader {
 	}
 
 	public DataLoader(Path repoPath, IScanEventsListener listener) {
-		File repoFile = repoPath.toFile();
-		validateRepoPath(repoFile, listener);
-		repo = Storage.load(repoPath, RepoFile.class);
-		validateRepoFile(repo, listener);
+		repoFilePath = repoPath.toAbsolutePath();
+		dataFilePath = Path.of(removeRepoExtension(repoFilePath.toString()) + "." + DATE_EXT);
+		load(repoFilePath, dataFilePath, listener);
+	}
 
-		File dataFile = dataFileFromRepo(repoFile);
-		dataFilePath = dataFile.toPath();
+	private void load(Path repoFilePath, Path dataFilePath, IScanEventsListener listener) {
+		validateRepoPath(repoFilePath, listener);
+		repoFile = Storage.load(repoFilePath, RepoFile.class);
+		validateRepoFile(repoFile, listener);
+
 		repoData = new RepoData();
-		if (dataFile.exists()) {
+		if (dataFilePath.toFile().exists()) {
 			repoData = Storage.load(dataFilePath, RepoData.class);
 		}
 
-		meta = new RepoMetaData(repoData, extractFileName(repoFile));
+		meta = new RepoMetaData(repoData, repoFile.getPath(),
+				removeRepoExtension(repoFilePath.getFileName().toString()));
 	}
 
 	public Path getDataFilePath() {
@@ -55,24 +60,22 @@ public class DataLoader {
 		return repoData;
 	}
 
-	public RepoFile getRepo() {
-		return repo;
+	public RepoFile getRepoFile() {
+		return repoFile;
 	}
 
-	private File dataFileFromRepo(File repoFile) {
-		String repoFileName = repoFile.getName();
-		return new File(repoFileName.substring(0, repoFileName.length() - REPO_EXT.length() - 1) + "." + DATE_EXT);
+	public Path getRepoFilePath() {
+		return repoFilePath;
 	}
 
-	private String extractFileName(File repoFile) {
-		String repoFileName = repoFile.getName();
-		String withoutExt = repoFileName.substring(0, repoFileName.length() - REPO_EXT.length() - 1);
-		return withoutExt.isEmpty() ? repoFileName : withoutExt;
+	private String removeRepoExtension(String fileName) {
+		String withoutExt = fileName.substring(0, fileName.length() - REPO_EXT.length() - 1);
+		return withoutExt.isEmpty() ? fileName : withoutExt;
 	}
 
-	public void validateRepoPath(File repoFile, IScanEventsListener listener) {
+	public void validateRepoPath(Path repoPath, IScanEventsListener listener) {
 
-		String repoFileName = repoFile.getName();
+		File repoFile = repoPath.toFile();
 
 		if (!repoFile.exists()) {
 			listener.event(ScanEvent.VALIDATION_REPO_FILE_NOT_EXIST,
@@ -80,7 +83,7 @@ public class DataLoader {
 			throw new RuntimeException("Repository file does not exists: [" + repoFile + "]");
 		}
 
-		if (!repoFileName.endsWith(REPO_EXT)) {
+		if (!repoFile.getName().endsWith(REPO_EXT)) {
 			listener.event(ScanEvent.VALIDATION_NOT_A_REPO_FILE,
 					"Expected:[path/to/*." + REPO_EXT + "] provided:[" + repoFile.getName() + "]");
 			throw new RuntimeException("Not a repo file");
@@ -89,26 +92,11 @@ public class DataLoader {
 
 	private void validateRepoFile(RepoFile repo, IScanEventsListener listener) {
 
-//		boolean valid = true;
-//
-//		if (repo.getPc() == null) {
-//			listener.event(ScanEvent.VALIDATION_MOUNTED_DISC,
-//					"Detected as mobile repository / removable disk (no pc value / 'uname -u' provided)");
-//		} else if (!PCName.uname().equals(repo.getPc())) {
-//			valid = false;
-//			listener.event(ScanEvent.VALIDATION_OTHER_PCS_REPO,
-//					"Expected:[" + PCName.uname() + "] found:[" + repo.getPc() + "]");
-//		}
-
 		if (repo.getPath() == null || repo.getPath().isEmpty()) {
-//			valid = false;
 			listener.event(ScanEvent.VALIDATION_BLANK_PATH, "Empty paths not allowed");
 			throw new RuntimeException("Repository file is not valid");
 		}
 
-//		if (!valid) {
-//			throw new RuntimeException("Repository file is not valid");
-//		}
 	}
 
 }
