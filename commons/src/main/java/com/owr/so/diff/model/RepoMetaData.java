@@ -24,11 +24,13 @@ public class RepoMetaData {
 
 	private String repoName;
 
+	private String repoRootDir;
+
 	public RepoMetaData(RepoData data, String repoRootDir, String repoName) {
 		this.repoName = repoName;
-
+		this.repoRootDir = repoRootDir;
 		data.getTree().forEach((relativeDirPath, dirContent) -> {
-			dirContent.forEach(fileEntity -> initTransientFields(repoName, repoRootDir, relativeDirPath, fileEntity));
+			dirContent.forEach(fileEntity -> initTransientFields(repoName, relativeDirPath, fileEntity));
 		});
 	}
 
@@ -37,8 +39,8 @@ public class RepoMetaData {
 	 * pattern for dir level: [/dirName]
 	 */
 
-	private void initTransientFields(String repoName, String repoRootDir, String relativeDirPath, FileEntity entity) {
-		FileEntityWrapper wrapper = new FileEntityWrapper(repoName, repoRootDir, relativeDirPath, entity);
+	private void initTransientFields(String repoName, String relativeDirPath, FileEntity entity) {
+		FileEntityWrapper wrapper = new FileEntityWrapper(repoName, relativeDirPath, entity);
 		files.add(wrapper);
 		filesByPath.put(relativeDirPath + "/" + entity.getName(), wrapper);
 		if (!filesByChecksum.containsKey(entity.getChecksum())) {
@@ -62,6 +64,10 @@ public class RepoMetaData {
 
 	public Map<String, List<FileEntityWrapper>> getFilesByChecksum() {
 		return filesByChecksum;
+	}
+
+	public String getRepoRootDir() {
+		return repoRootDir;
 	}
 
 }

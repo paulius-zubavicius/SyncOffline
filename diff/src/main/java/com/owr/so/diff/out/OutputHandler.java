@@ -3,15 +3,22 @@ package com.owr.so.diff.out;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.owr.so.commons.ConvertUtil;
 import com.owr.so.commons.DataLoader;
 import com.owr.so.diff.model.DirTreesDiffResult;
+import com.owr.so.diff.model.RepoMetaData;
+import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
+import com.owr.so.diff.model.diffs.FileModifiedDiff;
+import com.owr.so.diff.model.diffs.FileMovedDiff;
+import com.owr.so.diff.model.diffs.FileNewDiff;
 
 public class OutputHandler implements IOutputHandler {
 
-	private List<IDiffOutput> outs = Arrays.asList(new ConsoleOut(), new ConsoleShellOut());
+	private List<IDiffOutput> outs = Arrays.asList(new TitlesOut(), new ConsoleOut(), new ConsoleShellOut());
 
 	@Override
 	public void treesLoaded(DataLoader dl1, DataLoader dl2) {
@@ -21,12 +28,20 @@ public class OutputHandler implements IOutputHandler {
 	}
 
 	@Override
-	public void treesCompared(DirTreesDiffResult treeDiffs) {
+	public void treesCompared(DirTreesDiffResult treeDiffs, RepoMetaData meta1, RepoMetaData meta2) {
 
-		outs.forEach(out -> out.outModified(treeDiffs.getModifiedFiles()));
-		outs.forEach(out -> out.outMoved(treeDiffs.getMovedFiles()));
-		outs.forEach(out -> out.outNew(treeDiffs.getNewFiles()));
-		outs.forEach(out -> out.outDuplicates(treeDiffs.getDuplicates()));
+		Map<String, String> rootPathByRepoName = new HashMap<>();
+		rootPathByRepoName.put(meta1.getRepoName(), meta1.getRepoRootDir());
+		rootPathByRepoName.put(meta2.getRepoName(), meta2.getRepoRootDir());
+
+		if (!treeDiffs.getModifiedFiles().isEmpty())
+			outs.forEach(out -> out.out(FileModifiedDiff.class, treeDiffs.getModifiedFiles(), rootPathByRepoName));
+		if (!treeDiffs.getMovedFiles().isEmpty())
+			outs.forEach(out -> out.out(FileMovedDiff.class, treeDiffs.getMovedFiles(), rootPathByRepoName));
+		if (!treeDiffs.getNewFiles().isEmpty())
+			outs.forEach(out -> out.out(FileNewDiff.class, treeDiffs.getNewFiles(), rootPathByRepoName));
+		if (!treeDiffs.getDuplicates().isEmpty())
+			outs.forEach(out -> out.out(FileDuplicatesDiff.class, treeDiffs.getDuplicates(), rootPathByRepoName));
 
 		summary(treeDiffs);
 

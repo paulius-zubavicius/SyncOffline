@@ -1,9 +1,9 @@
 package com.owr.so.diff.model.diffs;
 
 import com.owr.so.diff.model.FileEntityWrapper;
-import com.owr.so.diff.model.UserResolution;
+import com.owr.so.diff.model.RepoDiff;
 
-public class FileNewDiff extends UserResolution {
+public class FileNewDiff implements RepoDiff {
 
 	private FileEntityWrapper file1;
 

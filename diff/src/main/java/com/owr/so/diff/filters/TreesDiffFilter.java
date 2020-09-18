@@ -1,6 +1,7 @@
 package com.owr.so.diff.filters;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.owr.so.diff.model.DirTreesDiffResult;
@@ -18,6 +19,11 @@ public class TreesDiffFilter implements DiffFilter {
 
 		treeOneSideDiff(tree1, tree2, result, false);
 		treeOneSideDiff(tree2, tree1, result, true);
+
+		// Order
+		result.getNewFiles().sort(Comparator.comparing((FileNewDiff diff) -> diff.getFile1().getRepoName())
+				.thenComparing((diff) -> diff.getFile1().getFile().getName()));
+		
 
 	}
 

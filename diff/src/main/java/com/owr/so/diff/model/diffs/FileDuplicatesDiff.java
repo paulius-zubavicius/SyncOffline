@@ -3,9 +3,9 @@ package com.owr.so.diff.model.diffs;
 import java.util.List;
 
 import com.owr.so.diff.model.FileEntityWrapper;
-import com.owr.so.diff.model.UserResolution;
+import com.owr.so.diff.model.RepoDiff;
 
-public class FileDuplicatesDiff extends UserResolution {
+public class FileDuplicatesDiff implements RepoDiff {
 
 	private List<FileEntityWrapper> files1;
 	private List<FileEntityWrapper> files2;

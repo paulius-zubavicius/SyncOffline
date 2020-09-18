@@ -1,20 +1,12 @@
 package com.owr.so.diff.out;
 
 import java.util.List;
+import java.util.Map;
 
-import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
-import com.owr.so.diff.model.diffs.FileModifiedDiff;
-import com.owr.so.diff.model.diffs.FileMovedDiff;
-import com.owr.so.diff.model.diffs.FileNewDiff;
+import com.owr.so.diff.model.RepoDiff;
 
 public interface IDiffOutput {
 
-	void outModified(List<FileModifiedDiff> modifiedFiles);
-
-	void outMoved(List<FileMovedDiff> movedFiles);
-
-	void outNew(List<FileNewDiff> newFiles);
-
-	void outDuplicates(List<FileDuplicatesDiff> duplicates);
+	<T extends RepoDiff> void out(Class<T> type, List<T> data, Map<String, String> rootPathByRepoName);
 
 }

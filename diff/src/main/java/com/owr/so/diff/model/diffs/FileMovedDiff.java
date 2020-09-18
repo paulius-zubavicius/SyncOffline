@@ -1,10 +1,9 @@
 package com.owr.so.diff.model.diffs;
 
-import com.owr.so.diff.model.DiffAction;
 import com.owr.so.diff.model.FileEntityWrapper;
-import com.owr.so.diff.model.UserResolution;
+import com.owr.so.diff.model.RepoDiff;
 
-public class FileMovedDiff extends UserResolution {
+public class FileMovedDiff implements RepoDiff {
 
 	private FileEntityWrapper file1;
 	private FileEntityWrapper file2;
@@ -12,13 +11,6 @@ public class FileMovedDiff extends UserResolution {
 	public FileMovedDiff(FileEntityWrapper file1, FileEntityWrapper file2) {
 		this.file1 = file1;
 		this.file2 = file2;
-
-		if (file1.getFile().getAccessed() == file2.getFile().getAccessed()) {
-			super.setAction(DiffAction.IGNORE);
-		} else {
-			super.setAction(DiffAction.UPDATE);
-		}
-
 	}
 
 	public FileEntityWrapper getFile1() {
@@ -29,14 +21,6 @@ public class FileMovedDiff extends UserResolution {
 		return file2;
 	}
 
-	@Override
-	public void setAction(DiffAction action) {
-
-		if (file1.getFile().getAccessed() == file2.getFile().getAccessed()) {
-			super.setAction(DiffAction.IGNORE);
-		} else {
-			super.setAction(action);
-		}
-	}
+	
 
 }

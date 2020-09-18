@@ -31,7 +31,7 @@ public class RepoDiff {
 
 		filters.forEach(filter -> filter.apply(dl1.getMeta(), dl2.getMeta(), treesDiffs));
 		
-		outHandler.treesCompared(treesDiffs);
+		outHandler.treesCompared(treesDiffs, dl1.getMeta(), dl2.getMeta());
 	}
 
 }
