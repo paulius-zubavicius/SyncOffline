@@ -25,4 +25,8 @@ public class FileEntityWrapper {
 		return file;
 	}
 
+	public String getRelativeDirPath() {
+		return relativeDirPath;
+	}
+
 }

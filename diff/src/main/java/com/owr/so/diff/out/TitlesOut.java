@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.owr.so.diff.model.RepoDiff;
+import com.owr.so.diff.model.diffs.DirMovedDiff;
 import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
@@ -18,6 +19,7 @@ public class TitlesOut implements IDiffOutput {
 		titleByClass = new HashMap<>();
 		titleByClass.put(FileModifiedDiff.class, "Modified files");
 		titleByClass.put(FileMovedDiff.class, "Moved files");
+		titleByClass.put(DirMovedDiff.class, "Moved directories");
 		titleByClass.put(FileNewDiff.class, "New files");
 		titleByClass.put(FileDuplicatesDiff.class, "Duplicates");
 	}

@@ -3,6 +3,7 @@ package com.owr.so.diff.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.owr.so.diff.model.diffs.DirMovedDiff;
 import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
@@ -14,6 +15,8 @@ public class DirTreesDiffResult {
 
 	private List<FileMovedDiff> movedFiles = new ArrayList<>();
 
+	private List<DirMovedDiff> movedDirs = new ArrayList<>();
+
 	private List<FileNewDiff> newFiles = new ArrayList<>();
 
 	private List<FileDuplicatesDiff> duplicates = new ArrayList<>();
@@ -24,6 +27,10 @@ public class DirTreesDiffResult {
 
 	public List<FileMovedDiff> getMovedFiles() {
 		return movedFiles;
+	}
+
+	public List<DirMovedDiff> getMovedDirs() {
+		return movedDirs;
 	}
 
 	public List<FileNewDiff> getNewFiles() {

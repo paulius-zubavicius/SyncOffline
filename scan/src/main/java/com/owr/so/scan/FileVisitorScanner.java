@@ -46,7 +46,6 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 		}
 
 		dirTree.put(FileEntityUtil.getExcludeRootPath(dir, path), new ArrayList<>());
-
 //		listener.event(ScanEvent.SCAN_NEW_DIR, dir);
 		return FileVisitResult.CONTINUE;
 	}

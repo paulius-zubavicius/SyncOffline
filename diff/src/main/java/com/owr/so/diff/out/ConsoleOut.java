@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.owr.so.diff.model.FileEntityWrapper;
 import com.owr.so.diff.model.RepoDiff;
+import com.owr.so.diff.model.diffs.DirMovedDiff;
 import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
@@ -20,6 +21,8 @@ public class ConsoleOut implements IDiffOutput {
 			outModified((List<FileModifiedDiff>) data);
 		} else if (type == FileMovedDiff.class) {
 			outMoved((List<FileMovedDiff>) data);
+		} else if (type == DirMovedDiff.class) {
+			outMovedDir((List<DirMovedDiff>) data);
 		} else if (type == FileNewDiff.class) {
 			outNew((List<FileNewDiff>) data);
 		} else if (type == FileDuplicatesDiff.class) {
@@ -42,6 +45,15 @@ public class ConsoleOut implements IDiffOutput {
 			System.out.println("(" + modFile.getFile2().getRepoName() + ")" + modFile.getFile2().getPath());
 			System.out.println("----------------------------------------------------------------");
 		}
+	}
+
+	private void outMovedDir(List<DirMovedDiff> movedDirs) {
+		for (DirMovedDiff modDir : movedDirs) {
+			System.out.println("(" + modDir.getDir1().getRepoName() + ")" + modDir.getDir1().getRelativeDirPath());
+			System.out.println("(" + modDir.getDir2().getRepoName() + ")" + modDir.getDir2().getRelativeDirPath());
+			System.out.println("----------------------------------------------------------------");
+		}
+
 	}
 
 	private void outNew(List<FileNewDiff> newFiles) {
