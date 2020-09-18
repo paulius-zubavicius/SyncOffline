@@ -23,4 +23,8 @@ public class FileDuplicatesDiff implements RepoDiff {
 		return files2;
 	}
 
+	public String getChecksum() {
+		return files1.get(0).getFile().getChecksum();
+	}
+
 }

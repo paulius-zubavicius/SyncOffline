@@ -104,10 +104,10 @@ public class ConsoleShellOut implements IDiffOutput {
 		System.out.println(GROUP + group);
 		System.out.println();
 		System.out.println(OPT + newerStr);
-		System.out.println("mv '" + rootOlder2 + olderFile.getPath() + "' '" + rootOlder2 + newerFile.getPath());
+		System.out.println("mv '" + rootOlder2 + olderFile.getPath() + "' '" + rootOlder2 + newerFile.getPath() + "'");
 		System.out.println();
 		System.out.println(OPT + olderString);
-		System.out.println("mv '" + rootNewer1 + newerFile.getPath() + "' '" + rootNewer1 + olderFile.getPath());
+		System.out.println("mv '" + rootNewer1 + newerFile.getPath() + "' '" + rootNewer1 + olderFile.getPath() + "'");
 		System.out.println();
 	}
 
@@ -116,7 +116,7 @@ public class ConsoleShellOut implements IDiffOutput {
 		for (FileNewDiff modFile : newFiles) {
 			System.out.println(GROUP + modFile.getFile1().getPath());
 			System.out.println();
-			
+
 			System.out.println(OPT + "copy to new repo");
 			String rootPath = rootPathByRepoName.get(modFile.getFile1().getRepoName());
 			String rootPathOther = rootPathByRepoName
@@ -124,21 +124,12 @@ public class ConsoleShellOut implements IDiffOutput {
 			System.out.println("mkdir -r '" + rootPathOther + "'");
 			System.out.println("cp '" + rootPath + modFile.getFile1().getPath() + "' '" + rootPathOther
 					+ modFile.getFile1().getPath() + "'");
-			
+
 			System.out.println();
 			System.out.println(OPT + "rollback");
 			System.out.println("rm '" + rootPath + modFile.getFile1().getPath() + "'");
 			System.out.println();
 		}
-
-//		System.out.println();
-//		System.out.println(OPT + "remove from original");
-//		for (FileNewDiff modFile : newFiles) {
-//			String repoPath = rootPathByRepoName.get(modFile.getFile1().getRepoName());
-//			System.out.println("rm '" + repoPath + modFile.getFile1().getPath() + "'");
-//		}
-		
-
 	}
 
 	private String opositeRepoName(Map<String, String> rootPathByRepoName, String repoName) {
@@ -150,10 +141,8 @@ public class ConsoleShellOut implements IDiffOutput {
 	}
 
 	public void outDuplicates(List<FileDuplicatesDiff> duplicates, Map<String, String> rootPathByRepoName) {
-		int group = 0;
 		for (FileDuplicatesDiff modFile : duplicates) {
-			group++;
-			System.out.println(GROUP + group);
+			System.out.println(GROUP + modFile.getChecksum());
 			System.out.println();
 			System.out.println(OPT + "remove from repo: "
 					+ (modFile.getFiles1() != null ? "[" + modFile.getFiles1().get(0).getRepoName() + "]" : ""));

@@ -53,7 +53,7 @@ public class ConsoleOut implements IDiffOutput {
 
 	private void outDuplicates(List<FileDuplicatesDiff> duplicates) {
 		for (FileDuplicatesDiff modFile : duplicates) {
-			System.out.println("Duplicates group: ");
+			System.out.println("Duplicates group: " + modFile.getChecksum());
 			for (FileEntityWrapper fileEntity : modFile.getFiles1()) {
 				System.out.println("(" + fileEntity.getRepoName() + ")" + fileEntity.getPath());
 			}

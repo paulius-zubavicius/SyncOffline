@@ -10,6 +10,7 @@ import java.util.Map;
 import com.owr.so.commons.ConvertUtil;
 import com.owr.so.commons.DataLoader;
 import com.owr.so.diff.model.DirTreesDiffResult;
+import com.owr.so.diff.model.FileEntityWrapper;
 import com.owr.so.diff.model.RepoMetaData;
 import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
@@ -48,10 +49,21 @@ public class OutputHandler implements IOutputHandler {
 	}
 
 	private void printMetaFileInfo(LocalDateTime currentTime, DataLoader dl1) {
-		System.out.println("Repo file : " + dl1.getRepoFilePath());
-		System.out.println("Data file : " + dl1.getDataFilePath());
+
+		System.out.println("Name      : " + dl1.getMeta().getRepoName());
+		System.out.println("Path      : " + dl1.getRepoFile().getPath());
 		System.out.println("Age       : "
 				+ ConvertUtil.getTimeInHumanFormat(Duration.between(dl1.getRepoData().getLastScan(), currentTime)));
+
+		long readSize = 0;
+		for (FileEntityWrapper ent : dl1.getMeta().getFiles()) {
+			readSize += ent.getFile().getSize();
+		}
+		System.out.println("Size      : " + ConvertUtil.getSizeInHumanFormat(readSize) + " ("
+				+ dl1.getMeta().getFiles().size() + " files)");
+		if (null != dl1.getRepoFile().getExcludes() && !dl1.getRepoFile().getExcludes().isEmpty()) {
+			dl1.getRepoFile().getExcludes().forEach(exc -> System.out.println("Exludes   : [" + exc + "]"));
+		}
 		System.out.println();
 	}
 
