@@ -17,10 +17,13 @@ import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
 import com.owr.so.diff.model.diffs.FileNewDiff;
+import com.owr.so.diff.out.options.ListOut;
+import com.owr.so.diff.out.options.ListShellOut;
+import com.owr.so.diff.out.options.TitlesOut;
 
-public class OutputHandler implements IOutputHandler {
+public abstract class OutputHandler implements IOutputHandler {
 
-	private List<IDiffOutput> outs = Arrays.asList(new TitlesOut(), new ConsoleOut(), new ConsoleShellOut());
+	
 
 	@Override
 	public void treesLoaded(DataLoader dl1, DataLoader dl2) {
@@ -29,12 +32,16 @@ public class OutputHandler implements IOutputHandler {
 		printMetaFileInfo(currentTime, dl2);
 	}
 
+	public abstract List<IDiffOutput> getDiffsOutputs();
+
 	@Override
 	public void treesCompared(DirTreesDiffResult treeDiffs, RepoMetaData meta1, RepoMetaData meta2) {
 
 		Map<String, String> rootPathByRepoName = new HashMap<>();
 		rootPathByRepoName.put(meta1.getRepoName(), meta1.getRepoRootDir());
 		rootPathByRepoName.put(meta2.getRepoName(), meta2.getRepoRootDir());
+
+		List<IDiffOutput> outs = getDiffsOutputs();
 
 		if (!treeDiffs.getModifiedFiles().isEmpty())
 			outs.forEach(out -> out.out(FileModifiedDiff.class, treeDiffs.getModifiedFiles(), rootPathByRepoName));
@@ -47,7 +54,18 @@ public class OutputHandler implements IOutputHandler {
 		if (!treeDiffs.getDuplicates().isEmpty())
 			outs.forEach(out -> out.out(FileDuplicatesDiff.class, treeDiffs.getDuplicates(), rootPathByRepoName));
 
-		summary(treeDiffs);
+	}
+
+	@Override
+	public void summary(DirTreesDiffResult treeDiffs, RepoMetaData meta1, RepoMetaData meta2) {
+		System.out.println("============================[Summary]============================");
+		System.out.println();
+		System.out.println("Modified files................. " + treeDiffs.getModifiedFiles().size());
+		System.out.println("Moved/Renamed files............ " + treeDiffs.getMovedFiles().size());
+		System.out.println("Moved/Renamed dirs............. " + treeDiffs.getMovedDirs().size());
+		System.out.println("New files...................... " + treeDiffs.getNewFiles().size());
+		System.out.println("Conflicted & dublicated files.. " + treeDiffs.getDuplicates().size());
+
 	}
 
 	private void printMetaFileInfo(LocalDateTime currentTime, DataLoader dl1) {
@@ -67,16 +85,6 @@ public class OutputHandler implements IOutputHandler {
 			dl1.getRepoFile().getExcludes().forEach((k, v) -> System.out.println("Exludes   : " + k + " [" + v + "]"));
 		}
 		System.out.println();
-	}
-
-	private void summary(DirTreesDiffResult treeDiffs) {
-		System.out.println("============================[Summary]============================");
-		System.out.println();
-		System.out.println("Modified files................. " + treeDiffs.getModifiedFiles().size());
-		System.out.println("Moved/Renamed files............ " + treeDiffs.getMovedFiles().size());
-		System.out.println("Moved/Renamed dirs............. " + treeDiffs.getMovedDirs().size());
-		System.out.println("New files...................... " + treeDiffs.getNewFiles().size());
-		System.out.println("Conflicted & dublicated files.. " + treeDiffs.getDuplicates().size());
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.owr.so.diff.out;
+package com.owr.so.diff.out.options;
 
 import java.util.HashSet;
 import java.util.List;
@@ -12,8 +12,9 @@ import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
 import com.owr.so.diff.model.diffs.FileNewDiff;
+import com.owr.so.diff.out.IDiffOutput;
 
-public class ConsoleShellOut implements IDiffOutput {
+public class ListShellOut implements IDiffOutput {
 
 	private static String GROUP = "@ Group: ";
 	private static String OPT = "$[Option]: ";

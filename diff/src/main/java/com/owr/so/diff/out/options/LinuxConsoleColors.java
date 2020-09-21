@@ -1,4 +1,4 @@
-package com.owr.so.diff.out;
+package com.owr.so.diff.out.options;
 
 public class LinuxConsoleColors {
 

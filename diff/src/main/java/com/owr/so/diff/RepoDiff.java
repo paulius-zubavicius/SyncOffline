@@ -11,14 +11,14 @@ import com.owr.so.diff.filters.SimilarImgFilter;
 import com.owr.so.diff.filters.TreesDiffFilter;
 import com.owr.so.diff.model.DirTreesDiffResult;
 import com.owr.so.diff.out.IOutputHandler;
-import com.owr.so.diff.out.OutputHandler;
+import com.owr.so.diff.out.options.OptionsOutput;
 
 public class RepoDiff {
 
 	private static final List<DiffFilter> filters = List.of(new TreesDiffFilter(), new MovedDirFilter(),
 			new SimilarImgFilter());
 
-	private IOutputHandler outHandler = new OutputHandler();
+	private IOutputHandler outHandler = new OptionsOutput();
 
 	public RepoDiff(ArgsValues argsValues) {
 
