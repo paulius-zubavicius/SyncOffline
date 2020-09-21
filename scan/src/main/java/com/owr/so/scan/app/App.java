@@ -17,7 +17,7 @@ import com.owr.so.scan.RepoScanner;
  */
 public class App {
 
-	private static final String OPT_META_FILE = "repoFile";
+	private static final String OPT_META_FILE = "f";
 
 	public static void main(String[] args) {
 
