@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.owr.so.diff.model.FileEntityWrapper;
 import com.owr.so.diff.model.RepoDiff;
+import com.owr.so.diff.model.diffs.DirMovedDiff;
 import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
@@ -25,6 +26,8 @@ public class ConsoleShellOut implements IDiffOutput {
 			outModified((List<FileModifiedDiff>) data, rootPathByRepoName);
 		} else if (type == FileMovedDiff.class) {
 			outMoved((List<FileMovedDiff>) data, rootPathByRepoName);
+		} else if (type == DirMovedDiff.class) {
+			outDirMoved((List<DirMovedDiff>) data, rootPathByRepoName);
 		} else if (type == FileNewDiff.class) {
 			outNew((List<FileNewDiff>) data, rootPathByRepoName);
 		} else if (type == FileDuplicatesDiff.class) {
@@ -109,6 +112,22 @@ public class ConsoleShellOut implements IDiffOutput {
 		System.out.println(OPT + olderString);
 		System.out.println("mv '" + rootNewer1 + newerFile.getPath() + "' '" + rootNewer1 + olderFile.getPath() + "'");
 		System.out.println();
+	}
+
+	private void outDirMoved(List<DirMovedDiff> movedDirs, Map<String, String> rootPathByRepoName) {
+		int group = 0;
+		for (DirMovedDiff modDir : movedDirs) {
+			System.out.println(GROUP + ++group);
+			System.out.println();
+			System.out.println(OPT + " " + modDir.getDir1().getRepoName() + " -> " + modDir.getDir2().getRepoName());
+			System.out.println("mv '" + modDir.getDir1().getRelativeDirPath() + "' '"
+					+ modDir.getDir2().getRelativeDirPath() + "'");
+			System.out.println();
+			System.out.println(OPT + " " + modDir.getDir2().getRepoName() + " -> " + modDir.getDir1().getRepoName());
+			System.out.println("mv '" + modDir.getDir2().getRelativeDirPath() + "' '"
+					+ modDir.getDir1().getRelativeDirPath() + "'");
+			System.out.println();
+		}
 	}
 
 	public void outNew(List<FileNewDiff> newFiles, Map<String, String> rootPathByRepoName) {
