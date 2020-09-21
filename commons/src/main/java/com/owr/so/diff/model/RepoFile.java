@@ -1,6 +1,7 @@
 package com.owr.so.diff.model;
 
 import java.util.List;
+import java.util.Map;
 
 public class RepoFile {
 
@@ -8,7 +9,7 @@ public class RepoFile {
 
 	private String path;
 
-	private List<String> excludes;
+	private Map<ExclusionType, List<String>> excludes;
 
 	public PathType getPathType() {
 		return pathType;
@@ -26,11 +27,11 @@ public class RepoFile {
 		this.path = path;
 	}
 
-	public List<String> getExcludes() {
+	public Map<ExclusionType, List<String>> getExcludes() {
 		return excludes;
 	}
 
-	public void setExcludes(List<String> excludes) {
+	public void setExcludes(Map<ExclusionType, List<String>> excludes) {
 		this.excludes = excludes;
 	}
 

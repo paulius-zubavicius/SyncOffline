@@ -64,7 +64,7 @@ public class OutputHandler implements IOutputHandler {
 		System.out.println("Size      : " + ConvertUtil.getSizeInHumanFormat(readSize) + " ("
 				+ dl1.getMeta().getFiles().size() + " files)");
 		if (null != dl1.getRepoFile().getExcludes() && !dl1.getRepoFile().getExcludes().isEmpty()) {
-			dl1.getRepoFile().getExcludes().forEach(exc -> System.out.println("Exludes   : [" + exc + "]"));
+			dl1.getRepoFile().getExcludes().forEach((k, v) -> System.out.println("Exludes   : " + k + " [" + v + "]"));
 		}
 		System.out.println();
 	}

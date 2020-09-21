@@ -58,12 +58,13 @@ public class App {
 	}
 
 	private static int handleError(Exception e, Options options) {
-		if (e.getMessage() != null) {
-			System.err.println(e.getMessage());
-		} else {
-			e.printStackTrace();
-		}
-
+//		if (e.getMessage() != null) {
+//			System.err.println(e.getMessage());
+//		} else {
+//			e.printStackTrace();
+//		}
+		e.printStackTrace();
+		
 		System.out.println();
 
 		HelpFormatter formatter = new HelpFormatter();

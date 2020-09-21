@@ -39,8 +39,8 @@ public class RepoScanner {
 
 		try {
 			Map<String, List<FileEntity>> dirTree = new HashMap<>();
-			Files.walkFileTree(Path.of(repo.getPath()),
-					new FileVisitorScanner(dirTree, meta, repo.getPath(), repo.getExcludes(), listener));
+			Files.walkFileTree(Path.of(repo.getPath()), new FileVisitorScanner(dirTree, meta, repo.getPath(),
+					repo.getExcludes(), listener));
 			result.getTree().putAll(dirTree);
 		} catch (IOException e) {
 			e.printStackTrace();

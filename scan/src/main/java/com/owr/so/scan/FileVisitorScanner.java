@@ -6,11 +6,15 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import com.owr.so.commons.IScanEventsListener;
 import com.owr.so.commons.ScanEvent;
+import com.owr.so.diff.model.ExclusionType;
 import com.owr.so.diff.model.FileEntity;
 import com.owr.so.diff.model.RepoMetaData;
 import com.owr.so.scan.utils.FileEntityUtil;
@@ -21,40 +25,52 @@ import com.owr.so.scan.utils.FileEntityUtil;
  */
 public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
+	private static Map<ExclusionType, BiFunction<String, String, Boolean>> matchByType;
+
+	static {
+		matchByType = new HashMap<>();
+		matchByType.put(ExclusionType.BEGINS, String::startsWith);
+		matchByType.put(ExclusionType.CONTAINS, String::contains);
+		matchByType.put(ExclusionType.ENDS, String::endsWith);
+		matchByType.put(ExclusionType.REGEX, String::matches);
+	}
+
 	private IScanEventsListener listener;
 	private Map<String, List<FileEntity>> dirTree;
-	private List<String> excludes = new ArrayList<>();
+	private List<ExcludedPath> excludes;
 	private String path;
 	private RepoMetaData metaData;
 	private String prevDir = "";
 
 	public FileVisitorScanner(Map<String, List<FileEntity>> dirTree, RepoMetaData metaData, String path,
-			List<String> excludes, IScanEventsListener listener) {
+			Map<ExclusionType, List<String>> excludes, IScanEventsListener listener) {
 		this.listener = listener;
 		this.dirTree = dirTree;
-		this.excludes = excludes;
+
+		this.excludes = (null == excludes ? new HashMap<ExclusionType, List<String>>() : excludes).entrySet().stream()
+				.flatMap(set -> set.getValue().stream().map(str -> new ExcludedPath(set.getKey(), str)))
+				.collect(Collectors.toList());
 		this.path = path;
 		this.metaData = metaData;
 	}
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-		
+
 		if (skipPath(dir)) {
 			listener.event(ScanEvent.SCAN_NEW_DIR_SKIPING, dir);
-			return FileVisitResult.CONTINUE;
+			return FileVisitResult.SKIP_SUBTREE;
 		}
 
 		dirTree.put(FileEntityUtil.getExcludeRootPath(dir, path), new ArrayList<>());
-//		listener.event(ScanEvent.SCAN_NEW_DIR, dir);
 		return FileVisitResult.CONTINUE;
 	}
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		
+
 		if (skipPath(file)) {
-			listener.event(ScanEvent.SCAN_NEW_DIR_SKIPING, file);
+			listener.event(ScanEvent.SCAN_FILE_SKIPPED, file, attrs);
 			return FileVisitResult.CONTINUE;
 		}
 
@@ -96,8 +112,9 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 
 	private boolean skipPath(Path file) {
 		String dirPathString = FileEntityUtil.getExcludeRootPath(file, path);
-		return excludes != null
-				&& excludes.stream().anyMatch(excStr -> !dirPathString.isEmpty() && dirPathString.startsWith(excStr));
+
+		return excludes != null && excludes.stream().anyMatch(
+				excStr -> !dirPathString.isEmpty() && matchByType.get(excStr.type).apply(dirPathString, excStr.value));
 	}
 
 	private FileEntity createFileEntity(Path file, BasicFileAttributes attrs) {
@@ -128,6 +145,19 @@ public class FileVisitorScanner extends SimpleFileVisitor<Path> {
 		}
 
 		return false;
+	}
+
+	private class ExcludedPath {
+
+		private ExclusionType type;
+
+		private String value;
+
+		public ExcludedPath(ExclusionType type, String value) {
+			this.type = type;
+			this.value = value;
+		}
+
 	}
 
 }

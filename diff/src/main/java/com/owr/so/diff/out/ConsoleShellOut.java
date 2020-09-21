@@ -16,7 +16,7 @@ import com.owr.so.diff.model.diffs.FileNewDiff;
 public class ConsoleShellOut implements IDiffOutput {
 
 	private static String GROUP = "@ Group: ";
-	private static String OPT = LinuxConsoleColors.BLUE + "$[Option]: " + LinuxConsoleColors.RESET;
+	private static String OPT = "$[Option]: ";
 
 	@SuppressWarnings("unchecked")
 	@Override
