@@ -10,6 +10,7 @@ import com.owr.so.diff.filters.MovedDirFilter;
 import com.owr.so.diff.filters.SimilarImgFilter;
 import com.owr.so.diff.filters.TreesDiffFilter;
 import com.owr.so.diff.model.DirTreesDiffResult;
+import com.owr.so.diff.model.ReposRootPaths;
 import com.owr.so.diff.out.IOutputHandler;
 import com.owr.so.diff.out.options.OptionsOutput;
 
@@ -30,8 +31,8 @@ public class RepoDiff {
 		DirTreesDiffResult treesDiffs = new DirTreesDiffResult();
 
 		filters.forEach(filter -> filter.apply(dl1.getMeta(), dl2.getMeta(), treesDiffs));
-		
-		outHandler.treesCompared(treesDiffs, dl1.getMeta(), dl2.getMeta());
+
+		outHandler.treesCompared(treesDiffs, dl1.getMeta(), dl2.getMeta(), new ReposRootPaths( dl1.getMeta(), dl2.getMeta()));
 	}
 
 }

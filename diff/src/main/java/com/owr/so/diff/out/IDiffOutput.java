@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.owr.so.diff.model.RepoDiff;
+import com.owr.so.diff.model.ReposRootPaths;
 
-public interface IDiffOutput {
+public interface  IDiffOutput {
 
-	<T extends RepoDiff> void out(Class<T> type, List<T> data, Map<String, String> rootPathByRepoName);
+	<T extends RepoDiff> void  out(Class<T> type, List<T> data, ReposRootPaths rootPathByRepoName);
+
 
 }
