@@ -23,15 +23,12 @@ public class TreesDiffFilter implements DiffFilter {
 		// Order
 		result.getNewFiles().sort(Comparator.comparing((FileNewDiff diff) -> diff.getFile1().getRepoName())
 				.thenComparing((diff) -> diff.getFile1().getFile().getName()));
-		
 
 	}
 
 	private void treeOneSideDiff(RepoMetaData tree1, RepoMetaData tree2, DirTreesDiffResult diffs,
 			boolean mirrorDiffScan) {
-		tree1.getFilesByPath().forEach((dirPath1, file1) -> {
-			findDiffSubdir(file1, tree1, tree2, diffs, mirrorDiffScan);
-		});
+		tree1.getFilesByPath().forEach((dirPath1, file1) -> findDiffSubdir(file1, tree1, tree2, diffs, mirrorDiffScan));
 	}
 
 	private void findDiffSubdir(FileEntityWrapper file1, RepoMetaData tree1, RepoMetaData tree2,
@@ -82,19 +79,17 @@ public class TreesDiffFilter implements DiffFilter {
 			// Two side effect
 			if (!mirrorScan) {
 				FileEntityWrapper tree2File = files2.get(0);
-
 				diffs.getMovedFiles().add(new FileMovedDiff(file1, tree2File));
 			}
 		} else
 		// [N:0] New (or deleted in "tree2")
 		if (files2.isEmpty()) {
-
 			diffs.getNewFiles().add(new FileNewDiff(file1));
 		} else
 		// [N:N] Duplicates conflict
 		if (files1.size() > 1 && files2.size() > 1) {
 
-			/**
+			/*
 			 * <pre>
 			 *  [abc]  \ / [abc]
 			 *          ?
@@ -109,7 +104,7 @@ public class TreesDiffFilter implements DiffFilter {
 		} else
 		// [1:N] [N:1]
 		if ((files1.size() == 1 && files2.size() > 1) || (files1.size() > 1 && files2.size() == 1)) {
-			/**
+			/*
 			 * <pre>
 			 *         / ? [abc]
 			 *  [abc] -

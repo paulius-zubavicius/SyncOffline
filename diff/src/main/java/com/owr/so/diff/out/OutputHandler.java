@@ -2,10 +2,7 @@ package com.owr.so.diff.out;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.owr.so.commons.ConvertUtil;
 import com.owr.so.commons.DataLoader;
@@ -18,14 +15,11 @@ import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
 import com.owr.so.diff.model.diffs.FileMovedDiff;
 import com.owr.so.diff.model.diffs.FileNewDiff;
-import com.owr.so.diff.out.options.ListOut;
-import com.owr.so.diff.out.options.ListShellOut;
-import com.owr.so.diff.out.options.TitlesOut;
 
 public abstract class OutputHandler implements IOutputHandler {
 
     @Override
-    public void treesLoaded(DataLoader dl1, DataLoader dl2) {
+    public void loadRepoTrees(DataLoader dl1, DataLoader dl2) {
         LocalDateTime currentTime = LocalDateTime.now();
         printMetaFileInfo(currentTime, dl1);
         printMetaFileInfo(currentTime, dl2);
@@ -34,7 +28,7 @@ public abstract class OutputHandler implements IOutputHandler {
     public abstract List<IDiffOutput> getDiffsOutputs();
 
     @Override
-    public void treesCompared(DirTreesDiffResult treeDiffs, RepoMetaData meta1, RepoMetaData meta2, ReposRootPaths rootPathByRepoName) {
+    public void compareRepoTrees(DirTreesDiffResult treeDiffs, RepoMetaData meta1, RepoMetaData meta2, ReposRootPaths rootPathByRepoName) {
 
         List<IDiffOutput> outs = getDiffsOutputs();
 

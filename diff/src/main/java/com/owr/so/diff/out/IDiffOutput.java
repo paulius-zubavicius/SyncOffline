@@ -1,7 +1,6 @@
 package com.owr.so.diff.out;
 
 import java.util.List;
-import java.util.Map;
 
 import com.owr.so.diff.model.RepoDiff;
 import com.owr.so.diff.model.ReposRootPaths;

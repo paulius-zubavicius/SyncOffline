@@ -5,11 +5,12 @@ public class ArgsValues {
 	private String repoFilePath1;
 	private String repoFilePath2;
 
-	ArgsValues(String repoFilePath1, String repoFilePath2) {
+	private String mode;
 
+	ArgsValues(String repoFilePath1, String repoFilePath2, String mode) {
 		this.repoFilePath1 = repoFilePath1;
 		this.repoFilePath2 = repoFilePath2;
-
+		this.mode = mode;
 	}
 
 	public String getRepoFilePath1() {
@@ -20,6 +21,7 @@ public class ArgsValues {
 		return repoFilePath2;
 	}
 
-
-
+	public String getMode() {
+		return mode;
+	}
 }

@@ -16,6 +16,7 @@ public class ArgsResolver {
 
 	private static final String OPT_SHORT_META1 = "f1";
 	private static final String OPT_SHORT_META2 = "f2";
+	private static final String OPT_MODE = "mode";
 
 	public ArgsValues resolve(String[] args) {
 
@@ -37,10 +38,11 @@ public class ArgsResolver {
 
 		String metaFile1Path = line.getOptionValue(OPT_SHORT_META1);
 		String metaFile2Path = line.getOptionValue(OPT_SHORT_META2);
+		String mode = line.getOptionValue(OPT_MODE);
 
 		validateMetaFilesPaths(metaFile1Path, metaFile2Path);
 
-		return new ArgsValues(metaFile1Path, metaFile2Path);
+		return new ArgsValues(metaFile1Path, metaFile2Path, mode);
 	}
 
 	private static Options creteArgsOptions() {
@@ -49,6 +51,8 @@ public class ArgsResolver {
 				.desc("Meta file (1) of scanned directory tree.").build());
 		options.addOption(Option.builder(OPT_SHORT_META2).required().hasArg().valueSeparator().longOpt(OPT_SHORT_META2)
 				.desc("Meta file (2) of scanned directory tree.").build());
+		options.addOption(Option.builder(OPT_MODE).required(false).hasArg().valueSeparator().longOpt(OPT_MODE)
+				.desc("Comparing mode").build());
 		return options;
 	}
 

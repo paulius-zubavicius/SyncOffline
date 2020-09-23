@@ -12,27 +12,23 @@ import com.owr.so.diff.filters.TreesDiffFilter;
 import com.owr.so.diff.model.DirTreesDiffResult;
 import com.owr.so.diff.model.ReposRootPaths;
 import com.owr.so.diff.out.IOutputHandler;
-import com.owr.so.diff.out.options.OptionsOutput;
+import com.owr.so.diff.out.OutputHandlerFactory;
 
 public class RepoDiff {
 
-	private static final List<DiffFilter> filters = List.of(new TreesDiffFilter(), new MovedDirFilter(),
-			new SimilarImgFilter());
+    private static final List<DiffFilter> filters = List.of(new TreesDiffFilter(), new MovedDirFilter(),
+            new SimilarImgFilter());
 
-	private IOutputHandler outHandler = new OptionsOutput();
+    public RepoDiff(ArgsValues argsValues) {
 
-	public RepoDiff(ArgsValues argsValues) {
+        DataLoader dl1 = new DataLoader(Path.of(argsValues.getRepoFilePath1()));
+        DataLoader dl2 = new DataLoader(Path.of(argsValues.getRepoFilePath2()));
+        IOutputHandler outHandler = OutputHandlerFactory.createInstance(argsValues.getMode());
+        DirTreesDiffResult treesDiffs = new DirTreesDiffResult();
 
-		DataLoader dl1 = new DataLoader(Path.of(argsValues.getRepoFilePath1()));
-		DataLoader dl2 = new DataLoader(Path.of(argsValues.getRepoFilePath2()));
-		
-		outHandler.treesLoaded(dl1, dl2);
-
-		DirTreesDiffResult treesDiffs = new DirTreesDiffResult();
-
-		filters.forEach(filter -> filter.apply(dl1.getMeta(), dl2.getMeta(), treesDiffs));
-
-		outHandler.treesCompared(treesDiffs, dl1.getMeta(), dl2.getMeta(), new ReposRootPaths( dl1.getMeta(), dl2.getMeta()));
-	}
+        outHandler.loadRepoTrees(dl1, dl2);
+        filters.forEach(filter -> filter.apply(dl1.getMeta(), dl2.getMeta(), treesDiffs));
+        outHandler.compareRepoTrees(treesDiffs, dl1.getMeta(), dl2.getMeta(), new ReposRootPaths(dl1.getMeta(), dl2.getMeta()));
+    }
 
 }

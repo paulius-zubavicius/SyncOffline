@@ -1,7 +1,6 @@
 package com.owr.so.diff.out.options;
 
 import java.util.List;
-import java.util.Map;
 
 import com.owr.so.diff.model.FileEntityWrapper;
 import com.owr.so.diff.model.RepoDiff;
@@ -17,8 +16,6 @@ public class ListShellOut implements IDiffOutput {
 
     private static String GROUP = "@ Group: ";
     private static String OPT = "$[Option]: ";
-
-    private static Map<Class<? extends RepoDiff>, String> titleByClass;
 
     @SuppressWarnings("unchecked")
     @Override

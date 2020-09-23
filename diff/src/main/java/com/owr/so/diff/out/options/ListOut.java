@@ -1,10 +1,10 @@
 package com.owr.so.diff.out.options;
 
 import java.util.List;
-import java.util.Map;
 
 import com.owr.so.diff.model.FileEntityWrapper;
 import com.owr.so.diff.model.RepoDiff;
+import com.owr.so.diff.model.ReposRootPaths;
 import com.owr.so.diff.model.diffs.DirMovedDiff;
 import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
@@ -16,7 +16,7 @@ public class ListOut implements IDiffOutput {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends RepoDiff> void out(Class<T> type, List<T> data, Map<String, String> rootPathByRepoName) {
+	public <T extends RepoDiff> void out(Class<T> type, List<T> data, ReposRootPaths rootPathByRepoName) {
 
 		if (type == FileModifiedDiff.class) {
 			outModified((List<FileModifiedDiff>) data);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.owr.so.diff.model.RepoDiff;
+import com.owr.so.diff.model.ReposRootPaths;
 import com.owr.so.diff.model.diffs.DirMovedDiff;
 import com.owr.so.diff.model.diffs.FileDuplicatesDiff;
 import com.owr.so.diff.model.diffs.FileModifiedDiff;
@@ -26,7 +27,7 @@ public class TitlesOut implements IDiffOutput {
 	}
 
 	@Override
-	public <T extends RepoDiff> void out(Class<T> type, List<T> data, Map<String, String> rootPathByRepoName) {
+	public <T extends RepoDiff> void out(Class<T> type, List<T> data, ReposRootPaths rootPathByRepoName) {
 		System.out.println("================================[" + titleByClass.getOrDefault(type, "???")
 				+ "]================================");
 	}
